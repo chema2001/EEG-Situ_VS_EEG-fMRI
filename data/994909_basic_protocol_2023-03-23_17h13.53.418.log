@@ -1,0 +1,16 @@
+2.3622 	WARNING 	We strongly recommend you activate the PTB sound engine in PsychoPy prefs as the preferred audio engine. Its timing is vastly superior. Your prefs are currently set to use ['sounddevice', 'PTB', 'pyo', 'pygame'] (in that order).
+10.1262 	WARNING 	User requested fullscreen with size [1024  768], but screen is actually [1920, 1080]. Using actual size
+12.4759 	EXP 	Created window1 = Window(allowGUI=True, allowStencil=False, autoLog=True, backendConf=UNKNOWN, bitsMode=UNKNOWN, blendMode='avg', bpc=(8, 8, 8), color=array([0, 0, 0]), colorSpace='rgb', depthBits=8, fullscr=<method-wrapper '__getattribute__' of attributeSetter object at 0x0000026FBDD88100>, gamma=None, gammaErrorPolicy='raise', lms=UNKNOWN, monitor=<psychopy.monitors.calibTools.Monitor object at 0x0000026FC2E29340>, multiSample=False, name='window1', numSamples=2, pos=(-1920, 11), screen=0, size=array([1920, 1080]), stencilBits=0, stereo=False, units='height', useFBO=True, useRetina=False, viewOri=0.0, viewPos=None, viewScale=None, waitBlanking=True, winType='pyglet')
+12.4761 	EXP 	window1: mouseVisible = True
+12.4761 	EXP 	window1: mouseVisible = False
+12.4762 	EXP 	window1: Attempting to measure frame rate of screen (0) ...
+12.4762 	EXP 	window1: recordFrameIntervals = False
+12.6424 	EXP 	window1: recordFrameIntervals = True
+12.7621 	WARNING 	t of last frame was 20.33ms (=1/49)
+13.0756 	EXP 	Screen (0) actual frame rate measured at 59.77Hz
+13.0757 	EXP 	window1: recordFrameIntervals = False
+16.3837 	EXP 	Created text = TextStim(__class__=<class 'psychopy.visual.text.TextStim'>, alignHoriz=method-wrapper(...), alignText='center', alignVert=method-wrapper(...), anchorHoriz='center', anchorVert='center', antialias=True, autoDraw=False, autoLog=True, bold=False, color=array([1, 1, 1]), colorSpace='rgb', contrast=1.0, depth=0.0, flipHoriz=False, flipVert=False, font='Open Sans', fontFiles=[], height=0.05, italic=False, languageStyle='LTR', name='text', opacity=1.0, ori=0.0, pos=array([0., 0.]), rgb=UNKNOWN, text='Any text\n\nincluding line breaks', units='height', win=Window(...), wrapWidth=1)
+16.3933 	EXP 	text: autoDraw = True
+17.3959 	EXP 	text: autoDraw = False
+17.3959 	EXP 	text: autoDraw = False
+17.4526 	EXP 	window1: mouseVisible = True
