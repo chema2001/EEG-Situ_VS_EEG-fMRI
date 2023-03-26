@@ -58,7 +58,7 @@ def main():
     BoardShim.enable_dev_board_logger()
     logging.basicConfig(level=logging.DEBUG) # Ativa as mensagens log do brainflow para fazer debug
 
-    parser = argparse.ArgumentParser() # Permite definir os parâmetros através da consola sem ser necessário ter o editor
+    parser = argparse.ArgumentParser() # Permite definir os parâmetros através da consola sem ser necessário ter o editor aberto
     parser.add_argument('--eeg', type=str, # Este é o único parâmetro necessário colocar para testar (SYNTHETIC_BOARD)
                         help='EEG headband, check docs to get a list of supported boards: https://brainflow.readthedocs.io/en/stable/SupportedBoards.html#supported-boards-label',
                         required=True, default='')
@@ -91,11 +91,11 @@ def main():
         sampling_rate = BoardShim.get_sampling_rate(board_id)
 
         if(len(cyton_ch) > 1): 
-            # Caso se insira os nomes elétrodos como parâmetro, os mesmos são guardados numa vaiável
+            # Caso os nomes dos elétrodos sejam inseridos como parâmetro, os mesmos são guardados numa variável
             channel_labels = cyton_ch
             eeg_channels = eeg_channels[0:len(channel_labels)]
         else:
-            # Caso não se insira, os nomes predifinidos no brainflow para a placa escolhida serão usados para não dar erro
+            # Caso não sejam inseridos, os nomes dos elétrodos predifinidos no brainflow para a placa escolhida serão usados para não dar erro
             channel_labels = BoardShim.get_eeg_names(board_id)
 
         # Variável com os dados da placa. 
@@ -119,7 +119,7 @@ def main():
         if board.is_prepared():
             stopStream(board)
 
-def stopStream(board):
+def stopStream(board): # Termina a sessão corretamente
     logging.info('Releasing session')
     board.release_session()
 
