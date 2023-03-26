@@ -30,9 +30,9 @@ def eeg_systemId(_id):
 
     '''
     - A placa daisy é uma extensão da cyton que permite adicionar mais 8 elétrodos. 
-    - Em princípio isto não é preciso irá se preciso a não ser que queiramos ter melhor resolução espacial.
-    - Filtros espaciais (ICA, CSP), por vezes usados no pré-processamento (retirar ruído) e na análise de ERPs, 
-      funcionam melhor com um maior número de elétrodos 
+    - Em princípio isto não irá ser preciso a não ser que queiramos ter melhor resolução espacial.
+    - Filtros espaciais (ICA, CSP) por vezes usados no pré-processamento (retirar ruído) e na análise de ERPs, 
+      funcionam melhor com um maior número de elétrodos por isso não é má ideia considerarmos isto 
 
     - A placa sintética serve para fazer testes e usa sinais simulados na biblioteca
     '''
