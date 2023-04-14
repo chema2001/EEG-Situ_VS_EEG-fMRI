@@ -77,7 +77,7 @@ frameTolerance = 0.001  # how close to onset before 'same' frame
 
 # --- Setup the Window ---
 win = visual.Window(
-    size=[1280, 720], fullscr=False, screen=0, 
+    size=[1920, 1080], fullscr=True, screen=0, 
     winType='pyglet', allowStencil=False,
     monitor='testMonitor', color=[-1.0000, -1.0000, -1.0000], colorSpace='rgb',
     blendMode='avg', useFBO=True, 
@@ -171,11 +171,11 @@ trialImage = visual.ImageStim(
     image='sin', mask=None, anchor='center',
     ori=0.0, pos=(0, 0), size=(0.5, 0.5),
     color=[1,1,1], colorSpace='rgb', opacity=None,
-    flipHoriz=True, flipVert=True,
+    flipHoriz=False, flipVert=False,
     texRes=128.0, interpolate=True, depth=0.0)
 polygon = visual.Rect(
     win=win, name='polygon',
-    width=(0.1, 0.1)[0], height=(0.1, 0.1)[1],
+    width=(0.15, 0.15)[0], height=(0.1, 0.1)[1],
     ori=0.0, pos=(-0.9, -0.5), anchor='bottom-left',
     lineWidth=1.0,     colorSpace='rgb',  lineColor='white', fillColor='white',
     opacity=None, depth=-1.0, interpolate=True)
