@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 This experiment was created using PsychoPy3 Experiment Builder (v2022.2.5),
-    on abril 13, 2023, at 23:30
+    on abril 14, 2023, at 02:55
 If you publish work using this script the most relevant publication is:
 
     Peirce J, Gray JR, Simpson S, MacAskill M, Höchenberger R, Sogo H, Kastman E, Lindeløv JK. (2019) 
@@ -63,7 +63,7 @@ filename = _thisDir + os.sep + u'data/%s_%s_%s' % (expInfo['participant'], expNa
 # An ExperimentHandler isn't essential but helps with data saving
 thisExp = data.ExperimentHandler(name=expName, version='',
     extraInfo=expInfo, runtimeInfo=None,
-    originPath='C:\\Users\\migue\\OneDrive\\Ambiente de Trabalho\\IEEE project\\EEG-Situ_VS_EEG-fMRI\\face_recognition_ERP_protocol_lastrun.py',
+    originPath='C:\\Users\\migue\\OneDrive\\Ambiente de Trabalho\\IEEE project\\EEG-Situ_VS_EEG-fMRI\\face_recognition_ERP_protocol.py',
     savePickle=True, saveWideText=True,
     dataFileName=filename)
 # save a log file for detail verbose info
@@ -124,10 +124,31 @@ instructions_text = visual.TextStim(win=win, name='instructions_text',
 spacebar_key = keyboard.Keyboard()
 
 # --- Initialize components for Routine "eyeScreen" ---
+eye_text = visual.TextStim(win=win, name='eye_text',
+    text='Blink you eyes',
+    font='Open Sans',
+    pos=(0, 0), height=0.05, wrapWidth=None, ori=0.0, 
+    color='white', colorSpace='rgb', opacity=None, 
+    languageStyle='LTR',
+    depth=0.0);
 
 # --- Initialize components for Routine "jawClenching" ---
+text = visual.TextStim(win=win, name='text',
+    text='Clench your jaw!',
+    font='Open Sans',
+    pos=(0, 0), height=0.05, wrapWidth=None, ori=0.0, 
+    color='white', colorSpace='rgb', opacity=None, 
+    languageStyle='LTR',
+    depth=0.0);
 
 # --- Initialize components for Routine "closedEyes" ---
+closedEyes_text = visual.TextStim(win=win, name='closedEyes_text',
+    text='Close your eyes and open them when you hear the beep.\n',
+    font='Open Sans',
+    pos=(0, 0), height=0.05, wrapWidth=None, ori=0.0, 
+    color='white', colorSpace='rgb', opacity=None, 
+    languageStyle='LTR',
+    depth=0.0);
 beep = sound.Sound('A', secs=0.5, stereo=True, hamming=True,
     name='beep')
 beep.setVolume(1.0)
@@ -140,7 +161,8 @@ permutation = np.random.permutation(imgs_file.index)
 shuffled_df = imgs_file.loc[permutation]
 
 img = shuffled_df['image'].values
-
+stim = shuffled_df['stimulus'].values
+count = 0
 
 # --- Initialize components for Routine "trial" ---
 trialImage = visual.ImageStim(
@@ -149,7 +171,7 @@ trialImage = visual.ImageStim(
     image='sin', mask=None, anchor='center',
     ori=0.0, pos=(0, 0), size=(0.5, 0.5),
     color=[1,1,1], colorSpace='rgb', opacity=None,
-    flipHoriz=False, flipVert=False,
+    flipHoriz=True, flipVert=True,
     texRes=128.0, interpolate=True, depth=0.0)
 polygon = visual.Rect(
     win=win, name='polygon',
@@ -367,7 +389,7 @@ continueRoutine = True
 routineForceEnded = False
 # update component parameters for each repeat
 # keep track of which components have finished
-eyeScreenComponents = []
+eyeScreenComponents = [eye_text]
 for thisComponent in eyeScreenComponents:
     thisComponent.tStart = None
     thisComponent.tStop = None
@@ -381,13 +403,33 @@ _timeToFirstFrame = win.getFutureFlipTime(clock="now")
 frameN = -1
 
 # --- Run Routine "eyeScreen" ---
-while continueRoutine:
+while continueRoutine and routineTimer.getTime() < 15.0:
     # get current time
     t = routineTimer.getTime()
     tThisFlip = win.getFutureFlipTime(clock=routineTimer)
     tThisFlipGlobal = win.getFutureFlipTime(clock=None)
     frameN = frameN + 1  # number of completed frames (so 0 is the first frame)
     # update/draw components on each frame
+    
+    # *eye_text* updates
+    if eye_text.status == NOT_STARTED and tThisFlip >= 0.0-frameTolerance:
+        # keep track of start time/frame for later
+        eye_text.frameNStart = frameN  # exact frame index
+        eye_text.tStart = t  # local t and not account for scr refresh
+        eye_text.tStartRefresh = tThisFlipGlobal  # on global time
+        win.timeOnFlip(eye_text, 'tStartRefresh')  # time at next scr refresh
+        # add timestamp to datafile
+        thisExp.timestampOnFlip(win, 'eye_text.started')
+        eye_text.setAutoDraw(True)
+    if eye_text.status == STARTED:
+        # is it time to stop? (based on global clock, using actual start)
+        if tThisFlipGlobal > eye_text.tStartRefresh + 15-frameTolerance:
+            # keep track of stop time/frame for later
+            eye_text.tStop = t  # not accounting for scr refresh
+            eye_text.frameNStop = frameN  # exact frame index
+            # add timestamp to datafile
+            thisExp.timestampOnFlip(win, 'eye_text.stopped')
+            eye_text.setAutoDraw(False)
     
     # check for quit (typically the Esc key)
     if endExpNow or defaultKeyboard.getKeys(keyList=["escape"]):
@@ -411,15 +453,18 @@ while continueRoutine:
 for thisComponent in eyeScreenComponents:
     if hasattr(thisComponent, "setAutoDraw"):
         thisComponent.setAutoDraw(False)
-# the Routine "eyeScreen" was not non-slip safe, so reset the non-slip timer
-routineTimer.reset()
+# using non-slip timing so subtract the expected duration of this Routine (unless ended on request)
+if routineForceEnded:
+    routineTimer.reset()
+else:
+    routineTimer.addTime(-15.000000)
 
 # --- Prepare to start Routine "jawClenching" ---
 continueRoutine = True
 routineForceEnded = False
 # update component parameters for each repeat
 # keep track of which components have finished
-jawClenchingComponents = []
+jawClenchingComponents = [text]
 for thisComponent in jawClenchingComponents:
     thisComponent.tStart = None
     thisComponent.tStop = None
@@ -433,13 +478,33 @@ _timeToFirstFrame = win.getFutureFlipTime(clock="now")
 frameN = -1
 
 # --- Run Routine "jawClenching" ---
-while continueRoutine:
+while continueRoutine and routineTimer.getTime() < 15.0:
     # get current time
     t = routineTimer.getTime()
     tThisFlip = win.getFutureFlipTime(clock=routineTimer)
     tThisFlipGlobal = win.getFutureFlipTime(clock=None)
     frameN = frameN + 1  # number of completed frames (so 0 is the first frame)
     # update/draw components on each frame
+    
+    # *text* updates
+    if text.status == NOT_STARTED and tThisFlip >= 0.0-frameTolerance:
+        # keep track of start time/frame for later
+        text.frameNStart = frameN  # exact frame index
+        text.tStart = t  # local t and not account for scr refresh
+        text.tStartRefresh = tThisFlipGlobal  # on global time
+        win.timeOnFlip(text, 'tStartRefresh')  # time at next scr refresh
+        # add timestamp to datafile
+        thisExp.timestampOnFlip(win, 'text.started')
+        text.setAutoDraw(True)
+    if text.status == STARTED:
+        # is it time to stop? (based on global clock, using actual start)
+        if tThisFlipGlobal > text.tStartRefresh + 15-frameTolerance:
+            # keep track of stop time/frame for later
+            text.tStop = t  # not accounting for scr refresh
+            text.frameNStop = frameN  # exact frame index
+            # add timestamp to datafile
+            thisExp.timestampOnFlip(win, 'text.stopped')
+            text.setAutoDraw(False)
     
     # check for quit (typically the Esc key)
     if endExpNow or defaultKeyboard.getKeys(keyList=["escape"]):
@@ -463,8 +528,11 @@ while continueRoutine:
 for thisComponent in jawClenchingComponents:
     if hasattr(thisComponent, "setAutoDraw"):
         thisComponent.setAutoDraw(False)
-# the Routine "jawClenching" was not non-slip safe, so reset the non-slip timer
-routineTimer.reset()
+# using non-slip timing so subtract the expected duration of this Routine (unless ended on request)
+if routineForceEnded:
+    routineTimer.reset()
+else:
+    routineTimer.addTime(-15.000000)
 
 # --- Prepare to start Routine "closedEyes" ---
 continueRoutine = True
@@ -473,7 +541,7 @@ routineForceEnded = False
 beep.setSound('A', secs=0.5, hamming=True)
 beep.setVolume(1.0, log=False)
 # keep track of which components have finished
-closedEyesComponents = [beep]
+closedEyesComponents = [closedEyes_text, beep]
 for thisComponent in closedEyesComponents:
     thisComponent.tStart = None
     thisComponent.tStop = None
@@ -487,13 +555,33 @@ _timeToFirstFrame = win.getFutureFlipTime(clock="now")
 frameN = -1
 
 # --- Run Routine "closedEyes" ---
-while continueRoutine and routineTimer.getTime() < 14.9:
+while continueRoutine and routineTimer.getTime() < 15.0:
     # get current time
     t = routineTimer.getTime()
     tThisFlip = win.getFutureFlipTime(clock=routineTimer)
     tThisFlipGlobal = win.getFutureFlipTime(clock=None)
     frameN = frameN + 1  # number of completed frames (so 0 is the first frame)
     # update/draw components on each frame
+    
+    # *closedEyes_text* updates
+    if closedEyes_text.status == NOT_STARTED and tThisFlip >= 0.0-frameTolerance:
+        # keep track of start time/frame for later
+        closedEyes_text.frameNStart = frameN  # exact frame index
+        closedEyes_text.tStart = t  # local t and not account for scr refresh
+        closedEyes_text.tStartRefresh = tThisFlipGlobal  # on global time
+        win.timeOnFlip(closedEyes_text, 'tStartRefresh')  # time at next scr refresh
+        # add timestamp to datafile
+        thisExp.timestampOnFlip(win, 'closedEyes_text.started')
+        closedEyes_text.setAutoDraw(True)
+    if closedEyes_text.status == STARTED:
+        # is it time to stop? (based on global clock, using actual start)
+        if tThisFlipGlobal > closedEyes_text.tStartRefresh + 15-frameTolerance:
+            # keep track of stop time/frame for later
+            closedEyes_text.tStop = t  # not accounting for scr refresh
+            closedEyes_text.frameNStop = frameN  # exact frame index
+            # add timestamp to datafile
+            thisExp.timestampOnFlip(win, 'closedEyes_text.stopped')
+            closedEyes_text.setAutoDraw(False)
     # start/stop beep
     if beep.status == NOT_STARTED and tThisFlip >= 14.4-frameTolerance:
         # keep track of start time/frame for later
@@ -540,7 +628,7 @@ beep.stop()  # ensure sound has stopped at end of routine
 if routineForceEnded:
     routineTimer.reset()
 else:
-    routineTimer.addTime(-14.900000)
+    routineTimer.addTime(-15.000000)
 
 # --- Prepare to start Routine "codingTrials" ---
 continueRoutine = True
@@ -595,7 +683,7 @@ for thisComponent in codingTrialsComponents:
 routineTimer.reset()
 
 # set up handler to look after randomisation of conditions etc
-trial_block = data.TrialHandler(nReps=6.0, method='random', 
+trial_block = data.TrialHandler(nReps=12.0, method='random', 
     extraInfo=expInfo, originPath=-1,
     trialList=[None],
     seed=None, name='trial_block')
@@ -614,7 +702,7 @@ for thisTrial_block in trial_block:
             exec('{} = thisTrial_block[paramName]'.format(paramName))
     
     # set up handler to look after randomisation of conditions etc
-    trials = data.TrialHandler(nReps=3.0, method='random', 
+    trials = data.TrialHandler(nReps=1.0, method='random', 
         extraInfo=expInfo, originPath=-1,
         trialList=data.importConditions('stims.xlsx'),
         seed=None, name='trials')
@@ -636,7 +724,14 @@ for thisTrial_block in trial_block:
         continueRoutine = True
         routineForceEnded = False
         # update component parameters for each repeat
-        trialImage.setImage(image)
+        trialImage.setImage(img[count])
+
+        if stim[count] == 'target':
+            polygon.color = [1,1,1]
+        elif stim[count] == 'non_target':
+            polygon.color = [-0.4 , -0.4, -0.4]
+
+        count+=1
         # keep track of which components have finished
         trialComponents = [trialImage, polygon]
         for thisComponent in trialComponents:
@@ -804,7 +899,7 @@ for thisTrial_block in trial_block:
             routineTimer.addTime(-0.500000)
         thisExp.nextEntry()
         
-    # completed 3.0 repeats of 'trials'
+    # completed 1.0 repeats of 'trials'
     
     
     # --- Prepare to start Routine "trialBlockScreen" ---
@@ -828,7 +923,15 @@ for thisTrial_block in trial_block:
     t = 0
     _timeToFirstFrame = win.getFutureFlipTime(clock="now")
     frameN = -1
+
+    count = 0
     
+    permutation = np.random.permutation(imgs_file.index)
+    shuffled_df = imgs_file.loc[permutation]
+
+    img = shuffled_df['image'].values
+    stim = shuffled_df['stimulus'].values
+
     # --- Run Routine "trialBlockScreen" ---
     while continueRoutine:
         # get current time
@@ -903,7 +1006,7 @@ for thisTrial_block in trial_block:
         trial_block.addData('new_trialblock.rt', new_trialblock.rt)
     # the Routine "trialBlockScreen" was not non-slip safe, so reset the non-slip timer
     routineTimer.reset()
-# completed 6.0 repeats of 'trial_block'
+# completed 12.0 repeats of 'trial_block'
 
 
 # --- Prepare to start Routine "GoodbyeScreen" ---

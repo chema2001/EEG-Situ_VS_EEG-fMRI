@@ -7,121 +7,89 @@ Para correr o script é preciso primeiro definir o diretório onde ele está:
 - cd path
 
 De seguida:
-- python acquisition_brainflow.py --eeg cyton --serial-port COM6 --channels FP1,FP2,...
+- python acquisition_brainflow.py --subject 1 --age 25 --gender Male
 
-Para testar o script sem nenhuma placa conectada:
-- python acquisition_brainflow.py --eeg test
 '''
 
+# Setup importante da cyton/cyton+daisy: https://docs.openbci.com/Troubleshooting/FTDI_Fix_Windows/
 
 import keyboard
-
-import argparse
 import logging
 import numpy as np
+import argparse
+import pandas as pd
+import matplotlib.pyplot as plt
+import csv
 
 from brainflow.board_shim import BoardShim, BrainFlowInputParams, BoardIds
-from brainflow.data_filter import DataFilter, FilterTypes, DetrendOperations
+from brainflow.data_filter import DataFilter
 
-def eeg_systemId(_id):
-    
-    # Seleção da placa de aquisição a partir do ID da mesma na API do brainflow.
-    # Com este ID, a API faz o setup com as predefinições necessárias para adquirir sinal da placa
+board_id = BoardIds.CYTON_DAISY_BOARD.value
 
-    '''
-    - A placa daisy é uma extensão da cyton que permite adicionar mais 8 elétrodos. 
-    - Em princípio isto não irá ser preciso a não ser que queiramos ter melhor resolução espacial.
-    - Filtros espaciais (ICA, CSP) por vezes usados no pré-processamento (retirar ruído) e na análise de ERPs, 
-      funcionam melhor com um maior número de elétrodos por isso não é má ideia considerarmos isto 
-
-    - A placa sintética serve para fazer testes e usa sinais simulados na biblioteca
-    '''
-    if(_id == "cyton"):
-        board_id = BoardIds.CYTON_BOARD
-        isCyton = True 
-    elif(_id == "daisy"):
-        board_id = BoardIds.CYTON_DAISY_BOARD 
-        isCyton = True
-    elif(_id == "test"):
-        board_id = BoardIds.SYNTHETIC_BOARD
-        isCyton = False
-    return board_id, isCyton
-
-def cyton_channels_sep(channel_string):
-
-    # Separação da string de elétrodos nas strings individuais correspondentes a cada elétrodo 
-
-    individual_chs = channel_string.split(',')
-    return individual_chs
+BoardShim.enable_dev_board_logger()
+logging.basicConfig(level=logging.DEBUG) # Ativa as mensagens log do brainflow para fazer debug
+params = BrainFlowInputParams()
+params.serial_port = 'COM7' # Porta COM do BT dongle no PC
+channel_labels = ['C3','CP3','P3','P7','O1','Fz','FCz','Cz','CPz','Pz','Oz','C4','CP4','P4','P8','O2']
 
 def main():
     BoardShim.enable_dev_board_logger()
     logging.basicConfig(level=logging.DEBUG) # Ativa as mensagens log do brainflow para fazer debug
 
     parser = argparse.ArgumentParser() # Permite definir os parâmetros através da consola sem ser necessário ter o editor aberto
-    parser.add_argument('--eeg', type=str, # Este é o único parâmetro necessário colocar para testar (SYNTHETIC_BOARD)
-                        help='EEG headband, check docs to get a list of supported boards: https://brainflow.readthedocs.io/en/stable/SupportedBoards.html#supported-boards-label',
+    parser.add_argument('--subject', type=int, # Este é o único parâmetro necessário colocar para testar (SYNTHETIC_BOARD)
+                        help='Subjects code number',
                         required=True, default='')
-    parser.add_argument('--channels', type=cyton_channels_sep,
-                        help='Headbad channels that will be used. For example, write in order and seperated by a comma from pins NP1 to NP8: [Fp1, Fp2,...]',
-                        required=False, default='')
-    parser.add_argument('--serial-port', type=str, help='Serial port', required=False, default='')
+    parser.add_argument('--age', type=int,
+                        help='Subjects Age',
+                        required=True, default='')
+    parser.add_argument('--gender', type=str, help='Subjects gender', required=True, default='')
     args = parser.parse_args()
-
-    params = BrainFlowInputParams()
-    params.serial_port = args.serial_port 
     
-    '''
-    O serial port (no caso da cyton e daisy) é o único parâmetro necessário colocar diretamente como argumento
-    para inicializar a board com as predefinições do brainflow. Os outros dois são usados à parte 
-    '''
     try:  
-        board_id, isCyton = eeg_systemId(args.eeg)
-        if (isCyton):
-            cyton_ch = args.channels
-        else:
-            cyton_ch = ""
         print("\nBoard description: \n")
-        print(BoardShim.get_board_descr(board_id,0))
-        print("\n")
+        print(BoardShim.get_board_descr(board_id))
         board = BoardShim(board_id, params) # Inicialização da board
         board.prepare_session()
+        board.config_board('/2') # Ativar leitura analógica (Fotoresisência no pino D12). Cyton board ASCII commands: https://docs.openbci.com/Cyton/CytonSDK/
         board.start_stream(450000) # O parâmetro corresponde ao tamanho do Buffer. O valor é o default do brainflow
-        eeg_channels = BoardShim.get_eeg_channels(board_id) # O brainflow adquire dados de 24 colunas (no caso da cyton) mas apenas 8 delas correspondem aos dados do EEG
+        
+        eeg_channels = BoardShim.get_eeg_channels(board_id) # O brainflow adquire dados de várias coisas correspondentes a cada coluna de dados mas apenas 8/16 delas correspondem aos dados do EEG
         sampling_rate = BoardShim.get_sampling_rate(board_id)
+        eeg_channels = eeg_channels[0:len(channel_labels)]
+        
+        data = np.zeros((sampling_rate, len(eeg_channels)))
+        ldr = np.zeros((sampling_rate,1))
 
-        if(len(cyton_ch) > 1): 
-            # Caso os nomes dos elétrodos sejam inseridos como parâmetro, os mesmos são guardados numa variável
-            channel_labels = cyton_ch
-            eeg_channels = eeg_channels[0:len(channel_labels)]
-        else:
-            # Caso não sejam inseridos, os nomes dos elétrodos predifinidos no brainflow para a placa escolhida serão usados para não dar erro
-            channel_labels = BoardShim.get_eeg_names(board_id)
+        file_name = 'S' + str(args.subject) + '_' + str(args.age) + '_' + args.gender + '.csv'
 
-        # Variável com os dados da placa. 
-        # O parâmetro define a quantidade de amostras a retirar do buffer. Neste caso retira as amostras de 1s 
         while(True):
-            data = board.get_current_board_data(sampling_rate)
-            print("\n")
-            print(data[eeg_channels]) 
-            if keyboard.is_pressed('0'): # Clicar no 0 para parar o stream.
-                stopStream(board)
-                break
+            # Variável com os dados da placa. 
+            # O parâmetro define a quantidade de amostras a retirar do buffer. Neste caso retira as amostras de 1s 
+            data = board.get_board_data(sampling_rate) 
+            ldr = data[24] # Pino analógico D12.    
 
+            if np.size(ldr) > 0:
+                write_data = DataFilter.write_file(np.concatenate([data[eeg_channels],np.array([ldr])]), file_name, 'a')
+
+
+            if keyboard.is_pressed('esc'): # Clicar no esc para parar o stream.
+                stopStream(board)
 
     except BaseException:
         print("--------------------------------------------------------------------------------------------------------------------------")
         logging.warning('Exception', exc_info=True)
         print("--------------------------------------------------------------------------------------------------------------------------")
-        
-    finally:
-        logging.info('End')
-        if board.is_prepared():
-            stopStream(board)
 
+    finally:
+        stopStream(board)
+            
 def stopStream(board): # Termina a sessão corretamente
-    logging.info('Releasing session')
-    board.release_session()
+    logging.info('End')
+    if board.is_prepared():
+        logging.info('Releasing session')
+        board.release_session()  
+
 
 if __name__ == '__main__':
     main()

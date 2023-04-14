@@ -7,9 +7,9 @@
     <Param val="auto" valType="str" updates="None" name="Data file delimiter"/>
     <Param val="u'data/%s_%s_%s' % (expInfo['participant'], expName, expInfo['date'])" valType="code" updates="None" name="Data filename"/>
     <Param val="True" valType="bool" updates="None" name="Enable Escape"/>
-    <Param val="{'participant':'f&quot;{randint(0, 999999):06.0f}&quot;', 'session':'001'}" valType="code" updates="None" name="Experiment info"/>
+    <Param val="{'participant': 'f&quot;{randint(0, 999999):06.0f}&quot;', 'session': '001', 'age': '', 'gender': ''}" valType="code" updates="None" name="Experiment info"/>
     <Param val="True" valType="bool" updates="None" name="Force stereo"/>
-    <Param val="True" valType="bool" updates="None" name="Full-screen window"/>
+    <Param val="False" valType="bool" updates="None" name="Full-screen window"/>
     <Param val="" valType="str" updates="None" name="HTML path"/>
     <Param val="" valType="str" updates="None" name="Incomplete URL"/>
     <Param val="testMonitor" valType="str" updates="None" name="Monitor"/>
@@ -27,7 +27,7 @@
     <Param val="" valType="str" updates="None" name="Use version"/>
     <Param val="[1280, 720]" valType="list" updates="None" name="Window size (pixels)"/>
     <Param val="avg" valType="str" updates="None" name="blendMode"/>
-    <Param val="$[0,0,0]" valType="color" updates="None" name="color"/>
+    <Param val="-1.0000, -1.0000, -1.0000" valType="color" updates="None" name="color"/>
     <Param val="rgb" valType="str" updates="None" name="colorSpace"/>
     <Param val="100.1.1.1" valType="str" updates="None" name="elAddress"/>
     <Param val="FILTER_LEVEL_2" valType="str" updates="None" name="elDataFiltering"/>
@@ -46,7 +46,7 @@
     <Param val="4242" valType="num" updates="None" name="gpPort"/>
     <Param val="ioHub" valType="str" updates="None" name="keyboardBackend"/>
     <Param val="exp" valType="code" updates="None" name="logging level"/>
-    <Param val="MIDDLE_BUTTON" valType="list" updates="None" name="mgBlink"/>
+    <Param val="('MIDDLE_BUTTON',)" valType="list" updates="None" name="mgBlink"/>
     <Param val="CONTINUOUS" valType="str" updates="None" name="mgMove"/>
     <Param val="0.5" valType="num" updates="None" name="mgSaccade"/>
     <Param val="0.6" valType="num" updates="None" name="plConfidenceThreshold"/>
@@ -64,19 +64,19 @@
   </Settings>
   <Routines>
     <Routine name="trial">
-      <ImageComponent name="image">
+      <ImageComponent name="trialImage">
         <Param val="center" valType="str" updates="constant" name="anchor"/>
         <Param val="$[1,1,1]" valType="color" updates="constant" name="color"/>
         <Param val="rgb" valType="str" updates="constant" name="colorSpace"/>
         <Param val="1" valType="num" updates="constant" name="contrast"/>
         <Param val="False" valType="bool" updates="None" name="disabled"/>
         <Param val="" valType="code" updates="None" name="durationEstim"/>
-        <Param val="False" valType="bool" updates="constant" name="flipHoriz"/>
-        <Param val="False" valType="bool" updates="constant" name="flipVert"/>
-        <Param val="$stimulus_time" valType="file" updates="set every repeat" name="image"/>
+        <Param val="True" valType="bool" updates="constant" name="flipHoriz"/>
+        <Param val="True" valType="bool" updates="constant" name="flipVert"/>
+        <Param val="$image" valType="file" updates="set every repeat" name="image"/>
         <Param val="linear" valType="str" updates="constant" name="interpolate"/>
         <Param val="" valType="str" updates="constant" name="mask"/>
-        <Param val="image" valType="code" updates="None" name="name"/>
+        <Param val="trialImage" valType="code" updates="None" name="name"/>
         <Param val="" valType="num" updates="constant" name="opacity"/>
         <Param val="0" valType="num" updates="constant" name="ori"/>
         <Param val="(0, 0)" valType="list" updates="constant" name="pos"/>
@@ -91,6 +91,33 @@
         <Param val="128" valType="num" updates="constant" name="texture resolution"/>
         <Param val="from exp settings" valType="str" updates="None" name="units"/>
       </ImageComponent>
+      <PolygonComponent name="polygon">
+        <Param val="bottom-left" valType="str" updates="constant" name="anchor"/>
+        <Param val="rgb" valType="str" updates="constant" name="colorSpace"/>
+        <Param val="1" valType="num" updates="constant" name="contrast"/>
+        <Param val="False" valType="bool" updates="None" name="disabled"/>
+        <Param val="" valType="code" updates="None" name="durationEstim"/>
+        <Param val="white" valType="color" updates="constant" name="fillColor"/>
+        <Param val="linear" valType="str" updates="constant" name="interpolate"/>
+        <Param val="white" valType="color" updates="constant" name="lineColor"/>
+        <Param val="1" valType="num" updates="constant" name="lineWidth"/>
+        <Param val="4" valType="int" updates="constant" name="nVertices"/>
+        <Param val="polygon" valType="code" updates="None" name="name"/>
+        <Param val="" valType="num" updates="constant" name="opacity"/>
+        <Param val="0" valType="num" updates="constant" name="ori"/>
+        <Param val="(-0.9, -0.5)" valType="list" updates="constant" name="pos"/>
+        <Param val="True" valType="bool" updates="None" name="saveStartStop"/>
+        <Param val="rectangle" valType="str" updates="None" name="shape"/>
+        <Param val="(0.1, 0.1)" valType="list" updates="constant" name="size"/>
+        <Param val="" valType="code" updates="None" name="startEstim"/>
+        <Param val="time (s)" valType="str" updates="None" name="startType"/>
+        <Param val="0.0" valType="code" updates="None" name="startVal"/>
+        <Param val="duration (s)" valType="str" updates="None" name="stopType"/>
+        <Param val="0.5" valType="code" updates="constant" name="stopVal"/>
+        <Param val="True" valType="bool" updates="None" name="syncScreenRefresh"/>
+        <Param val="from exp settings" valType="str" updates="None" name="units"/>
+        <Param val="" valType="list" updates="constant" name="vertices"/>
+      </PolygonComponent>
     </Routine>
     <Routine name="WelcomeScreen">
       <TextComponent name="welcome_text">
@@ -141,7 +168,7 @@
         <Param val="duration (s)" valType="str" updates="None" name="stopType"/>
         <Param val="" valType="code" updates="constant" name="stopVal"/>
         <Param val="True" valType="bool" updates="None" name="syncScreenRefresh"/>
-        <Param val="Pay attention to the images with minimal head movements if possible.&amp;#10;&amp;#10;Mentally count each instance of an image of Kelly from the Office.&amp;#10;&amp;#10;Press SPACEBAR when you are ready. " valType="str" updates="constant" name="text"/>
+        <Param val="Pay attention to the images with minimal head movements if possible.&amp;#10;&amp;#10;Mentally count each instance of an image of Daniel Radcliffe (Harry Potter)&amp;#10;&amp;#10;Press SPACEBAR when you are ready to start the Experiment." valType="str" updates="constant" name="text"/>
         <Param val="from exp settings" valType="str" updates="None" name="units"/>
         <Param val="" valType="num" updates="constant" name="wrapWidth"/>
       </TextComponent>
@@ -352,12 +379,76 @@
         <Param val="A" valType="str" updates="constant" name="sound"/>
         <Param val="" valType="code" updates="None" name="startEstim"/>
         <Param val="time (s)" valType="str" updates="None" name="startType"/>
-        <Param val="15" valType="code" updates="None" name="startVal"/>
+        <Param val="14.4" valType="code" updates="None" name="startVal"/>
         <Param val="duration (s)" valType="str" updates="None" name="stopType"/>
         <Param val="0.5" valType="code" updates="constant" name="stopVal"/>
         <Param val="True" valType="bool" updates="constant" name="syncScreenRefresh"/>
         <Param val="1" valType="num" updates="constant" name="volume"/>
       </SoundComponent>
+    </Routine>
+    <Routine name="codingTrials">
+      <CodeComponent name="code">
+        <Param val="import pandas as pd&amp;#10;import random&amp;#10;&amp;#10;file_path = 'C:/Users/migue/OneDrive/Ambiente de Trabalho/IEEE project/EEG-Situ_VS_EEG-fMRI/stims.xlsx'&amp;#10;&amp;#10;" valType="extendedCode" updates="constant" name="Before Experiment"/>
+        <Param val="/* Syntax Error: Fix Python code */" valType="extendedCode" updates="constant" name="Before JS Experiment"/>
+        <Param val="imgs_file = pd.read_excel(file_path)&amp;#10;&amp;#10;permutation = np.random.permutation(imgs_file.index)&amp;#10;shuffled_df = imgs_file.loc[permutation]&amp;#10;&amp;#10;img = shuffled_df['image'].values&amp;#10;" valType="extendedCode" updates="constant" name="Begin Experiment"/>
+        <Param val="" valType="extendedCode" updates="constant" name="Begin JS Experiment"/>
+        <Param val="" valType="extendedCode" updates="constant" name="Begin JS Routine"/>
+        <Param val="" valType="extendedCode" updates="constant" name="Begin Routine"/>
+        <Param val="Py" valType="str" updates="None" name="Code Type"/>
+        <Param val="" valType="extendedCode" updates="constant" name="Each Frame"/>
+        <Param val="" valType="extendedCode" updates="constant" name="Each JS Frame"/>
+        <Param val="" valType="extendedCode" updates="constant" name="End Experiment"/>
+        <Param val="" valType="extendedCode" updates="constant" name="End JS Experiment"/>
+        <Param val="" valType="extendedCode" updates="constant" name="End JS Routine"/>
+        <Param val="" valType="extendedCode" updates="constant" name="End Routine"/>
+        <Param val="False" valType="bool" updates="None" name="disabled"/>
+        <Param val="code" valType="code" updates="None" name="name"/>
+      </CodeComponent>
+    </Routine>
+    <Routine name="conditionScreen">
+      <TextComponent name="conditionTxt">
+        <Param val="white" valType="color" updates="constant" name="color"/>
+        <Param val="rgb" valType="str" updates="constant" name="colorSpace"/>
+        <Param val="1" valType="num" updates="constant" name="contrast"/>
+        <Param val="False" valType="bool" updates="None" name="disabled"/>
+        <Param val="" valType="code" updates="None" name="durationEstim"/>
+        <Param val="None" valType="str" updates="constant" name="flip"/>
+        <Param val="Open Sans" valType="str" updates="constant" name="font"/>
+        <Param val="LTR" valType="str" updates="None" name="languageStyle"/>
+        <Param val="0.05" valType="num" updates="constant" name="letterHeight"/>
+        <Param val="conditionTxt" valType="code" updates="None" name="name"/>
+        <Param val="" valType="num" updates="constant" name="opacity"/>
+        <Param val="0" valType="num" updates="constant" name="ori"/>
+        <Param val="(0, 0)" valType="list" updates="constant" name="pos"/>
+        <Param val="True" valType="bool" updates="None" name="saveStartStop"/>
+        <Param val="" valType="code" updates="None" name="startEstim"/>
+        <Param val="time (s)" valType="str" updates="None" name="startType"/>
+        <Param val="0.0" valType="code" updates="None" name="startVal"/>
+        <Param val="duration (s)" valType="str" updates="None" name="stopType"/>
+        <Param val="" valType="code" updates="constant" name="stopVal"/>
+        <Param val="True" valType="bool" updates="None" name="syncScreenRefresh"/>
+        <Param val="Press the SPACEBAR when you are ready to initiate the next condition trial!" valType="str" updates="constant" name="text"/>
+        <Param val="from exp settings" valType="str" updates="None" name="units"/>
+        <Param val="" valType="num" updates="constant" name="wrapWidth"/>
+      </TextComponent>
+      <KeyboardComponent name="new_conditionblock">
+        <Param val="'space'" valType="list" updates="set every repeat" name="allowedKeys"/>
+        <Param val="" valType="str" updates="constant" name="correctAns"/>
+        <Param val="False" valType="bool" updates="None" name="disabled"/>
+        <Param val="True" valType="bool" updates="constant" name="discard previous"/>
+        <Param val="" valType="code" updates="None" name="durationEstim"/>
+        <Param val="True" valType="bool" updates="constant" name="forceEndRoutine"/>
+        <Param val="new_conditionblock" valType="code" updates="None" name="name"/>
+        <Param val="True" valType="bool" updates="None" name="saveStartStop"/>
+        <Param val="" valType="code" updates="None" name="startEstim"/>
+        <Param val="time (s)" valType="str" updates="None" name="startType"/>
+        <Param val="0.0" valType="code" updates="None" name="startVal"/>
+        <Param val="duration (s)" valType="str" updates="None" name="stopType"/>
+        <Param val="" valType="code" updates="constant" name="stopVal"/>
+        <Param val="last key" valType="str" updates="constant" name="store"/>
+        <Param val="False" valType="bool" updates="constant" name="storeCorrect"/>
+        <Param val="True" valType="bool" updates="constant" name="syncScreenRefresh"/>
+      </KeyboardComponent>
     </Routine>
   </Routines>
   <Flow>
@@ -366,6 +457,7 @@
     <Routine name="eyeScreen"/>
     <Routine name="jawClenching"/>
     <Routine name="closedEyes"/>
+    <Routine name="codingTrials"/>
     <LoopInitiator loopType="TrialHandler" name="trial_block">
       <Param name="Selected rows" updates="None" val="" valType="str"/>
       <Param name="conditions" updates="None" val="None" valType="str"/>
@@ -373,23 +465,23 @@
       <Param name="endPoints" updates="None" val="[0, 1]" valType="num"/>
       <Param name="isTrials" updates="None" val="False" valType="bool"/>
       <Param name="loopType" updates="None" val="random" valType="str"/>
-      <Param name="nReps" updates="None" val="3" valType="num"/>
+      <Param name="nReps" updates="None" val="12" valType="num"/>
       <Param name="name" updates="None" val="trial_block" valType="code"/>
       <Param name="random seed" updates="None" val="" valType="code"/>
     </LoopInitiator>
     <LoopInitiator loopType="TrialHandler" name="trials">
       <Param name="Selected rows" updates="None" val="" valType="str"/>
-      <Param name="conditions" updates="None" val="[{'StimulusTime': 'Dataset/httpabsolumentgratuitfreefrimagesbenaffleckjpg.jpg'}, {'StimulusTime': 'Dataset/httpafilesbiographycomimageuploadcfillcssrgbdprgfacehqwMTENDgMDUODczNDcNTcjpg.jpg'}, {'StimulusTime': 'Dataset/httpafilesbiographycomimageuploadcfillcssrgbdprgfacehqwMTEODAOTcxNjcMjczMjkzjpg.jpg'}, {'StimulusTime': 'Dataset/httpafilesbiographycomimageuploadcfillcssrgbdprgfacehqwMTIOTcwODQNTUzNjQMzcjpg.jpg'}, {'StimulusTime': 'Dataset/httpafilesbiographycomimageuploadcfillcssrgbdprgfacehqwMTIwNjANjMMDINzIxNjcjpg.jpg'}, {'StimulusTime': 'Dataset/httpassetsrollingstonecomassetsarticlemadonnadavidbowiechangedthecourseofmylifeforeversmallsquarexmadonnabowiejpg.jpg'}, {'StimulusTime': 'Dataset/httpassetsrollingstonecomassetsimagesalbumreviewaffaceabdcccaeedjpg.jpg'}, {'StimulusTime': 'Dataset/httpaurorasblogcomwpcontentuploadsjerryseinfeldpublicityshotjpg.jpg'}, {'StimulusTime': 'Dataset/httpblognjcomentertainmentimpactcelebritiesmediumjerrybjpg.jpg'}, {'StimulusTime': 'Dataset/httpbpblogspotcomedLMjVpRGkSWexgsXjkNIAAAAAAAADWgFFtAUqBlhAsjpg.jpg'}, {'StimulusTime': 'Dataset/httpcdncdnjustjaredcomwpcontentuploadsheadlineseltonjohnemmysperformancewatchnowjpg.jpg'}, {'StimulusTime': 'Dataset/httpcdncdnjustjaredcomwpcontentuploadsheadlineseltonjohnstillstandingbrooklynnewyearsjpg.jpg'}, {'StimulusTime': 'Dataset/httpcdncdnjustjaredcomwpcontentuploadsheadlineseltonjohnsupportsbrucejennerstransitiontowomanjpg.jpg'}, {'StimulusTime': 'Dataset/httpcdncdnjustjaredcomwpcontentuploadsheadlinesjerryseinfeldmakesbrianwilliamsjokejpg.jpg'}, {'StimulusTime': 'Dataset/httpcdncdnjustjaredcomwpcontentuploadsheadlinesmadonnatalksparisattackstearsjpg.jpg'}, {'StimulusTime': 'Dataset/httpcdncdnjustjaredcomwpcontentuploadsheadlinesmindykalingcomedypilotjpg.jpg'}, {'StimulusTime': 'Dataset/httpcdnfuncheapcomwpcontentuploadsVOGUEjpg.jpg'}, {'StimulusTime': 'Dataset/httpcdnlyricssongonlyricsnetwpcontentuploadsEltonJohnDiscographyCDreleasesjpg.jpg'}, {'StimulusTime': 'Dataset/httpcdnpastemagazinecomwwwarticlesmindykalingndbookjpg.jpg'}, {'StimulusTime': 'Dataset/httpcdnpastemagazinecomwwwarticlesmindyprojectjpg.jpg'}, {'StimulusTime': 'Dataset/httpcdnssninsidercomwpcontentuploadsjerryseinfeldxjpg.jpg'}, {'StimulusTime': 'Dataset/httpcsvkmeuaafdfjpg.jpg'}, {'StimulusTime': 'Dataset/httpcsvkmeuadecafjpg.jpg'}, {'StimulusTime': 'Dataset/httpcsvkmeuaeccjpg.jpg'}, {'StimulusTime': 'Dataset/httpdbrbzkkbdsdcloudfrontnetwpcontentuploadsMindyKalingjpg.jpg'}, {'StimulusTime': 'Dataset/httpecximagesamazoncomimagesIfmaBKWLACULSRjpg.jpg'}, {'StimulusTime': 'Dataset/httpftqncomymusicLxZeltonjohnjpg.jpg'}, {'StimulusTime': 'Dataset/httpgonetworthcomwpcontentuploadsthumbsjpg.jpg'}, {'StimulusTime': 'Dataset/httpgraphicsnytimescomimagesmagazinekalingkalingarticleInlinejpg.jpg'}, {'StimulusTime': 'Dataset/httpgraphicsnytimescomimagessectionmoviesfilmographyWireImagejpg.jpg'}, {'StimulusTime': 'Dataset/httpiamediaimdbcomimagesMMVBMTANDQNTAxNDVeQTJeQWpwZBbWUMDIMjQOTYVUXCRALjpg.jpg'}, {'StimulusTime': 'Dataset/httpiamediaimdbcomimagesMMVBMTAxNDUMzUwOTdeQTJeQWpwZBbWUMDUOTAyNTIVUXCRALjpg.jpg'}, {'StimulusTime': 'Dataset/httpikinjaimgcomgawkermediaimageuploadsWmIuhdsrcedidjpgjpg.jpg'}, {'StimulusTime': 'Dataset/httpimagegaladevcmseamadonnaprivatdetektivsquaretopsquarejpgv.jpg'}, {'StimulusTime': 'Dataset/httpimagescontactmusiccomnewsimagesjerryseinfeldjpg.jpg'}, {'StimulusTime': 'Dataset/httpimagesfandangocomrImageRendererredesignstaticimgnoxportraitjpgpcpcpcimagesmasterrepositoryperformerimagespjpg.jpg'}, {'StimulusTime': 'Dataset/httpimagesmtvcomurimgidfiledocrootvhcomsitewideflipbooksimgdailyjpgenlargefalsemattetruematteColorblackquality.jpg'}, {'StimulusTime': 'Dataset/httpimagesnymagcomimagesdailymindykalingxjpg.jpg'}, {'StimulusTime': 'Dataset/httpimagesrottentomatoescomimagesspotlightsnewsjerryseinfeldjpg.jpg'}, {'StimulusTime': 'Dataset/httpimgclosermagfrvarclosermagstorageimagesactupeoplebiodestarsmadonnamadonnafreFRmadonnaexactxljpg.jpg'}, {'StimulusTime': 'Dataset/httpimggalpmdstaticnetfithttpAFFwwwEgalaEfrFvarFgalFstorageFimagesFmediaFmultiuploaddufevrierFeltonjohnFfreFRFeltonjohnEjpgxqualityeltonjohnjpg.jpg'}, {'StimulusTime': 'Dataset/httpimgthedrumcomsfspublicnewstmpjerryseinfeldjpg.jpg'}, {'StimulusTime': 'Dataset/httpimgtimeincnetpeopleinewsjerryseinfeldjpg.jpg'}, {'StimulusTime': 'Dataset/httpmediacacheecpinimgcomxffeffbcefjpg.jpg'}, {'StimulusTime': 'Dataset/httpmediaonsugarcomfilesbabaaaaaMindyInterviewxxxlargejpg.jpg'}, {'StimulusTime': 'Dataset/httpmediapopsugarassetscomfilescbffewltonjpg.jpg'}, {'StimulusTime': 'Dataset/httpmediapopsugarassetscomfilesusersxlargejpg.jpg'}, {'StimulusTime': 'Dataset/httpmediavoguecomrwblondesdarkbrowsmadonnajpg.jpg'}, {'StimulusTime': 'Dataset/httppfodcompchannelslegacyprofilejerryseinfeldpodcastjpg.jpg'}, {'StimulusTime': 'Dataset/httppixelnymagcomimgsfashiondailymindykalingwhjpg.jpg'}, {'StimulusTime': 'Dataset/httpresizeparismatchladmediafrrffffffcentermiddleimgvarnewsstorageimagesparismatchpeopleazmadonnafreFRMadonnajpg.jpg'}, {'StimulusTime': 'Dataset/httpsamazonawscomkidzworldphotoimagesbccdddaaadgallerymindykalinggalleryjpg.jpg'}, {'StimulusTime': 'Dataset/httpsdfrpwlycscloudfrontnetdeltonjohnjpg.jpg'}, {'StimulusTime': 'Dataset/httpsimagesnasslimagesamazoncomimagesIAQdwKvFILUXjpg.jpg'}, {'StimulusTime': 'Dataset/httpsimgbuzzfeedcombuzzfeedstaticstaticcampaignimageswebdradorableetsyitemsallmindykalingfansneedbigjpg.jpg'}, {'StimulusTime': 'Dataset/httpsmedialivenationcomartiststapjpg.jpg'}, {'StimulusTime': 'Dataset/httpspmctvlinefileswordpresscomeltonjohnjpg.jpg'}, {'StimulusTime': 'Dataset/httpsrobertaccetturacomwpcontentuploadsjerryseinfeldheadshotjpg.jpg'}, {'StimulusTime': 'Dataset/httpssmediacacheakpinimgcomxaaeaaeecccaedfebdbjpg.jpg'}, {'StimulusTime': 'Dataset/httpssmediacacheakpinimgcomxafafedebcbjpg.jpg'}, {'StimulusTime': 'Dataset/httpssmediacacheakpinimgcomxafaffbbbbdbcbdddjpg.jpg'}, {'StimulusTime': 'Dataset/httpssmediacacheakpinimgcomxbabafeacbaaacabffjpg.jpg'}, {'StimulusTime': 'Dataset/httpssmediacacheakpinimgcomxbbfcbdedfbfdbjpg.jpg'}, {'StimulusTime': 'Dataset/httpssmediacacheakpinimgcomxcccccddbbfedabjpg.jpg'}, {'StimulusTime': 'Dataset/httpssmediacacheakpinimgcomxccccdabeaadjpg.jpg'}, {'StimulusTime': 'Dataset/httpssmediacacheakpinimgcomxdbbdbbbececacdecdcdfjpg.jpg'}, {'StimulusTime': 'Dataset/httpssmediacacheakpinimgcomxdcfdcfedfaedadjpg.jpg'}, {'StimulusTime': 'Dataset/httpssmediacacheakpinimgcomxdfdfadcfeabjpg.jpg'}, {'StimulusTime': 'Dataset/httpssmediacacheakpinimgcomxedaedabcbefbcbabbjpg.jpg'}, {'StimulusTime': 'Dataset/httpssmediacacheakpinimgcomxededbebccdajpg.jpg'}, {'StimulusTime': 'Dataset/httpssmediacacheakpinimgcomxeebdfdbaaajpg.jpg'}, {'StimulusTime': 'Dataset/httpssmediacacheakpinimgcomxeedccadejpg.jpg'}, {'StimulusTime': 'Dataset/httpssmediacacheakpinimgcomxeeedcacddeccccacfjpg.jpg'}, {'StimulusTime': 'Dataset/httpssmediacacheakpinimgcomxfcfcbaeaeddabbjpg.jpg'}, {'StimulusTime': 'Dataset/httpssmediacacheakpinimgcomxfecfecaefaadfebejpg.jpg'}, {'StimulusTime': 'Dataset/httpssmediacacheakpinimgcomxfeebfdccajpg.jpg'}, {'StimulusTime': 'Dataset/httpssmediacacheakpinimgcomxfefdacfbfdeadajpg.jpg'}, {'StimulusTime': 'Dataset/httpssmediacacheakpinimgcomxffabffabbbcfbceaedjpg.jpg'}, {'StimulusTime': 'Dataset/httpssmediacacheakpinimgcomxffeabacaaejpg.jpg'}, {'StimulusTime': 'Dataset/httpssmediacacheakpinimgcomxffecfafddjpg.jpg'}, {'StimulusTime': 'Dataset/httpssvagalumecommadonnaimagesmadonnajpg.jpg'}, {'StimulusTime': 'Dataset/httpstatictherichestimagescomcdncwpcontentuploadsJerrySeinfeldjpg.jpg'}, {'StimulusTime': 'Dataset/httpsticketmnettmenusdamabbacdaebeafdbbCUSTOMjpg.jpg'}, {'StimulusTime': 'Dataset/httpsticketmnettmenusdbimagesajpg.jpg'}, {'StimulusTime': 'Dataset/httpsuploadwikimediaorgwikipediacommonsMadonnathAnnualGoldenGlobesAwardscroppedjpg.jpg'}, {'StimulusTime': 'Dataset/httpsuploadwikimediaorgwikipediacommonsthumbaaMadonnaatthepremiereofIAmBecauseWeArejpgpxMadonnaatthepremiereofIAmBecauseWeArejpg.jpg'}, {'StimulusTime': 'Dataset/httpsuploadwikimediaorgwikipediacommonsthumbbJerrySeinfeldjpgpxJerrySeinfeldjpg.jpg'}, {'StimulusTime': 'Dataset/httpsuploadwikimediaorgwikipediacommonsthumbddBenAffleckbyGageSkidmorejpgpxBenAffleckbyGageSkidmorejpg.jpg'}, {'StimulusTime': 'Dataset/httpsuploadwikimediaorgwikipediacommonsthumbEltonJohninsjpgpxEltonJohninsjpg.jpg'}, {'StimulusTime': 'Dataset/httpsuploadwikimediaorgwikipediacommonsthumbMindyBKalingBPaleyFestBNewBYorkBBMindyBIqZgUWvbljpgpxMindyBKalingBPaleyFestBNewBYorkBBMindyBIqZgUWvbljpg.jpg'}, {'StimulusTime': 'Dataset/httpsuswestamazonawscomblogsprodmediausuploadsJerrySeinfeldkidsxjpg.jpg'}, {'StimulusTime': 'Dataset/httpswwwticketscomuploadsartistsjerryseinfeldbilletsjpg.jpg'}, {'StimulusTime': 'Dataset/httptrwebimgacstanetcxbdddmediasnmediajpg.jpg'}, {'StimulusTime': 'Dataset/httpuploadwikimediaorgwikipediacommonsthumbaMadonnaRotterdamjpgpxMadonnaRotterdamjpg.jpg'}, {'StimulusTime': 'Dataset/httpwwwaceshowbizcomimagesphotobenaffleckjpg.jpg'}, {'StimulusTime': 'Dataset/httpwwwadweekcomfilesimagecachenodeinlinemindykalingprofilehedjpg.jpg'}, {'StimulusTime': 'Dataset/httpwwwallposterscomimagesPostersPFjpg.jpg'}, {'StimulusTime': 'Dataset/httpwwwbeastiemaniacomwhoismadonnamadonnajpg.jpg'}, {'StimulusTime': 'Dataset/httpwwwblackdogfilmscomwordpresswpcontentuploadsmadonnacelebrationxjpg.jpg'}, {'StimulusTime': 'Dataset/httpwwwbooksforbetterlivingcomwpcontentuploadsMindyKalingAuthorPhotojpg.jpg'}, {'StimulusTime': 'Dataset/httpwwwdeadlinecomvimgnetwpcontentuploadseltonjpg.jpg'}, {'StimulusTime': 'Dataset/httpwwweonlinecomeolimagesEntireSiteregKalingCancermhjpg.jpg'}, {'StimulusTime': 'Dataset/httpwwweonlinecomresizewwweonlinecomeolimagesEntireSitersxEltonJohnJRjpg.jpg'}, {'StimulusTime': 'Dataset/httpwwweonlinecomresizewwweonlinecomeolimagesEntireSitersxjerryseinfeldjulialouisdreyfusjwjpg.jpg'}, {'StimulusTime': 'Dataset/httpwwwetonlinecomphotomadonnabdayjpg.jpg'}, {'StimulusTime': 'Dataset/httpwwwfilmscoopitcgibinattoriBENAFFLECKBENAFFLECKjpg.jpg'}, {'StimulusTime': 'Dataset/httpwwwhillsindcomstorebenjpg.jpg'}, {'StimulusTime': 'Dataset/httpwwwimpropercomimagesuploadsusercontentimagesSoroffMindyjpg.jpg'}, {'StimulusTime': 'Dataset/httpwwwjohnpauljonesarenacomeventimagesEltonCalendarVjpg.jpg'}, {'StimulusTime': 'Dataset/httpwwwlautdeEltonJohneltonjohnjpg.jpg'}, {'StimulusTime': 'Dataset/httpwwwnndbcompeoplejerryseinfeldaujpg.jpg'}, {'StimulusTime': 'Dataset/httpwwwpictureszimbiocomfpMindyKalingfBgaONVFDFmjpg.jpg'}, {'StimulusTime': 'Dataset/httpwwwpictureszimbiocomgiMindyKalingLkvEhTwDeJmjpg.jpg'}, {'StimulusTime': 'Dataset/httpwwwpictureszimbiocomgpJerrySeinfeldJessicaSeinfeldmarriedBczSipMdNMQljpg.jpg'}, {'StimulusTime': 'Dataset/httpwwwpsychiatrictimescomsitesdefaultfilesimagesmediaPTMofficSeinfeldjpg.jpg'}, {'StimulusTime': 'Dataset/httpwwwrumenewscomwpcontentuploadsbenafflekxpng.jpg'}, {'StimulusTime': 'Dataset/httpwwwslatecomcontentdamslateblogsbrowbeatseinfeldjpgCROParticlemediumjpg.jpg'}, {'StimulusTime': 'Dataset/httpwwwwatchidcomsitesdefaultfilesuploadsightingBreitlingwatchJerrySeinfeldjpg.jpg'}]" valType="str"/>
+      <Param name="conditions" updates="None" val="[{'image': 'Celebs/14_Emma_Watson_0004.jpg', 'stimulus': 'non_target'}, {'image': 'Celebs/14_Emma_Watson_0005.jpg', 'stimulus': 'non_target'}, {'image': 'Celebs/14_Emma_Watson_0008.jpg', 'stimulus': 'non_target'}, {'image': 'Celebs/14_Emma_Watson_0013.jpg', 'stimulus': 'non_target'}, {'image': 'Celebs/14_Emma_Watson_0015.jpg', 'stimulus': 'non_target'}, {'image': 'Celebs/15_Margot_Robbie_0005.jpg', 'stimulus': 'non_target'}, {'image': 'Celebs/15_Margot_Robbie_0012.jpg', 'stimulus': 'non_target'}, {'image': 'Celebs/16_Emma_Stone_0008.jpg', 'stimulus': 'non_target'}, {'image': 'Celebs/16_Emma_Stone_0010.jpg', 'stimulus': 'non_target'}, {'image': 'Celebs/16_Emma_Stone_0012.jpg', 'stimulus': 'non_target'}, {'image': 'Celebs/16_Emma_Stone_0014.jpg', 'stimulus': 'non_target'}, {'image': 'Celebs/16_Margot_Robbie_0009.jpg', 'stimulus': 'non_target'}, {'image': 'Celebs/17_Daniel_Radcliffe_0007.jpg', 'stimulus': 'target'}, {'image': 'Celebs/17_Emma_Watson_0006.jpg', 'stimulus': 'non_target'}, {'image': 'Celebs/17_Margot_Robbie_0006.jpg', 'stimulus': 'non_target'}, {'image': 'Celebs/17_Margot_Robbie_0012.jpg', 'stimulus': 'non_target'}, {'image': 'Celebs/17_Margot_Robbie_0014.jpg', 'stimulus': 'non_target'}, {'image': 'Celebs/18_Daniel_Radcliffe_0002.jpg', 'stimulus': 'target'}, {'image': 'Celebs/18_Daniel_Radcliffe_0007.jpg', 'stimulus': 'target'}, {'image': 'Celebs/18_Daniel_Radcliffe_0008.jpg', 'stimulus': 'target'}, {'image': 'Celebs/18_Emma_Stone_0016.jpg', 'stimulus': 'non_target'}, {'image': 'Celebs/18_Emma_Watson_0004.jpg', 'stimulus': 'non_target'}, {'image': 'Celebs/19_Emma_Stone_0006.jpg', 'stimulus': 'non_target'}, {'image': 'Celebs/19_Margot_Robbie_0001.jpg', 'stimulus': 'non_target'}, {'image': 'Celebs/19_Margot_Robbie_0004.jpg', 'stimulus': 'non_target'}, {'image': 'Celebs/20_Emma_Stone_0005.jpg', 'stimulus': 'non_target'}, {'image': 'Celebs/20_Emma_Watson_0007.jpg', 'stimulus': 'non_target'}, {'image': 'Celebs/20_Margot_Robbie_0004.jpg', 'stimulus': 'non_target'}, {'image': 'Celebs/20_Margot_Robbie_0006.jpg', 'stimulus': 'non_target'}, {'image': 'Celebs/20_Scarlett_Johansson_0011.jpg', 'stimulus': 'non_target'}, {'image': 'Celebs/21_Daniel_Radcliffe_0002.jpg', 'stimulus': 'target'}, {'image': 'Celebs/21_Daniel_Radcliffe_0008.jpg', 'stimulus': 'target'}, {'image': 'Celebs/21_Daniel_Radcliffe_0009.jpg', 'stimulus': 'target'}, {'image': 'Celebs/21_Daniel_Radcliffe_0012.jpg', 'stimulus': 'target'}, {'image': 'Celebs/21_Emma_Stone_0002.jpg', 'stimulus': 'non_target'}, {'image': 'Celebs/21_Emma_Stone_0003.jpg', 'stimulus': 'non_target'}, {'image': 'Celebs/21_Emma_Watson_0004.jpg', 'stimulus': 'non_target'}, {'image': 'Celebs/21_Margot_Robbie_0003.jpg', 'stimulus': 'non_target'}, {'image': 'Celebs/21_Scarlett_Johansson_0007.jpg', 'stimulus': 'non_target'}, {'image': 'Celebs/22_Emma_Stone_0013.jpg', 'stimulus': 'non_target'}, {'image': 'Celebs/22_Emma_Watson_0001.jpg', 'stimulus': 'non_target'}, {'image': 'Celebs/22_Emma_Watson_0003.jpg', 'stimulus': 'non_target'}, {'image': 'Celebs/22_Emma_Watson_0010.jpg', 'stimulus': 'non_target'}, {'image': 'Celebs/22_Margot_Robbie_0010.jpg', 'stimulus': 'non_target'}, {'image': 'Celebs/22_Scarlett_Johansson_0005.jpg', 'stimulus': 'non_target'}, {'image': 'Celebs/23_Daniel_Radcliffe_0002.jpg', 'stimulus': 'target'}, {'image': 'Celebs/23_Daniel_Radcliffe_0010.jpg', 'stimulus': 'target'}, {'image': 'Celebs/23_Daniel_Radcliffe_0019.jpg', 'stimulus': 'target'}, {'image': 'Celebs/23_Emma_Stone_0014.jpg', 'stimulus': 'non_target'}, {'image': 'Celebs/24_Daniel_Radcliffe_0017.jpg', 'stimulus': 'target'}, {'image': 'Celebs/24_Emma_Stone_0015.jpg', 'stimulus': 'non_target'}, {'image': 'Celebs/24_Scarlett_Johansson_0001.jpg', 'stimulus': 'non_target'}, {'image': 'Celebs/24_Scarlett_Johansson_0011.jpg', 'stimulus': 'non_target'}, {'image': 'Celebs/25_Scarlett_Johansson_0010.jpg', 'stimulus': 'non_target'}, {'image': 'Celebs/26_Scarlett_Johansson_0003.jpg', 'stimulus': 'non_target'}, {'image': 'Celebs/26_Scarlett_Johansson_0008.jpg', 'stimulus': 'non_target'}, {'image': 'Celebs/27_Scarlett_Johansson_0012.jpg', 'stimulus': 'non_target'}, {'image': 'Celebs/28_Scarlett_Johansson_0005.jpg', 'stimulus': 'non_target'}, {'image': 'Celebs/29_Scarlett_Johansson_0010.jpg', 'stimulus': 'non_target'}, {'image': 'Celebs/29_Scarlett_Johansson_0016.jpg', 'stimulus': 'non_target'}, {'image': 'Celebs/31_Neil_Patrick_Harris_0008.jpg', 'stimulus': 'non_target'}, {'image': 'Celebs/32_Jim_Parsons_0010.jpg', 'stimulus': 'non_target'}, {'image': 'Celebs/32_Jim_Parsons_0016.jpg', 'stimulus': 'non_target'}, {'image': 'Celebs/32_Jim_Parsons_0018.jpg', 'stimulus': 'non_target'}, {'image': 'Celebs/33_Jim_Parsons_0011.jpg', 'stimulus': 'non_target'}, {'image': 'Celebs/33_Neil_Patrick_Harris_0011.jpg', 'stimulus': 'non_target'}, {'image': 'Celebs/34_Neil_Patrick_Harris_0004.jpg', 'stimulus': 'non_target'}, {'image': 'Celebs/34_Neil_Patrick_Harris_0007.jpg', 'stimulus': 'non_target'}, {'image': 'Celebs/35_Neil_Patrick_Harris_0009.jpg', 'stimulus': 'non_target'}, {'image': 'Celebs/36_Jim_Parsons_0011.jpg', 'stimulus': 'non_target'}, {'image': 'Celebs/36_Neil_Patrick_Harris_0007.jpg', 'stimulus': 'non_target'}, {'image': 'Celebs/36_Neil_Patrick_Harris_0010.jpg', 'stimulus': 'non_target'}, {'image': 'Celebs/37_Neil_Patrick_Harris_0010.jpg', 'stimulus': 'non_target'}, {'image': 'Celebs/37_Neil_Patrick_Harris_0014.jpg', 'stimulus': 'non_target'}, {'image': 'Celebs/37_Will_Smith_0015.jpg', 'stimulus': 'non_target'}, {'image': 'Celebs/38_Jim_Parsons_0003.jpg', 'stimulus': 'non_target'}, {'image': 'Celebs/38_Neil_Patrick_Harris_0006.jpg', 'stimulus': 'non_target'}, {'image': 'Celebs/38_Will_Smith_0013.jpg', 'stimulus': 'non_target'}, {'image': 'Celebs/39_Jim_Parsons_0001.jpg', 'stimulus': 'non_target'}, {'image': 'Celebs/39_Jim_Parsons_0004.jpg', 'stimulus': 'non_target'}, {'image': 'Celebs/39_Jim_Parsons_0008.jpg', 'stimulus': 'non_target'}, {'image': 'Celebs/39_Jim_Parsons_0010.jpg', 'stimulus': 'non_target'}, {'image': 'Celebs/39_Neil_Patrick_Harris_0001.jpg', 'stimulus': 'non_target'}, {'image': 'Celebs/39_Neil_Patrick_Harris_0010.jpg', 'stimulus': 'non_target'}, {'image': 'Celebs/40_Jim_Parsons_0004.jpg', 'stimulus': 'non_target'}, {'image': 'Celebs/40_Jim_Parsons_0015.jpg', 'stimulus': 'non_target'}, {'image': 'Celebs/40_Will_Smith_0012.jpg', 'stimulus': 'non_target'}, {'image': 'Celebs/42_Will_Smith_0012.jpg', 'stimulus': 'non_target'}, {'image': 'Celebs/43_Will_Smith_0006.jpg', 'stimulus': 'non_target'}, {'image': 'Celebs/43_Will_Smith_0007.jpg', 'stimulus': 'non_target'}, {'image': 'Celebs/43_Will_Smith_0010.jpg', 'stimulus': 'non_target'}, {'image': 'Celebs/44_Will_Smith_0006.jpg', 'stimulus': 'non_target'}, {'image': 'Celebs/44_Will_Smith_0007.jpg', 'stimulus': 'non_target'}, {'image': 'Celebs/44_Will_Smith_0015.jpg', 'stimulus': 'non_target'}, {'image': 'Celebs/45_Johnny_Depp_0003.jpg', 'stimulus': 'non_target'}, {'image': 'Celebs/45_Will_Smith_0010.jpg', 'stimulus': 'non_target'}, {'image': 'Celebs/45_Will_Smith_0014.jpg', 'stimulus': 'non_target'}, {'image': 'Celebs/47_Johnny_Depp_0003.jpg', 'stimulus': 'non_target'}, {'image': 'Celebs/47_Johnny_Depp_0004.jpg', 'stimulus': 'non_target'}, {'image': 'Celebs/47_Johnny_Depp_0009.jpg', 'stimulus': 'non_target'}, {'image': 'Celebs/48_Johnny_Depp_0001.jpg', 'stimulus': 'non_target'}, {'image': 'Celebs/48_Johnny_Depp_0003.jpg', 'stimulus': 'non_target'}, {'image': 'Celebs/48_Johnny_Depp_0005.jpg', 'stimulus': 'non_target'}, {'image': 'Celebs/49_Johnny_Depp_0013.jpg', 'stimulus': 'non_target'}, {'image': 'Celebs/50_Jackie_Chan_0012.jpg', 'stimulus': 'non_target'}, {'image': 'Celebs/50_Jackie_Chan_0014.jpg', 'stimulus': 'non_target'}, {'image': 'Celebs/50_Johnny_Depp_0004.jpg', 'stimulus': 'non_target'}, {'image': 'Celebs/50_Johnny_Depp_0008.jpg', 'stimulus': 'non_target'}, {'image': 'Celebs/50_Johnny_Depp_0010.jpg', 'stimulus': 'non_target'}, {'image': 'Celebs/50_Johnny_Depp_0018.jpg', 'stimulus': 'non_target'}, {'image': 'Celebs/51_Jackie_Chan_0006.jpg', 'stimulus': 'non_target'}, {'image': 'Celebs/52_Jackie_Chan_0002.jpg', 'stimulus': 'non_target'}, {'image': 'Celebs/54_Jackie_Chan_0001.jpg', 'stimulus': 'non_target'}, {'image': 'Celebs/54_Jackie_Chan_0014.jpg', 'stimulus': 'non_target'}, {'image': 'Celebs/55_Jackie_Chan_0003.jpg', 'stimulus': 'non_target'}, {'image': 'Celebs/55_Jackie_Chan_0008.jpg', 'stimulus': 'non_target'}, {'image': 'Celebs/55_Jackie_Chan_0015.jpg', 'stimulus': 'non_target'}, {'image': 'Celebs/57_Jackie_Chan_0008.jpg', 'stimulus': 'non_target'}, {'image': 'Celebs/57_Jackie_Chan_0010.jpg', 'stimulus': 'non_target'}, {'image': 'Celebs/58_Jackie_Chan_0005.jpg', 'stimulus': 'non_target'}]" valType="str"/>
       <Param name="conditionsFile" updates="None" val="stims.xlsx" valType="file"/>
       <Param name="endPoints" updates="None" val="[0, 1]" valType="num"/>
       <Param name="isTrials" updates="None" val="True" valType="bool"/>
       <Param name="loopType" updates="None" val="random" valType="str"/>
-      <Param name="nReps" updates="None" val="3" valType="num"/>
+      <Param name="nReps" updates="None" val="1" valType="num"/>
       <Param name="name" updates="None" val="trials" valType="code"/>
       <Param name="random seed" updates="None" val="" valType="code"/>
     </LoopInitiator>
-    <Routine name="blankScreen"/>
     <Routine name="trial"/>
+    <Routine name="blankScreen"/>
     <LoopTerminator name="trials"/>
     <Routine name="trialBlockScreen"/>
     <LoopTerminator name="trial_block"/>

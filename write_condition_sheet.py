@@ -1,4 +1,5 @@
 import os
+import numpy as np
 
 def run_fast_scandir(dir, ext):    # dir: str, ext: list
     subfolders, datafiles = [], []
@@ -17,17 +18,26 @@ def run_fast_scandir(dir, ext):    # dir: str, ext: list
     return subfolders, datafiles
 
 
-subfolders, datafiles = run_fast_scandir('C:/Users/migue/OneDrive/Ambiente de Trabalho/IEEE project/EEG-Situ_VS_EEG-fMRI/Dataset', [".jpg"])
+_, imgs = run_fast_scandir('C:/Users/migue/OneDrive/Ambiente de Trabalho/IEEE project/EEG-Situ_VS_EEG-fMRI/Celebs', [".jpg"])
+
+target_img = 'Daniel_Radcliffe'
 
 from pandas import DataFrame
 
-images=[]
+images = []
+stim = []
 
-for image in datafiles:
-    aux = image.split('\\')[:]
-    conc_string = ''.join(["Dataset/", aux[:][1]])
-    print(conc_string)
+for i, img in enumerate(imgs):
+    aux = img.split('\\')[:]
+    conc_string = ''.join(["Celebs"+"/", aux[1]])
     images.append(conc_string)
+    print(conc_string)
+
+    if target_img in conc_string:
+        aux_stim = 'target'
+    else:
+        aux_stim = 'non_target'
+    stim.append(aux_stim)
     
-df = DataFrame({'stimulus_time': images})
+df = DataFrame({'image': images, 'stimulus': stim})
 df.to_excel('stims.xlsx', sheet_name='sheet1', index=False)
