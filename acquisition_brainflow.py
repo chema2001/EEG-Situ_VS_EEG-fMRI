@@ -30,7 +30,7 @@ BoardShim.enable_dev_board_logger()
 logging.basicConfig(level=logging.DEBUG) # Ativa as mensagens log do brainflow para fazer debug
 params = BrainFlowInputParams()
 params.serial_port = 'COM7' # Porta COM do BT dongle no PC
-channel_labels = ['C3','CP3','P3','P7','O1','Fz','FCz','Cz','CPz','Pz','Oz','C4','CP4','P4','P8','O2']
+channel_labels = ['C3','CP3','P3','PO3','P7','PO7','Fz','Cz','CPz','Pz','C4','CP4','P4','PO4','P8','PO8']
 
 def main():
     BoardShim.enable_dev_board_logger()
