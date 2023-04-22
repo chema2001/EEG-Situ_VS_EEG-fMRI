@@ -6,12 +6,12 @@ t=linspace(0,100,length(photoVector));
 
 th=240;
 targetVector=double((photoVector>th));
- figure(2); plot(t,targetVector);
+%figure(2); plot(t,targetVector);
 
 [pks,locs,w,p] = findpeaks(targetVector);
 
 targetEEGs={};
-channel16Vector=data(:,7);
+channel16Vector=data(:,16);
 for i=1:length(locs)
     targetEEGs{i}=channel16Vector(locs(i):locs(i)+w(i)).';
 end
@@ -21,7 +21,11 @@ for i=1:length(targetEEGs)
 end
 
 b=cell2mat(targetEEGs);
-c=mean(b,1,'omitnan');
+c = mean(b,1,'omitnan');
+ind = ~isnan(c);
+c = c(ind);
+c = highpass(c, 0.5, 125);
+c = lowpass(c, 35, 125);
 
-d=linspace(0,100,length(c))
+d=linspace(0,100,length(c));
 figure(3); plot(d,c);
