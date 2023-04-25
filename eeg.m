@@ -16,7 +16,7 @@
 close all;
 clc, clear;
 
-addpath(genpath('C:\Users\migue\OneDrive\Ambiente de Trabalho\EEG stuff\eeglab2023.0')); % Path do EEGLAB
+addpath(genpath('eeglab2023.0')); % Path do EEGLAB
 ch_locs=readlocs('BioSemi64.loc'); % Ficheiro com localização dos elétrodos
 
 data=readtable("S1_21_Male.csv");
