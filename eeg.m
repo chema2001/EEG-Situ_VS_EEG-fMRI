@@ -39,11 +39,32 @@ nch_locs = ch_locs(logical(idx));
 %% Dados da fotoresistência 
 
 photoVector=(data(:,end));
+disp(length(photoVector))
+num_points = 10;
+B = 1/num_points*ones(num_points,1);
+photoVector = filter(B,1,photoVector);
+disp(length(photoVector))
+
+
 t = ((0:length(photoVector)-1)*1/fs)/60;
 
 fig = 1;
 figure (fig); plot(t,photoVector), title('Fotoresistência'), xlabel('Tempo (min)');
 fig = fig + 1;
+Fs = 125; % Sampling frequency
+T = 1/Fs; % Sampling period
+L = length(photoVector); % Length of signal
+t = (0:L-1)*T; % Time vector
+Y = fft(photoVector); % Fourier transform
+P2 = abs(Y/L); % Two-sided spectrum
+P1 = P2(1:L/2+1); % Single-sided spectrum
+P1(2:end-1) = 2*P1(2:end-1);
+f = Fs*(0:(L/2))/L; % Frequency vector
+figure
+plot(f,P1) 
+title('Single-Sided Amplitude Spectrum of X(t)')
+xlabel('f (Hz)')
+ylabel('|P1(f)|')
 
 %% Pré-processamento
 % Filtragem
