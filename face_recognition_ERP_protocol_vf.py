@@ -169,7 +169,7 @@ trialImage = visual.ImageStim(
     win=win,
     name='trialImage', 
     image='sin', mask=None, anchor='center',
-    ori=0.0, pos=(0, 0), size=(0.5, 0.5),
+    ori=0.0, pos=(0, 0), size=(0.3, 0.3),
     color=[1,1,1], colorSpace='rgb', opacity=None,
     flipHoriz=False, flipVert=False,
     texRes=128.0, interpolate=True, depth=0.0)
