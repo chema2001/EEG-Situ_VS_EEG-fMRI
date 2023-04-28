@@ -32,10 +32,7 @@ from psychopy.hardware import keyboard
 import pandas as pd
 import random
 
-file_path = 'C:/Users/migue/OneDrive/Ambiente de Trabalho/IEEE project/EEG-Situ_VS_EEG-fMRI/stims.xlsx'
-
-
-
+file_path = 'C:/Users/migue/OneDrive/Ambiente de Trabalho/EEG stuff/IEEE project/EEG-Situ_VS_EEG-fMRI/stims.xlsx'
 
 # Ensure that relative paths start from the same directory as this script
 _thisDir = os.path.dirname(os.path.abspath(__file__))
@@ -44,7 +41,7 @@ os.chdir(_thisDir)
 psychopyVersion = '2022.2.5'
 expName = 'face_recognition_ERP_protocol'  # from the Builder filename that created this script
 expInfo = {
-    'participant': f"{randint(0, 999999):06.0f}",
+    'participant': f"{randint(0, 999):06.0f}",
     'session': '001',
     'age': '',
     'gender': '',
@@ -175,7 +172,7 @@ trialImage = visual.ImageStim(
     texRes=128.0, interpolate=True, depth=0.0)
 polygon = visual.Rect(
     win=win, name='polygon',
-    width=(0.15, 0.15)[0], height=(0.1, 0.1)[1],
+    width=(0.2, 0.2)[0], height=(0.2, 0.2)[1],
     ori=0.0, pos=(-0.9, -0.5), anchor='bottom-left',
     lineWidth=1.0,     colorSpace='rgb',  lineColor='white', fillColor='white',
     opacity=None, depth=-1.0, interpolate=True)

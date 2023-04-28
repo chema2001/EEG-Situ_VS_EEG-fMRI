@@ -19,7 +19,7 @@ clc, clear;
 addpath(genpath('eeglab2023.0')); % Path do EEGLAB
 ch_locs=readlocs('BioSemi64.loc'); % Ficheiro com localização dos elétrodos
 
-data=readtable("S1_21_Male.csv");
+data=readtable("S2_21_Male.csv");
 data=table2array(data,1);
 
 fs = 125;
@@ -39,12 +39,6 @@ nch_locs = ch_locs(logical(idx));
 %% Dados da fotoresistência 
 
 photoVector=(data(:,end));
-disp(length(photoVector))
-num_points = 10;
-B = 1/num_points*ones(num_points,1);
-photoVector = filter(B,1,photoVector);
-disp(length(photoVector))
-
 
 t = ((0:length(photoVector)-1)*1/fs)/60;
 
@@ -68,9 +62,9 @@ figure (fig); plot(t,photoVector), title('Fotoresistência'), xlabel('Tempo (min
 fig = fig + 1;
 Fs = 125; % Sampling frequency
 T = 1/Fs; % Sampling period
-L = length(photoVector); % Length of signal
+L = length(data(:,3)); % Length of signal
 t = (0:L-1)*T; % Time vector
-Y = fft(photoVector); % Fourier transform
+Y = fft(data(:,3)); % Fourier transform
 P2 = abs(Y/L); % Two-sided spectrum
 P1 = P2(1:L/2+1); % Single-sided spectrum
 P1(2:end-1) = 2*P1(2:end-1);
@@ -106,7 +100,7 @@ filt_data = filtfilt(bsFilt,filt_data);
 %% Indices da segmentação do EEG target
 % Sinal da fotoresistência não filtrado 
 
-th=230;
+th=250.5;
 targetVector=double((photoVector>th));
 
 % locs -> Índice da primeira amostra
@@ -139,9 +133,9 @@ f_locs(f_idx) = [];
 f_minw = min(f_dur);
 f_dur(1:end) = f_minw;
 
-shift = abs(locs - f_locs);
+%shift = abs(locs - f_locs);
 
-f_locs = f_locs - shift; % Ajustar a mudança de fase que ocorre com o filtro de mediana, o qual é constante para
+f_locs = f_locs - 3; % Ajustar a mudança de fase que ocorre com o filtro de mediana, o qual é constante para
 
 
 
@@ -149,8 +143,8 @@ f_locs = f_locs - shift; % Ajustar a mudança de fase que ocorre com o filtro de
 
 targetEEG = [];
 
-for i=1:length(dur)
-    targetEEG = [targetEEG; filt_data(locs(i)-1:locs(i)+f_dur(i),:)];
+for i=1:length(f_dur)
+    targetEEG = [targetEEG; filt_data(f_locs(i)-1:f_locs(i)+f_dur(i),:)];
 end
 
 segmented_targetEEG = reshape(targetEEG, f_dur(1)+2, length(f_dur),length(channel_labels));
@@ -173,9 +167,9 @@ nont_locs(idx) = [];
 minw = min(nont_dur);
 nont_dur(1:end) = minw;
 
-nont_locs = nont_locs - shift(1);
+nont_locs = nont_locs - 3;
 
-%% Segmentação do EEG target
+%% Segmentação do EEG não target
 
 nontargetEEG = [];
 
