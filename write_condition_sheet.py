@@ -17,8 +17,7 @@ def run_fast_scandir(dir, ext):    # dir: str, ext: list
         datafiles.extend(f)
     return subfolders, datafiles
 
-
-_, imgs = run_fast_scandir('C:/Users/migue/OneDrive/Ambiente de Trabalho/IEEE project/EEG-Situ_VS_EEG-fMRI/Celebs', [".jpg"])
+_, imgs = run_fast_scandir('C:/Users/migue/OneDrive/Ambiente de Trabalho/EEG stuff/IEEE project/EEG-Situ_VS_EEG-fMRI/Celebs', [".jpg"])
 
 target_img = 'Daniel_Radcliffe'
 
@@ -40,4 +39,7 @@ for i, img in enumerate(imgs):
     stim.append(aux_stim)
     
 df = DataFrame({'image': images, 'stimulus': stim})
-df.to_excel('stims.xlsx', sheet_name='sheet1', index=False)
+
+permutation = np.random.permutation(df.index)
+shuffled_df = df.loc[permutation] # .loc -> Select rows
+shuffled_df.to_excel('stims.xlsx', sheet_name='sheet1', index=False)

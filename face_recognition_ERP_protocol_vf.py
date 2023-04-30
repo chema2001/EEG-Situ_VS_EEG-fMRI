@@ -11,6 +11,10 @@ If you publish work using this script the most relevant publication is:
 
 """
 
+'''
+Custom code: Lines 160, 729
+'''
+
 # --- Import packages ---
 from psychopy import locale_setup
 from psychopy import prefs
@@ -152,7 +156,8 @@ beep.setVolume(1.0)
 
 # --- Initialize components for Routine "codingTrials" ---
 # Run 'Begin Experiment' code from code
-imgs_file = pd.read_excel(file_path)
+
+imgs_file = pd.read_excel(file_path) # Read condition file
 
 permutation = np.random.permutation(imgs_file.index)
 shuffled_df = imgs_file.loc[permutation]
@@ -723,12 +728,24 @@ for thisTrial_block in trial_block:
         # update component parameters for each repeat
         trialImage.setImage(img[count])
 
-        if stim[count] == 'target':
+        if stim[count] == 'target': # Changes color of the stimulus depending on its class: target/non-target
             polygon.color = [1,1,1]
         elif stim[count] == 'non_target':
             polygon.color = [-0.4 , -0.4, -0.4]
 
+        if count < (len(stim)-1): # Condition that prevents 2 consecutive target stimuli presentations (In the makority of cases)
+            if stim[count] == 'target' and stim[count+1] == "target":
+                aux1 = img[count + 1]
+                aux2 = img[count + 2]
+
+                img[count+1] = aux2
+                img[count+2] = aux1
+
+                stim[count+1] = "non_target"    
+                stim[count+2] = "target"
+
         count+=1
+
         # keep track of which components have finished
         trialComponents = [trialImage, polygon]
         for thisComponent in trialComponents:
