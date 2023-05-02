@@ -1,0 +1,329 @@
+2.6092 	WARNING 	Speech-to-text recognition module for PocketSphinx is not available (use command `pip install SpeechRecognition` to get it). Transcription will be unavailable using that service this session.
+2.6113 	WARNING 	Speech-to-text recognition using Google online services is not available (use command `pip install google-api-core google-auth google-cloud google-cloud-speech googleapis-common-protos` to get it). Transcription will be unavailable using that service this session.
+32.2396 	EXP 	Created window1 = Window(allowGUI=True, allowStencil=False, autoLog=True, backendConf=UNKNOWN, backgroundFit=<method-wrapper '__getattribute__' of attributeSetter object at 0x000002281F3394B0>, backgroundImage=<method-wrapper '__getattribute__' of attributeSetter object at 0x000002281F339510>, bitsMode=UNKNOWN, blendMode='avg', bpc=(8, 8, 8), color=array([-1., -1., -1.]), colorSpace='rgb', depthBits=8, fullscr=<method-wrapper '__getattribute__' of attributeSetter object at 0x000002281F339810>, gamma=None, gammaErrorPolicy='raise', lms=UNKNOWN, monitor=<psychopy.monitors.calibTools.Monitor object at 0x00000228206F7D30>, multiSample=False, name='window1', numSamples=2, pos=(0, 0), screen=0, size=array([1920, 1080]), stencilBits=0, stereo=False, units='height', useFBO=True, useRetina=False, viewOri=0.0, viewPos=None, viewScale=None, waitBlanking=True, winType='pyglet')
+32.2398 	EXP 	window1: mouseVisible = True
+32.2398 	EXP 	window1: backgroundImage = None
+32.2398 	EXP 	window1: backgroundFit = 'cover'
+32.2399 	EXP 	window1: mouseVisible = True
+32.2399 	EXP 	window1: Attempting to measure frame rate of screen (0) ...
+32.2400 	EXP 	window1: recordFrameIntervals = False
+32.4062 	EXP 	window1: recordFrameIntervals = True
+32.5904 	EXP 	Screen (0) actual frame rate measured at 59.51Hz
+32.5905 	EXP 	window1: recordFrameIntervals = False
+37.1071 	EXP 	Created welcome_text = TextStim(__class__=<class 'psychopy.visual.text.TextStim'>, alignHoriz=method-wrapper(...), alignText='center', alignVert=method-wrapper(...), anchorHoriz='center', anchorVert='center', antialias=True, autoDraw=False, autoLog=True, bold=False, color=array([1., 1., 1.]), colorSpace='rgb', contrast=1.0, depth=0.0, flipHoriz=False, flipVert=False, font='Open Sans', fontFiles=[], height=0.05, italic=False, languageStyle='LTR', name='welcome_text', opacity=1.0, ori=0.0, pos=array([0., 0.]), rgb=UNKNOWN, text='Welcome!\n', units='height', win=Window(...), wrapWidth=1)
+37.1916 	EXP 	Created instructions_text = TextStim(__class__=<class 'psychopy.visual.text.TextStim'>, alignHoriz=method-wrapper(...), alignText='center', alignVert=method-wrapper(...), anchorHoriz='center', anchorVert='center', antialias=True, autoDraw=False, autoLog=True, bold=False, color=array([1., 1., 1.]), colorSpace='rgb', contrast=1.0, depth=0.0, flipHoriz=False, flipVert=False, font='Open Sans', fontFiles=[], height=0.05, italic=False, languageStyle='LTR', name='instructions_text', opacity=1.0, ori=0.0, pos=array([0., 0.]), rgb=UNKNOWN, text=str(...), units='height', win=Window(...), wrapWidth=1)
+37.1995 	EXP 	Created eye_text = TextStim(__class__=<class 'psychopy.visual.text.TextStim'>, alignHoriz=method-wrapper(...), alignText='center', alignVert=method-wrapper(...), anchorHoriz='center', anchorVert='center', antialias=True, autoDraw=False, autoLog=True, bold=False, color=array([1., 1., 1.]), colorSpace='rgb', contrast=1.0, depth=0.0, flipHoriz=False, flipVert=False, font='Open Sans', fontFiles=[], height=0.05, italic=False, languageStyle='LTR', name='eye_text', opacity=1.0, ori=0.0, pos=array([0., 0.]), rgb=UNKNOWN, text='Blink you eyes', units='height', win=Window(...), wrapWidth=1)
+37.2070 	EXP 	Created text = TextStim(__class__=<class 'psychopy.visual.text.TextStim'>, alignHoriz=method-wrapper(...), alignText='center', alignVert=method-wrapper(...), anchorHoriz='center', anchorVert='center', antialias=True, autoDraw=False, autoLog=True, bold=False, color=array([1., 1., 1.]), colorSpace='rgb', contrast=1.0, depth=0.0, flipHoriz=False, flipVert=False, font='Open Sans', fontFiles=[], height=0.05, italic=False, languageStyle='LTR', name='text', opacity=1.0, ori=0.0, pos=array([0., 0.]), rgb=UNKNOWN, text='Clench your jaw!', units='height', win=Window(...), wrapWidth=1)
+37.2146 	EXP 	Created closedEyes_text = TextStim(__class__=<class 'psychopy.visual.text.TextStim'>, alignHoriz=method-wrapper(...), alignText='center', alignVert=method-wrapper(...), anchorHoriz='center', anchorVert='center', antialias=True, autoDraw=False, autoLog=True, bold=False, color=array([1., 1., 1.]), colorSpace='rgb', contrast=1.0, depth=0.0, flipHoriz=False, flipVert=False, font='Open Sans', fontFiles=[], height=0.05, italic=False, languageStyle='LTR', name='closedEyes_text', opacity=1.0, ori=0.0, pos=array([0., 0.]), rgb=UNKNOWN, text=str(...), units='height', win=Window(...), wrapWidth=1)
+37.4399 	EXP 	Sound beep set volume 1.000
+37.4801 	EXP 	Created trialImage = ImageStim(__class__=<class 'psychopy.visual.image.ImageStim'>, anchor=('center', 'center'), autoLog=True, color=array([1., 1., 1.]), colorSpace='rgb', contrast=1.0, depth=0.0, flipHoriz=True, flipVert=True, image='sin', interpolate=True, mask=None, maskParams=None, name='trialImage', opacity=1.0, ori=0.0, pos=array([0., 0.]), size=array([0.3, 0.3]), texRes=128.0, units='height', win=Window(...))
+37.4852 	EXP 	Created polygon = Rect(__class__=<class 'psychopy.visual.rect.Rect'>, anchor=('left', 'bottom'), autoDraw=False, autoLog=True, closeShape=True, color=method-wrapper(...), colorSpace='rgb', contrast=None, depth=-1.0, fillColor=array([1, 1, 1]), fillColorSpace='rgb', fillRGB=array([1, 1, 1]), interpolate=True, lineColor=array([1., 1., 1.]), lineColorSpace='rgb', lineRGB=array([1, 1, 1]), lineWidth=1.0, name='polygon', opacity=1.0, ori=0.0, pos=array([-0.9, -0.5]), size=array([0.2, 0.2]), units='height', vertices=ndarray(...), win=Window(...))
+37.4880 	EXP 	Created blank_text = TextStim(__class__=<class 'psychopy.visual.text.TextStim'>, alignHoriz=method-wrapper(...), alignText='center', alignVert=method-wrapper(...), anchorHoriz='center', anchorVert='center', antialias=True, autoDraw=False, autoLog=True, bold=False, color=array([1., 1., 1.]), colorSpace='rgb', contrast=1.0, depth=0.0, flipHoriz=False, flipVert=False, font='Open Sans', fontFiles=[], height=0.05, italic=False, languageStyle='LTR', name='blank_text', opacity=1.0, ori=0.0, pos=array([0., 0.]), rgb=UNKNOWN, text='', units='height', win=Window(...), wrapWidth=1)
+37.4901 	EXP 	Created trialBlockText = TextStim(__class__=<class 'psychopy.visual.text.TextStim'>, alignHoriz=method-wrapper(...), alignText='center', alignVert=method-wrapper(...), anchorHoriz='center', anchorVert='center', antialias=True, autoDraw=False, autoLog=True, bold=False, color=array([1., 1., 1.]), colorSpace='rgb', contrast=1.0, depth=0.0, flipHoriz=False, flipVert=False, font='Open Sans', fontFiles=[], height=0.05, italic=False, languageStyle='LTR', name='trialBlockText', opacity=1.0, ori=0.0, pos=array([0., 0.]), rgb=UNKNOWN, text='', units='height', win=Window(...), wrapWidth=1)
+37.5006 	EXP 	Created goodbye_text = TextStim(__class__=<class 'psychopy.visual.text.TextStim'>, alignHoriz=method-wrapper(...), alignText='center', alignVert=method-wrapper(...), anchorHoriz='center', anchorVert='center', antialias=True, autoDraw=False, autoLog=True, bold=False, color=array([1., 1., 1.]), colorSpace='rgb', contrast=1.0, depth=0.0, flipHoriz=False, flipVert=False, font='Open Sans', fontFiles=[], height=0.05, italic=False, languageStyle='LTR', name='goodbye_text', opacity=1.0, ori=0.0, pos=array([0., 0.]), rgb=UNKNOWN, text='Thank you for participating!', units='height', win=Window(...), wrapWidth=1)
+37.5279 	EXP 	welcome_text: autoDraw = True
+39.5302 	EXP 	welcome_text: autoDraw = False
+39.5302 	EXP 	instructions_text: autoDraw = True
+63.2099 	DATA 	Keypress: space
+63.2402 	EXP 	instructions_text: autoDraw = False
+63.2402 	EXP 	eye_text: autoDraw = True
+78.2405 	EXP 	eye_text: autoDraw = False
+78.2405 	EXP 	eye_text: autoDraw = False
+78.2405 	EXP 	text: autoDraw = True
+93.2407 	EXP 	text: autoDraw = False
+93.2407 	EXP 	text: autoDraw = False
+93.2407 	EXP 	closedEyes_text: autoDraw = True
+107.6402 	EXP 	Sound beep started
+108.2412 	EXP 	closedEyes_text: autoDraw = False
+108.2414 	EXP 	Sound beep stopped
+108.2428 	EXP 	Created sequence: random, trialTypes=1, nReps=12, seed=None
+108.2431 	EXP 	New trial (rep=0, index=0): None
+108.2726 	EXP 	Imported stims.xlsx as conditions, 120 conditions, 2 params
+108.2759 	EXP 	Created sequence: random, trialTypes=120, nReps=1, seed=None
+108.2762 	EXP 	New trial (rep=0, index=0): {'image': 'Celebs/17_Margot_Robbie_0012.jpg', 'stimulus': 'non_target'}
+108.3245 	EXP 	closedEyes_text: autoDraw = False
+108.3245 	EXP 	trialImage: image = 'Celebs/31_Neil_Patrick_Harris_0008.jpg'
+108.3245 	EXP 	polygon: foreColor = [-0.4, -0.4, -0.4]
+108.3245 	EXP 	polygon: fillColor = [-0.4, -0.4, -0.4]
+108.3245 	EXP 	polygon: borderColor = [-0.4, -0.4, -0.4]
+108.3245 	EXP 	polygon: color = [-0.4, -0.4, -0.4]
+108.3245 	EXP 	trialImage: autoDraw = True
+108.3245 	EXP 	polygon: autoDraw = True
+108.7750 	EXP 	trialImage: autoDraw = False
+108.7750 	EXP 	polygon: autoDraw = False
+108.7750 	EXP 	blank_text: autoDraw = True
+109.2429 	EXP 	New trial (rep=0, index=1): {'image': 'Celebs/35_Neil_Patrick_Harris_0009.jpg', 'stimulus': 'non_target'}
+109.2740 	EXP 	blank_text: autoDraw = False
+109.2740 	EXP 	trialImage: image = 'Celebs/48_Johnny_Depp_0003.jpg'
+109.2740 	EXP 	polygon: foreColor = [-0.4, -0.4, -0.4]
+109.2740 	EXP 	polygon: fillColor = [-0.4, -0.4, -0.4]
+109.2740 	EXP 	polygon: borderColor = [-0.4, -0.4, -0.4]
+109.2740 	EXP 	polygon: color = [-0.4, -0.4, -0.4]
+109.2740 	EXP 	trialImage: autoDraw = True
+109.2740 	EXP 	polygon: autoDraw = True
+109.7595 	EXP 	trialImage: autoDraw = False
+109.7595 	EXP 	polygon: autoDraw = False
+109.7595 	EXP 	blank_text: autoDraw = True
+110.2440 	EXP 	New trial (rep=0, index=2): {'image': 'Celebs/31_Neil_Patrick_Harris_0008.jpg', 'stimulus': 'non_target'}
+110.2696 	EXP 	blank_text: autoDraw = False
+110.2696 	EXP 	trialImage: image = 'Celebs/19_Emma_Stone_0006.jpg'
+110.2696 	EXP 	polygon: foreColor = [-0.4, -0.4, -0.4]
+110.2696 	EXP 	polygon: fillColor = [-0.4, -0.4, -0.4]
+110.2696 	EXP 	polygon: borderColor = [-0.4, -0.4, -0.4]
+110.2696 	EXP 	polygon: color = [-0.4, -0.4, -0.4]
+110.2696 	EXP 	trialImage: autoDraw = True
+110.2696 	EXP 	polygon: autoDraw = True
+110.7606 	EXP 	trialImage: autoDraw = False
+110.7606 	EXP 	polygon: autoDraw = False
+110.7606 	EXP 	blank_text: autoDraw = True
+111.2450 	EXP 	New trial (rep=0, index=3): {'image': 'Celebs/24_Emma_Stone_0015.jpg', 'stimulus': 'non_target'}
+111.2613 	EXP 	blank_text: autoDraw = False
+111.2613 	EXP 	trialImage: image = 'Celebs/39_Jim_Parsons_0004.jpg'
+111.2613 	EXP 	polygon: foreColor = [-0.4, -0.4, -0.4]
+111.2613 	EXP 	polygon: fillColor = [-0.4, -0.4, -0.4]
+111.2613 	EXP 	polygon: borderColor = [-0.4, -0.4, -0.4]
+111.2613 	EXP 	polygon: color = [-0.4, -0.4, -0.4]
+111.2613 	EXP 	trialImage: autoDraw = True
+111.2613 	EXP 	polygon: autoDraw = True
+111.7618 	EXP 	trialImage: autoDraw = False
+111.7618 	EXP 	polygon: autoDraw = False
+111.7618 	EXP 	blank_text: autoDraw = True
+112.2460 	EXP 	New trial (rep=0, index=4): {'image': 'Celebs/34_Neil_Patrick_Harris_0007.jpg', 'stimulus': 'non_target'}
+112.2686 	EXP 	blank_text: autoDraw = False
+112.2686 	EXP 	trialImage: image = 'Celebs/14_Emma_Watson_0015.jpg'
+112.2686 	EXP 	polygon: foreColor = [-0.4, -0.4, -0.4]
+112.2686 	EXP 	polygon: fillColor = [-0.4, -0.4, -0.4]
+112.2686 	EXP 	polygon: borderColor = [-0.4, -0.4, -0.4]
+112.2686 	EXP 	polygon: color = [-0.4, -0.4, -0.4]
+112.2686 	EXP 	trialImage: autoDraw = True
+112.2686 	EXP 	polygon: autoDraw = True
+112.7628 	EXP 	trialImage: autoDraw = False
+112.7628 	EXP 	polygon: autoDraw = False
+112.7628 	EXP 	blank_text: autoDraw = True
+113.2473 	EXP 	New trial (rep=0, index=5): {'image': 'Celebs/15_Margot_Robbie_0005.jpg', 'stimulus': 'non_target'}
+113.2708 	EXP 	blank_text: autoDraw = False
+113.2708 	EXP 	trialImage: image = 'Celebs/28_Scarlett_Johansson_0005.jpg'
+113.2708 	EXP 	polygon: foreColor = [-0.4, -0.4, -0.4]
+113.2708 	EXP 	polygon: fillColor = [-0.4, -0.4, -0.4]
+113.2708 	EXP 	polygon: borderColor = [-0.4, -0.4, -0.4]
+113.2708 	EXP 	polygon: color = [-0.4, -0.4, -0.4]
+113.2708 	EXP 	trialImage: autoDraw = True
+113.2708 	EXP 	polygon: autoDraw = True
+113.7641 	EXP 	trialImage: autoDraw = False
+113.7641 	EXP 	polygon: autoDraw = False
+113.7641 	EXP 	blank_text: autoDraw = True
+114.2484 	EXP 	New trial (rep=0, index=6): {'image': 'Celebs/16_Emma_Stone_0012.jpg', 'stimulus': 'non_target'}
+114.2727 	EXP 	blank_text: autoDraw = False
+114.2727 	EXP 	trialImage: image = 'Celebs/50_Johnny_Depp_0018.jpg'
+114.2727 	EXP 	polygon: foreColor = [-0.4, -0.4, -0.4]
+114.2727 	EXP 	polygon: fillColor = [-0.4, -0.4, -0.4]
+114.2727 	EXP 	polygon: borderColor = [-0.4, -0.4, -0.4]
+114.2727 	EXP 	polygon: color = [-0.4, -0.4, -0.4]
+114.2727 	EXP 	trialImage: autoDraw = True
+114.2727 	EXP 	polygon: autoDraw = True
+114.7653 	EXP 	trialImage: autoDraw = False
+114.7653 	EXP 	polygon: autoDraw = False
+114.7653 	EXP 	blank_text: autoDraw = True
+115.2494 	EXP 	New trial (rep=0, index=7): {'image': 'Celebs/22_Scarlett_Johansson_0005.jpg', 'stimulus': 'non_target'}
+115.2727 	EXP 	blank_text: autoDraw = False
+115.2727 	EXP 	trialImage: image = 'Celebs/24_Daniel_Radcliffe_0017.jpg'
+115.2727 	EXP 	polygon: foreColor = [1, 1, 1]
+115.2727 	EXP 	polygon: fillColor = [1, 1, 1]
+115.2727 	EXP 	polygon: borderColor = [1, 1, 1]
+115.2727 	EXP 	polygon: color = [1, 1, 1]
+115.2727 	EXP 	trialImage: autoDraw = True
+115.2727 	EXP 	polygon: autoDraw = True
+115.7676 	EXP 	trialImage: autoDraw = False
+115.7676 	EXP 	polygon: autoDraw = False
+115.7676 	EXP 	blank_text: autoDraw = True
+116.2507 	EXP 	New trial (rep=0, index=8): {'image': 'Celebs/29_Scarlett_Johansson_0010.jpg', 'stimulus': 'non_target'}
+116.2673 	EXP 	blank_text: autoDraw = False
+116.2673 	EXP 	trialImage: image = 'Celebs/17_Margot_Robbie_0006.jpg'
+116.2673 	EXP 	polygon: foreColor = [-0.4, -0.4, -0.4]
+116.2673 	EXP 	polygon: fillColor = [-0.4, -0.4, -0.4]
+116.2673 	EXP 	polygon: borderColor = [-0.4, -0.4, -0.4]
+116.2673 	EXP 	polygon: color = [-0.4, -0.4, -0.4]
+116.2673 	EXP 	trialImage: autoDraw = True
+116.2673 	EXP 	polygon: autoDraw = True
+116.7674 	EXP 	trialImage: autoDraw = False
+116.7674 	EXP 	polygon: autoDraw = False
+116.7674 	EXP 	blank_text: autoDraw = True
+117.2517 	EXP 	New trial (rep=0, index=9): {'image': 'Celebs/24_Daniel_Radcliffe_0017.jpg', 'stimulus': 'target'}
+117.2894 	EXP 	blank_text: autoDraw = False
+117.2894 	EXP 	trialImage: image = 'Celebs/32_Jim_Parsons_0016.jpg'
+117.2894 	EXP 	polygon: foreColor = [-0.4, -0.4, -0.4]
+117.2894 	EXP 	polygon: fillColor = [-0.4, -0.4, -0.4]
+117.2894 	EXP 	polygon: borderColor = [-0.4, -0.4, -0.4]
+117.2894 	EXP 	polygon: color = [-0.4, -0.4, -0.4]
+117.2894 	EXP 	trialImage: autoDraw = True
+117.2894 	EXP 	polygon: autoDraw = True
+117.7686 	EXP 	trialImage: autoDraw = False
+117.7686 	EXP 	polygon: autoDraw = False
+117.7686 	EXP 	blank_text: autoDraw = True
+118.2528 	EXP 	New trial (rep=0, index=10): {'image': 'Celebs/15_Margot_Robbie_0012.jpg', 'stimulus': 'non_target'}
+118.2766 	EXP 	blank_text: autoDraw = False
+118.2766 	EXP 	trialImage: image = 'Celebs/17_Margot_Robbie_0012.jpg'
+118.2766 	EXP 	polygon: foreColor = [-0.4, -0.4, -0.4]
+118.2766 	EXP 	polygon: fillColor = [-0.4, -0.4, -0.4]
+118.2766 	EXP 	polygon: borderColor = [-0.4, -0.4, -0.4]
+118.2766 	EXP 	polygon: color = [-0.4, -0.4, -0.4]
+118.2766 	EXP 	trialImage: autoDraw = True
+118.2766 	EXP 	polygon: autoDraw = True
+118.7696 	EXP 	trialImage: autoDraw = False
+118.7696 	EXP 	polygon: autoDraw = False
+118.7696 	EXP 	blank_text: autoDraw = True
+119.2539 	EXP 	New trial (rep=0, index=11): {'image': 'Celebs/54_Jackie_Chan_0014.jpg', 'stimulus': 'non_target'}
+119.2868 	EXP 	blank_text: autoDraw = False
+119.2868 	EXP 	trialImage: image = 'Celebs/25_Scarlett_Johansson_0010.jpg'
+119.2868 	EXP 	polygon: foreColor = [-0.4, -0.4, -0.4]
+119.2868 	EXP 	polygon: fillColor = [-0.4, -0.4, -0.4]
+119.2868 	EXP 	polygon: borderColor = [-0.4, -0.4, -0.4]
+119.2868 	EXP 	polygon: color = [-0.4, -0.4, -0.4]
+119.2868 	EXP 	trialImage: autoDraw = True
+119.2868 	EXP 	polygon: autoDraw = True
+119.7708 	EXP 	trialImage: autoDraw = False
+119.7708 	EXP 	polygon: autoDraw = False
+119.7708 	EXP 	blank_text: autoDraw = True
+120.2551 	EXP 	New trial (rep=0, index=12): {'image': 'Celebs/36_Jim_Parsons_0011.jpg', 'stimulus': 'non_target'}
+120.2796 	EXP 	blank_text: autoDraw = False
+120.2796 	EXP 	trialImage: image = 'Celebs/55_Jackie_Chan_0015.jpg'
+120.2796 	EXP 	polygon: foreColor = [-0.4, -0.4, -0.4]
+120.2796 	EXP 	polygon: fillColor = [-0.4, -0.4, -0.4]
+120.2796 	EXP 	polygon: borderColor = [-0.4, -0.4, -0.4]
+120.2796 	EXP 	polygon: color = [-0.4, -0.4, -0.4]
+120.2796 	EXP 	trialImage: autoDraw = True
+120.2796 	EXP 	polygon: autoDraw = True
+120.7719 	EXP 	trialImage: autoDraw = False
+120.7719 	EXP 	polygon: autoDraw = False
+120.7719 	EXP 	blank_text: autoDraw = True
+121.2562 	EXP 	New trial (rep=0, index=13): {'image': 'Celebs/38_Neil_Patrick_Harris_0006.jpg', 'stimulus': 'non_target'}
+121.2726 	EXP 	blank_text: autoDraw = False
+121.2726 	EXP 	trialImage: image = 'Celebs/21_Scarlett_Johansson_0007.jpg'
+121.2726 	EXP 	polygon: foreColor = [-0.4, -0.4, -0.4]
+121.2726 	EXP 	polygon: fillColor = [-0.4, -0.4, -0.4]
+121.2726 	EXP 	polygon: borderColor = [-0.4, -0.4, -0.4]
+121.2726 	EXP 	polygon: color = [-0.4, -0.4, -0.4]
+121.2726 	EXP 	trialImage: autoDraw = True
+121.2726 	EXP 	polygon: autoDraw = True
+121.7736 	EXP 	trialImage: autoDraw = False
+121.7736 	EXP 	polygon: autoDraw = False
+121.7736 	EXP 	blank_text: autoDraw = True
+122.2577 	EXP 	New trial (rep=0, index=14): {'image': 'Celebs/32_Jim_Parsons_0016.jpg', 'stimulus': 'non_target'}
+122.2803 	EXP 	blank_text: autoDraw = False
+122.2803 	EXP 	trialImage: image = 'Celebs/52_Jackie_Chan_0002.jpg'
+122.2803 	EXP 	polygon: foreColor = [-0.4, -0.4, -0.4]
+122.2803 	EXP 	polygon: fillColor = [-0.4, -0.4, -0.4]
+122.2803 	EXP 	polygon: borderColor = [-0.4, -0.4, -0.4]
+122.2803 	EXP 	polygon: color = [-0.4, -0.4, -0.4]
+122.2803 	EXP 	trialImage: autoDraw = True
+122.2803 	EXP 	polygon: autoDraw = True
+122.7741 	EXP 	trialImage: autoDraw = False
+122.7741 	EXP 	polygon: autoDraw = False
+122.7741 	EXP 	blank_text: autoDraw = True
+123.2589 	EXP 	New trial (rep=0, index=15): {'image': 'Celebs/40_Jim_Parsons_0015.jpg', 'stimulus': 'non_target'}
+123.2866 	EXP 	blank_text: autoDraw = False
+123.2866 	EXP 	trialImage: image = 'Celebs/22_Emma_Watson_0001.jpg'
+123.2866 	EXP 	polygon: foreColor = [-0.4, -0.4, -0.4]
+123.2866 	EXP 	polygon: fillColor = [-0.4, -0.4, -0.4]
+123.2866 	EXP 	polygon: borderColor = [-0.4, -0.4, -0.4]
+123.2866 	EXP 	polygon: color = [-0.4, -0.4, -0.4]
+123.2866 	EXP 	trialImage: autoDraw = True
+123.2866 	EXP 	polygon: autoDraw = True
+123.7589 	EXP 	trialImage: autoDraw = False
+123.7589 	EXP 	polygon: autoDraw = False
+123.7589 	EXP 	blank_text: autoDraw = True
+124.2432 	EXP 	New trial (rep=0, index=16): {'image': 'Celebs/14_Emma_Watson_0005.jpg', 'stimulus': 'non_target'}
+124.2703 	EXP 	blank_text: autoDraw = False
+124.2703 	EXP 	trialImage: image = 'Celebs/22_Emma_Stone_0013.jpg'
+124.2703 	EXP 	polygon: foreColor = [-0.4, -0.4, -0.4]
+124.2703 	EXP 	polygon: fillColor = [-0.4, -0.4, -0.4]
+124.2703 	EXP 	polygon: borderColor = [-0.4, -0.4, -0.4]
+124.2703 	EXP 	polygon: color = [-0.4, -0.4, -0.4]
+124.2703 	EXP 	trialImage: autoDraw = True
+124.2703 	EXP 	polygon: autoDraw = True
+124.7597 	EXP 	trialImage: autoDraw = False
+124.7597 	EXP 	polygon: autoDraw = False
+124.7597 	EXP 	blank_text: autoDraw = True
+125.2449 	EXP 	New trial (rep=0, index=17): {'image': 'Celebs/18_Daniel_Radcliffe_0008.jpg', 'stimulus': 'target'}
+125.2705 	EXP 	blank_text: autoDraw = False
+125.2705 	EXP 	trialImage: image = 'Celebs/26_Scarlett_Johansson_0008.jpg'
+125.2705 	EXP 	polygon: foreColor = [-0.4, -0.4, -0.4]
+125.2705 	EXP 	polygon: fillColor = [-0.4, -0.4, -0.4]
+125.2705 	EXP 	polygon: borderColor = [-0.4, -0.4, -0.4]
+125.2705 	EXP 	polygon: color = [-0.4, -0.4, -0.4]
+125.2705 	EXP 	trialImage: autoDraw = True
+125.2705 	EXP 	polygon: autoDraw = True
+125.7611 	EXP 	trialImage: autoDraw = False
+125.7611 	EXP 	polygon: autoDraw = False
+125.7611 	EXP 	blank_text: autoDraw = True
+126.2459 	EXP 	New trial (rep=0, index=18): {'image': 'Celebs/17_Daniel_Radcliffe_0007.jpg', 'stimulus': 'target'}
+126.2605 	EXP 	blank_text: autoDraw = False
+126.2605 	EXP 	trialImage: image = 'Celebs/16_Emma_Stone_0008.jpg'
+126.2605 	EXP 	polygon: foreColor = [-0.4, -0.4, -0.4]
+126.2605 	EXP 	polygon: fillColor = [-0.4, -0.4, -0.4]
+126.2605 	EXP 	polygon: borderColor = [-0.4, -0.4, -0.4]
+126.2605 	EXP 	polygon: color = [-0.4, -0.4, -0.4]
+126.2605 	EXP 	trialImage: autoDraw = True
+126.2605 	EXP 	polygon: autoDraw = True
+126.7621 	EXP 	trialImage: autoDraw = False
+126.7621 	EXP 	polygon: autoDraw = False
+126.7621 	EXP 	blank_text: autoDraw = True
+127.2464 	EXP 	New trial (rep=0, index=19): {'image': 'Celebs/43_Will_Smith_0010.jpg', 'stimulus': 'non_target'}
+127.2708 	EXP 	blank_text: autoDraw = False
+127.2708 	EXP 	trialImage: image = 'Celebs/54_Jackie_Chan_0014.jpg'
+127.2708 	EXP 	polygon: foreColor = [-0.4, -0.4, -0.4]
+127.2708 	EXP 	polygon: fillColor = [-0.4, -0.4, -0.4]
+127.2708 	EXP 	polygon: borderColor = [-0.4, -0.4, -0.4]
+127.2708 	EXP 	polygon: color = [-0.4, -0.4, -0.4]
+127.2708 	EXP 	trialImage: autoDraw = True
+127.2708 	EXP 	polygon: autoDraw = True
+127.7632 	EXP 	trialImage: autoDraw = False
+127.7632 	EXP 	polygon: autoDraw = False
+127.7632 	EXP 	blank_text: autoDraw = True
+128.2477 	EXP 	New trial (rep=0, index=20): {'image': 'Celebs/37_Neil_Patrick_Harris_0014.jpg', 'stimulus': 'non_target'}
+128.2714 	EXP 	blank_text: autoDraw = False
+128.2714 	EXP 	trialImage: image = 'Celebs/15_Margot_Robbie_0005.jpg'
+128.2714 	EXP 	polygon: foreColor = [-0.4, -0.4, -0.4]
+128.2714 	EXP 	polygon: fillColor = [-0.4, -0.4, -0.4]
+128.2714 	EXP 	polygon: borderColor = [-0.4, -0.4, -0.4]
+128.2714 	EXP 	polygon: color = [-0.4, -0.4, -0.4]
+128.2714 	EXP 	trialImage: autoDraw = True
+128.2714 	EXP 	polygon: autoDraw = True
+128.7642 	EXP 	trialImage: autoDraw = False
+128.7642 	EXP 	polygon: autoDraw = False
+128.7642 	EXP 	blank_text: autoDraw = True
+129.2486 	EXP 	New trial (rep=0, index=21): {'image': 'Celebs/21_Margot_Robbie_0003.jpg', 'stimulus': 'non_target'}
+129.2736 	EXP 	blank_text: autoDraw = False
+129.2736 	EXP 	trialImage: image = 'Celebs/51_Jackie_Chan_0006.jpg'
+129.2736 	EXP 	polygon: foreColor = [-0.4, -0.4, -0.4]
+129.2736 	EXP 	polygon: fillColor = [-0.4, -0.4, -0.4]
+129.2736 	EXP 	polygon: borderColor = [-0.4, -0.4, -0.4]
+129.2736 	EXP 	polygon: color = [-0.4, -0.4, -0.4]
+129.2736 	EXP 	trialImage: autoDraw = True
+129.2736 	EXP 	polygon: autoDraw = True
+129.7654 	EXP 	trialImage: autoDraw = False
+129.7654 	EXP 	polygon: autoDraw = False
+129.7654 	EXP 	blank_text: autoDraw = True
+130.2497 	EXP 	New trial (rep=0, index=22): {'image': 'Celebs/21_Daniel_Radcliffe_0008.jpg', 'stimulus': 'target'}
+130.2721 	EXP 	blank_text: autoDraw = False
+130.2721 	EXP 	trialImage: image = 'Celebs/38_Neil_Patrick_Harris_0006.jpg'
+130.2721 	EXP 	polygon: foreColor = [-0.4, -0.4, -0.4]
+130.2721 	EXP 	polygon: fillColor = [-0.4, -0.4, -0.4]
+130.2721 	EXP 	polygon: borderColor = [-0.4, -0.4, -0.4]
+130.2721 	EXP 	polygon: color = [-0.4, -0.4, -0.4]
+130.2721 	EXP 	trialImage: autoDraw = True
+130.2721 	EXP 	polygon: autoDraw = True
+130.7665 	EXP 	trialImage: autoDraw = False
+130.7665 	EXP 	polygon: autoDraw = False
+130.7665 	EXP 	blank_text: autoDraw = True
+131.2510 	EXP 	New trial (rep=0, index=23): {'image': 'Celebs/45_Will_Smith_0014.jpg', 'stimulus': 'non_target'}
+131.2749 	EXP 	blank_text: autoDraw = False
+131.2749 	EXP 	trialImage: image = 'Celebs/38_Will_Smith_0013.jpg'
+131.2749 	EXP 	polygon: foreColor = [-0.4, -0.4, -0.4]
+131.2749 	EXP 	polygon: fillColor = [-0.4, -0.4, -0.4]
+131.2749 	EXP 	polygon: borderColor = [-0.4, -0.4, -0.4]
+131.2749 	EXP 	polygon: color = [-0.4, -0.4, -0.4]
+131.2749 	EXP 	trialImage: autoDraw = True
+131.2749 	EXP 	polygon: autoDraw = True
+131.3029 	DATA 	Keypress: escape
+132.1887 	EXP 	window1: mouseVisible = True

@@ -72,9 +72,9 @@ fig = 1;
 
 % figure (fig); plot(t,photoVector), title('Fotoresistência'), xlabel('Tempo (min)');
 % fig = fig + 1;
-% 
-% figure (fig); plot(t,filt_photoVector), title("Fotoresistência (Mediana flutuante com "+n_pnts+" pontos)"), xlabel('Tempo (min)');
-% fig = fig + 1;
+
+figure (fig); plot(t,log(filt_photoVector)), title("Fotoresistência (Mediana flutuante com "+n_pnts+" pontos)"), xlabel('Tempo (min)');
+fig = fig + 1;
 
 % figure (fig); plot(t,lpFilt_phVec), title("Fotoresistência (Filtro passa-baixo)"), xlabel('Tempo (min)');
 % fig = fig + 1;

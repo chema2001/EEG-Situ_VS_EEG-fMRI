@@ -112,6 +112,7 @@ def main():
 
         board = BoardShim(board_id, params)
         board.prepare_session()
+        board.config_board('/2') # Ativar leitura analógica (Fotoresisência no pino D12). Cyton board ASCII commands: https://docs.openbci.com/Cyton/CytonSDK/
         board.start_stream(450000)
         Graph(board)
         # protocol
