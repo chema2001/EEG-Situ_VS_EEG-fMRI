@@ -173,7 +173,7 @@ trialImage = visual.ImageStim(
     image='sin', mask=None, anchor='center',
     ori=0.0, pos=(0, 0), size=(0.3, 0.3),
     color=[1,1,1], colorSpace='rgb', opacity=None,
-    flipHoriz=False, flipVert=False,
+    flipHoriz=True, flipVert=False,
     texRes=128.0, interpolate=True, depth=0.0)
 polygon = visual.Rect(
     win=win, name='polygon',
@@ -733,7 +733,7 @@ for thisTrial_block in trial_block:
         elif stim[count] == 'non_target':
             polygon.color = [-0.4 , -0.4, -0.4]
 
-        if count < (len(stim)-1): # Condition that prevents 2 consecutive target stimuli presentations (In the makority of cases)
+        if count < (len(stim)-2): # Condition that prevents 2 consecutive target stimuli presentations (In the makority of cases)
             if stim[count] == 'target' and stim[count+1] == "target":
                 aux1 = img[count + 1]
                 aux2 = img[count + 2]
