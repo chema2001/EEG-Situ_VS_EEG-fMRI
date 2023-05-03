@@ -20,6 +20,7 @@ import argparse
 import pandas as pd
 import matplotlib.pyplot as plt
 import csv
+from datetime import datetime
 
 from brainflow.board_shim import BoardShim, BrainFlowInputParams, BoardIds
 from brainflow.data_filter import DataFilter
@@ -29,7 +30,7 @@ board_id = BoardIds.CYTON_DAISY_BOARD.value
 BoardShim.enable_dev_board_logger()
 logging.basicConfig(level=logging.DEBUG) # Ativa as mensagens log do brainflow para fazer debug
 params = BrainFlowInputParams()
-params.serial_port = 'COM7' # Porta COM do BT dongle no PC
+params.serial_port = 'COM11' # Porta COM do BT dongle no PC
 channel_labels = ['C3','CP3','P3','PO3','P7','PO7','Fz','Cz','CPz','Pz','C4','CP4','P4','PO4','P8','PO8']
 
 def main():
@@ -60,8 +61,9 @@ def main():
         
         data = np.zeros((sampling_rate, len(eeg_channels)))
         ldr = np.zeros((sampling_rate,1))
-
-        file_name = 'S' + str(args.subject) + '_' + str(args.age) + '_' + args.gender + '.csv'
+        now = datetime.now()
+        date_time = now.strftime("%Y-%m-%d_%H-%M")
+        file_name = 'S' + str(args.subject) + '_' + str(args.age) + '_' + args.gender + '_' + date_time + '.csv'
 
         while(True):
             # Variável com os dados da placa. 
