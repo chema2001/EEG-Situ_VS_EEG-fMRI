@@ -102,7 +102,11 @@ def main():
     logging.basicConfig(level=logging.DEBUG) # Ativa as mensagens log do brainflow para fazer debug
     board_id = BoardIds.CYTON_DAISY_BOARD.value
     params = BrainFlowInputParams()
+<<<<<<< HEAD
     params.serial_port = 'COM4' # Porta COM do BT dongle no PC
+=======
+    params.serial_port = 'COM11' # Porta COM do BT dongle no PC
+>>>>>>> 07b032f3eff502aaff1d6ad66882302376568286
 
     try:
     

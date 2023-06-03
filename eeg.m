@@ -20,7 +20,7 @@ clc, clear;
 addpath(genpath('eeglab2023.0')); % Path do EEGLAB
 ch_locs=readlocs('BioSemi64.loc'); % Ficheiro com localização dos elétrodos
 
-data=readtable("S3_25_Male.csv");
+data=readtable("S11_21_Male_2023-05-02_17-27.csv");
 data=table2array(data,1);
 
 fs = 125;
@@ -39,15 +39,15 @@ nch_locs = ch_locs(logical(idx)); % Elétrodos usados
 
 %% Verificar o efeito dos filtros na fase dos sinais
 
-t = (-3:1/fs:3)';
-s = 5*square(2*pi*t); % Sinal com a mesma frequência que o sinal da fotoresistência
-
-sqwave = awgn(s, 20, 'measured'); % Gaussian white noise
-
-plot(t, [sqwave, movmean(sqwave,10), movmedian(sqwave,20)]),
-title('Verificar o efeito dos filtros na fase dos sinais'), 
-xlabel('Tempo (s)'),
-legend('Original','Média flutuante','Mediana flutuante');
+% t = (-3:1/fs:3)';
+% s = 5*square(2*pi*t); % Sinal com a mesma frequência que o sinal da fotoresistência
+% 
+% sqwave = awgn(s, 20, 'measured'); % Gaussian white noise
+% 
+% plot(t, [sqwave, movmean(sqwave,10), movmedian(sqwave,20)]),
+% title('Verificar o efeito dos filtros na fase dos sinais'), 
+% xlabel('Tempo (s)'),
+% legend('Original','Média flutuante','Mediana flutuante');
 
 % Resumindo, a mediana flutuante não distorce tanto as fases do sinal,
 % principalmente no início das rising edges e falling edges. Isto é
@@ -70,10 +70,10 @@ filt_photoVector = movmedian(photoVector,20);
 
 fig = 1;
 
-% figure (fig); plot(t,photoVector), title('Fotoresistência'), xlabel('Tempo (min)');
-% fig = fig + 1;
+figure (fig); plot(t,photoVector), title('Fotoresistência'), xlabel('Tempo (min)');
+fig = fig + 1;
 
-figure (fig); plot(t,log(filt_photoVector)), title("Fotoresistência (Mediana flutuante com "+n_pnts+" pontos)"), xlabel('Tempo (min)');
+figure (fig); plot(t,filt_photoVector), title("Fotoresistência (Mediana flutuante com "+n_pnts+" pontos)"), xlabel('Tempo (min)');
 fig = fig + 1;
 
 % figure (fig); plot(t,lpFilt_phVec), title("Fotoresistência (Filtro passa-baixo)"), xlabel('Tempo (min)');
@@ -143,14 +143,14 @@ rising_edges = [];
 
 for i = 1:length(filt_photoVector)
     photoresistor = filt_photoVector(i);
-    if photoresistor <= 235 % Possible falling edge
+    if photoresistor >= 30 % Possible falling edge
         if last_high % Found falling edge
             falling_edges = [falling_edges;i];
         end
         last_low = true; 
         last_high = false;
 
-    elseif photoresistor >= 230 % Possible rising edge
+    elseif photoresistor >= 30 % Possible rising edge
         if last_low % Found rising edge
             rising_edges = [rising_edges; i];
         end
