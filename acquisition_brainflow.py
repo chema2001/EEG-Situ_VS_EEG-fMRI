@@ -30,11 +30,7 @@ board_id = BoardIds.CYTON_DAISY_BOARD.value
 BoardShim.enable_dev_board_logger()
 logging.basicConfig(level=logging.DEBUG) # Ativa as mensagens log do brainflow para fazer debug
 params = BrainFlowInputParams()
-<<<<<<< HEAD
-params.serial_port = 'COM4' # Porta COM do BT dongle no PC
-=======
 params.serial_port = 'COM11' # Porta COM do BT dongle no PC
->>>>>>> 07b032f3eff502aaff1d6ad66882302376568286
 channel_labels = ['C3','CP3','P3','PO3','P7','PO7','Fz','Cz','CPz','Pz','C4','CP4','P4','PO4','P8','PO8']
 
 def main():
