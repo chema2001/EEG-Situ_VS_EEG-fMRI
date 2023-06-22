@@ -82,7 +82,6 @@ for i = 1:length(filt_photoVector_seated)
         if last_high % Found falling edge
             falling_edges = [falling_edges;i];
         end
-
         last_low = true; 
         last_high = false;
 
@@ -214,30 +213,30 @@ time = ((idx_bf:idx_af)/fs) * 1000; % Vetor do tempo
 % Target - Sentado
 
 %targetEEG_seated = zeros(length(seg_target_seated), length(time), length(channel_labels)); % Pré-alocação dos dados
-p300_seated = [];
+signal_seated = [];
 
 for i=1:length(seg_target_seated)
-    p300_seated = [p300_seated; filt_data_seated((seg_target_seated(i)+idx_bf):(seg_target_seated(i)+idx_af),7)'];
+    signal_seated = [signal_seated; filt_data_seated((seg_target_seated(i)+idx_bf):(seg_target_seated(i)+idx_af),7)'];
 end
 
 % -------------------
 % Target - fMRI
 
 %[targetEEG_fmri, nontargetEEG_fmri] = deal(zeros(length(seg_target_fmri), length(time), length(channel_labels))); % Pré-alocação dos dados
-p300_fMRI = [];
+signal_fMRI = [];
 
 for i=1:length(seg_target_fmri)
-    p300_fMRI = [p300_fMRI; filt_data_fmri((seg_target_fmri(i)+idx_bf):(seg_target_fmri(i)+idx_af),7)'];
+    signal_fMRI = [signal_fMRI; filt_data_fmri((seg_target_fmri(i)+idx_bf):(seg_target_fmri(i)+idx_af),7)'];
 end
 
 % -------------------
 % Target - Deitado
 
 %[targetEEG_lying, nontargetEEG_lying] = deal(zeros(length(seg_target_lying), length(time), length(channel_labels))); % Pré-alocação dos dados
-p300_lying = [];
+signal_lying = [];
 
 for i=1:length(seg_target_lying)
-    p300_lying = [p300_lying; filt_data_lying((seg_target_lying(i)+idx_bf):(seg_target_lying(i)+idx_af),7)'];
+    signal_lying = [signal_lying; filt_data_lying((seg_target_lying(i)+idx_bf):(seg_target_lying(i)+idx_af),7)'];
 end
 
 %% Correção da linha de base
@@ -248,77 +247,169 @@ baseidx = dsearchn(time',baseline);
 
 % ----- Sentado -----
 
-for e=1:length(p300_seated)
-    tmn = mean(p300_seated(e,baseidx(1):baseidx(2)));   
-    p300_seated(e,:) = p300_seated(e,:) - tmn;
+for e=1:length(signal_seated)
+    tmn = mean(signal_seated(e,baseidx(1):baseidx(2)));   
+    signal_seated(e,:) = signal_seated(e,:) - tmn;
 end
 
 % ----- fMRI -----
 
-for e=1:length(p300_fMRI)
-    tmn = mean(p300_fMRI(e,baseidx(1):baseidx(2)));   
-    p300_fMRI(e,:) = p300_fMRI(e,:) - tmn;
+for e=1:length(signal_fMRI)
+    tmn = mean(signal_fMRI(e,baseidx(1):baseidx(2)));   
+    signal_fMRI(e,:) = signal_fMRI(e,:) - tmn;
 end
 
 % ----- Deitado -----
 
-for e=1:length(p300_lying)
-    tmn = mean(p300_lying(e,baseidx(1):baseidx(2)));   
-    p300_lying(e,:) = p300_lying(e,:) - tmn;
+for e=1:length(signal_lying)
+    tmn = mean(signal_lying(e,baseidx(1):baseidx(2)));   
+    signal_lying(e,:) = signal_lying(e,:) - tmn;
 end
 
 
-%% ANOVA P300 amp
+%% ANOVA P300
 
-startTime = 0.250 - bf; startIndex = round(startTime * fs);
-endTime = 0.500 - bf; endIndex = round(endTime * fs);
+startTime = 0.240 - bf; startIndex = round(startTime * fs);
+endTime = 0.340 - bf; endIndex = round(endTime * fs);
 
-p300Interval_seated = p300_seated(:,startIndex:endIndex);
-p300Interval_fMRI = p300_fMRI(:,startIndex:endIndex); 
-p300Interval_lying = p300_lying(:,startIndex:endIndex);
+p300Interval_seated = signal_seated(:,startIndex:endIndex);
+p300Interval_fMRI = signal_fMRI(:,startIndex:endIndex); 
+p300Interval_lying = signal_lying(:,startIndex:endIndex);
 
-[~, maxIndex_seated] = max(p300Interval_seated');
-[~, maxIndex_fMRI] = max(p300Interval_fMRI');
-[~, maxIndex_lying] = max(p300Interval_lying');
+[~, maxIndex_seated_p300] = max(p300Interval_seated');
+[~, maxIndex_fMRI_p300] = max(p300Interval_fMRI');
+[~, maxIndex_lying_p300] = max(p300Interval_lying');
 
 for i = 1:length(p300Interval_seated)
-    amplitude_seated(i) = p300Interval_seated(i, maxIndex_seated(i));
+    amplitude_seated_p300(i) = p300Interval_seated(i, maxIndex_seated_p300(i));
 end
 
 for i = 1:length(p300Interval_fMRI)
-    amplitude_fMRI(i) = p300Interval_fMRI(i, maxIndex_fMRI(i));
+    amplitude_fMRI_p300(i) = p300Interval_fMRI(i, maxIndex_fMRI_p300(i));
 end
 
 for i = 1:length(p300Interval_lying)
-    amplitude_lying(i) = p300Interval_lying(i, maxIndex_lying(i));
+    amplitude_lying_p300(i) = p300Interval_lying(i, maxIndex_lying_p300(i));
 end
 
-num = min([length(amplitude_seated), length(amplitude_fMRI), length(amplitude_lying)]);
+num_p300 = min([length(amplitude_seated_p300), length(amplitude_fMRI_p300), length(amplitude_lying_p300)]);
 
-amplitude_seated = amplitude_seated(1:num);
-amplitude_fMRI = amplitude_fMRI(1:num);
-amplitude_lying = amplitude_lying(1:num);
+amplitude_seated_p300 = amplitude_seated_p300(1:num_p300);
+amplitude_fMRI_p300 = amplitude_fMRI_p300(1:num_p300);
+amplitude_lying_p300 = amplitude_lying_p300(1:num_p300);
 
-anova_amp = [amplitude_seated', amplitude_fMRI', amplitude_lying'];
-[pValue, ~, stats_amp] = anova1(anova_amp);
-fprintf('amplitude P-value: %.4f\n', pValue);
+anova_amp_p300 = [amplitude_seated_p300', amplitude_fMRI_p300', amplitude_lying_p300'];
+[pValue_amp_p300, ~, stats_amp_p300] = anova1(anova_amp_p300);
+fprintf('amplitude P300 P-value: %.4f\n', pValue_amp_p300);
+
+latency_seated_p300 = (maxIndex_seated_p300./fs)+bf;
+latency_fMRI_p300 = (maxIndex_fMRI_p300./fs)+bf;
+latency_lying_p300 = (maxIndex_lying_p300./fs)+bf;
+
+latency_seated_p300 = latency_seated_p300(1:num_p300);
+latency_fMRI_p300 = latency_fMRI_p300(1:num_p300);
+latency_lying_p300 = latency_lying_p300(1:num_p300);
+
+anova_lat_p300 = [latency_seated_p300', latency_fMRI_p300', latency_lying_p300'];
+[pValue_lat_p300, ~, stats_lat_p300] = anova1(anova_lat_p300);
+fprintf('latency P300 P-value: %.4f\n', pValue_lat_p300);
+
+%% ANOVA N170
+
+startTime = 0.090 - bf; startIndex = round(startTime * fs);
+endTime = 0.120 - bf; endIndex = round(endTime * fs);
+
+n170Interval_seated = signal_seated(:,startIndex:endIndex);
+n170Interval_fMRI = signal_fMRI(:,startIndex:endIndex); 
+n170Interval_lying = signal_lying(:,startIndex:endIndex);
+
+[~, minIndex_seated_n170] = min(n170Interval_seated');
+[~, minIndex_fMRI_n170] = min(n170Interval_fMRI');
+[~, minIndex_lying_n170] = min(n170Interval_lying');
+
+for i = 1:length(n170Interval_seated)
+    amplitude_seated_n170(i) = n170Interval_seated(i, minIndex_seated_n170(i));
+end
+
+for i = 1:length(n170Interval_fMRI)
+    amplitude_fMRI_n170(i) = n170Interval_fMRI(i, minIndex_fMRI_n170(i));
+end
+
+for i = 1:length(n170Interval_lying)
+    amplitude_lying_n170(i) = n170Interval_lying(i, minIndex_lying_n170(i));
+end
+
+num_n170 = min([length(amplitude_seated_n170), length(amplitude_fMRI_n170), length(amplitude_lying_n170)]);
+
+amplitude_seated_n170 = amplitude_seated_n170(1:num_n170);
+amplitude_fMRI_n170= amplitude_fMRI_n170(1:num_n170);
+amplitude_lying_n170 = amplitude_lying_n170(1:num_n170);
+
+anova_amp_n170 = [amplitude_seated_n170', amplitude_fMRI_n170', amplitude_lying_n170'];
+[pValue_amp_n170, ~, stats_amp_n170] = anova1(anova_amp_n170);
+fprintf('amplitude n170 P-value: %.4f\n', pValue_amp_n170);
+
+latency_seated_n170 = (minIndex_seated_n170./fs)+bf;
+latency_fMRI_n170 = (minIndex_fMRI_n170./fs)+bf;
+latency_lying_n170 = (minIndex_lying_n170./fs)+bf;
+
+latency_seated_n170 = latency_seated_n170(1:num_n170);
+latency_fMRI_n170 = latency_fMRI_n170(1:num_n170);
+latency_lying_n170 = latency_lying_n170(1:num_n170);
+
+anova_lat_n170 = [latency_seated_n170', latency_fMRI_n170', latency_lying_n170'];
+[pValue_amp_n170, ~, stats_lat_n170] = anova1(anova_lat_n170);
+fprintf('latency n170 P-value: %.4f\n', pValue_amp_n170);
 % fprintf('F-statistic: %.4f\n', stats{2, 5});
 % fprintf('Degrees of freedom (between groups): %d\n', stats{2, 3});
 % fprintf('Degrees of freedom (within groups): %d\n', stats{3, 3});
 
-%% Get mean and sd P300 latency
+%% ANOVA N200
 
-latency_seated = (maxIndex_seated./fs)+bf;
-latency_fMRI = (maxIndex_fMRI./fs)+bf;
-latency_lying = (maxIndex_lying./fs)+bf;
+startTime = 0.180 - bf; startIndex = round(startTime * fs);
+endTime = 0.220 - bf; endIndex = round(endTime * fs);
 
-latency_seated = latency_seated(1:num);
-latency_fMRI = latency_fMRI(1:num);
-latency_lying = latency_lying(1:num);
+n200Interval_seated = signal_seated(:,startIndex:endIndex);
+n200Interval_fMRI = signal_fMRI(:,startIndex:endIndex); 
+n200Interval_lying = signal_lying(:,startIndex:endIndex);
 
-anova_lat = [latency_seated', latency_fMRI', latency_lying'];
-[pValue, ~, stats_lat] = anova1(anova_lat);
-fprintf('latency P-value: %.4f\n', pValue);
+[~, minIndex_seated_n200] = min(n200Interval_seated');
+[~, minIndex_fMRI_n200] = min(n200Interval_fMRI');
+[~, minIndex_lying_n200] = min(n200Interval_lying');
+
+for i = 1:length(n200Interval_seated)
+    amplitude_seated_n200(i) = n200Interval_seated(i, minIndex_seated_n200(i));
+end
+
+for i = 1:length(n200Interval_fMRI)
+    amplitude_fMRI_n200(i) = n200Interval_fMRI(i, minIndex_fMRI_n200(i));
+end
+
+for i = 1:length(n200Interval_lying)
+    amplitude_lying_n200(i) = n200Interval_lying(i, minIndex_lying_n200(i));
+end
+
+num_n200 = min([length(amplitude_seated_n200), length(amplitude_fMRI_n200), length(amplitude_lying_n200)]);
+
+amplitude_seated_n200 = amplitude_seated_n200(1:num_n200);
+amplitude_fMRI_n200= amplitude_fMRI_n200(1:num_n200);
+amplitude_lying_n200 = amplitude_lying_n200(1:num_n200);
+
+anova_amp_n200 = [amplitude_seated_n200', amplitude_fMRI_n200', amplitude_lying_n200'];
+[pValue_amp_n200, ~, stats_amp_n200] = anova1(anova_amp_n200);
+fprintf('amplitude n200 P-value: %.4f\n', pValue_amp_n200);
+
+latency_seated_n200 = (minIndex_seated_n200./fs)+bf;
+latency_fMRI_n200 = (minIndex_fMRI_n200./fs)+bf;
+latency_lying_n200 = (minIndex_lying_n200./fs)+bf;
+
+latency_seated_n200 = latency_seated_n200(1:num_n170);
+latency_fMRI_n200 = latency_fMRI_n200(1:num_n170);
+latency_lying_n200 = latency_lying_n200(1:num_n170);
+
+anova_lat_n200 = [latency_seated_n200', latency_fMRI_n200', latency_lying_n200'];
+[pValue_amp_n200, ~, stats_lat_n200] = anova1(anova_lat_n200);
+fprintf('latency n200 P-value: %.4f\n', pValue_amp_n200);
 % fprintf('F-statistic: %.4f\n', stats{2, 5});
 % fprintf('Degrees of freedom (between groups): %d\n', stats{2, 3});
 % fprintf('Degrees of freedom (within groups): %d\n', stats{3, 3});
