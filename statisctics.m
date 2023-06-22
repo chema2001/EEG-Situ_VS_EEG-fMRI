@@ -271,7 +271,7 @@ end
 %% ANOVA P300 amp
 
 startTime = 0.250 - bf; startIndex = round(startTime * fs);
-endTime = 0.500 - bf; endIndex = round(endTime * fs);
+endTime = 0.350 - bf; endIndex = round(endTime * fs);
 
 p300Interval_seated = p300_seated(:,startIndex:endIndex);
 p300Interval_fMRI = p300_fMRI(:,startIndex:endIndex); 

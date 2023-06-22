@@ -29,13 +29,16 @@ clc, clear;
 addpath(genpath('eeglab2023.0')); % Path do EEGLAB 
 ch_locs=readlocs('BioSemi64.loc'); % Ficheiro com localização dos elétrodos
 
-data_seated = readtable("S3_25_Male.csv");
+%data_seated = readtable("S3_25_Male.csv"); Miguel
+data_seated = readtable("S1_21_sentado_2023-06-17_12-42.csv");
 data_seated = table2array(data_seated);
 
-data_fmri = readtable("S2_25_Male_2023-06-02_16-21.csv");
+%data_fmri = readtable("S2_25_Male_2023-06-02_16-21.csv"); Miguel
+data_fmri = readtable("S1_21_deitado_2023-06-17_11-59.csv");
 data_fmri = table2array(data_fmri);
 
-data_lying = readtable("S22_25_Male_2023-06-02_17-03.csv");
+%data_lying = readtable("S22_25_Male_2023-06-02_17-03.csv"); Miguel
+data_lying = readtable("S11_21_Male_2023-05-02_17-27.csv");
 data_lying = table2array(data_lying);
 
 fs = 125;
@@ -51,6 +54,8 @@ for i = 1:length(ch_locs)
 end
 
 nch_locs = ch_locs(logical(idx)); % Elétrodos usados
+
+%writelocs(nch_locs, '16ch.loc');
 
 %% 2D plot
 
@@ -104,19 +109,19 @@ filt_photoVector_lying = movmedian(photoVector_lying,20);
 %figure (fig); plot(t,photoVector), title('Fotoresistência'), xlabel('Tempo (min)'); % Sem filtros
 %fig = fig + 1;
 
-% figure (fig); plot(t_seated,filt_photoVector_seated), title("Fotoresistência (Mediana flutuante com "+n_pnts+" pontos) - EEG Sentado"), xlabel('Tempo (min)');
-% fig = fig + 1;
+figure (fig); plot(t_seated,filt_photoVector_seated), title("Fotoresistência (Mediana flutuante com "+n_pnts+" pontos) - EEG Sentado"), xlabel('Tempo (min)');
+fig = fig + 1;
 
 % figure (fig); plot(t,lpFilt_phVec), title("Fotoresistência (Filtro passa-baixo)"), xlabel('Tempo (min)');
 % fig = fig + 1;
 
-% figure (fig); plot(t_fmri,filt_photoVector_fmri), title("Fotoresistência (Mediana flutuante com "+n_pnts+" pontos) - EEG com fMRI"), xlabel('Tempo (min)');
-% fig = fig + 1;
+figure (fig); plot(t_fmri,filt_photoVector_fmri), title("Fotoresistência (Mediana flutuante com "+n_pnts+" pontos) - EEG com fMRI"), xlabel('Tempo (min)');
+fig = fig + 1;
 
-% figure (fig); plot(t_lying,filt_photoVector_lying), title("Fotoresistência (Mediana flutuante com "+n_pnts+" pontos) - EEG Deitado"), xlabel('Tempo (min)');
-% fig = fig + 1;
+figure (fig); plot(t_lying,filt_photoVector_lying), title("Fotoresistência (Mediana flutuante com "+n_pnts+" pontos) - EEG Deitado"), xlabel('Tempo (min)');
+fig = fig + 1;
 
-%% Re-referenciação do EEG 
+%% Re-referenciação do EEG e uilização das colunas do EEG (Primeiras 16)
 
 eeg_data_seated = data_seated(:,1:end-1);
 eeg_data_fmri = data_fmri(:,1:end-1);
@@ -213,15 +218,15 @@ bsFilt = designfilt('bandstopfir','FilterOrder',1000, ...
 %fvtool(bsFilt)
 
 filt_data_seated = filtfilt(bsFilt,filt_data_seated);
-filt_data_fmri = filtfilt(bsFilt,filt_data_fmri);
-filt_data_lying = filtfilt(bsFilt,filt_data_lying);
+% filt_data_fmri = filtfilt(bsFilt,filt_data_fmri);
+% filt_data_lying = filtfilt(bsFilt,filt_data_lying);
 
 %% Deteção dos índices de segmentação
 
 % ----- Seated -----
 
-last_low = true; 
-last_high = false;
+last_low = false; 
+last_high = true;
 
 falling_edges = [];
 rising_edges = [];
@@ -245,16 +250,23 @@ for i = 1:length(filt_photoVector_seated)
     end
 end
 
-rising_edges(1) = []; 
+falling_edges(end) = [];
 
 seg_target_seated = [];
 seg_nontarget_seated = [];
 
 for i = 1:length(falling_edges) % Verificar quais blocos pertecem aos targets e não targets
-    if(min(filt_photoVector_seated(falling_edges(i):rising_edges(i))) < 125)
-        seg_nontarget_seated = [seg_nontarget_seated, falling_edges(i)];
-    else
-        seg_target_seated = [seg_target_seated, falling_edges(i)];
+
+    aux = filt_photoVector_seated(falling_edges(i):rising_edges(i));
+
+    if (length(aux) >= 55) && (length(aux) <= 75)
+    
+        if(min(aux) < 140)
+            seg_nontarget_seated = [seg_nontarget_seated, falling_edges(i)];
+        else
+            seg_target_seated = [seg_target_seated, falling_edges(i)];
+        end
+
     end
 end
 
@@ -263,8 +275,8 @@ seg_nontarget_seated = unique(seg_nontarget_seated);
 
 % ----- fMRI -----
 
-last_low = true; 
-last_high = false;
+last_low = false; 
+last_high = true;
 
 falling_edges = [];
 rising_edges = [];
@@ -288,19 +300,25 @@ for i = 1:length(filt_photoVector_fmri)
     end
 end
 
-rising_edges(1:11) = []; 
-falling_edges(1:10) = []; 
 falling_edges(end) = [];
 
 seg_target_fmri = [];
 seg_nontarget_fmri = [];
 
 for i = 1:length(falling_edges) % Verificar quais blocos pertecem aos targets e não targets
-    if(min(filt_photoVector_fmri(falling_edges(i):rising_edges(i))) < 125)
-        seg_nontarget_fmri = [seg_nontarget_fmri, falling_edges(i)];
-    else
-        seg_target_fmri = [seg_target_fmri, falling_edges(i)];
+
+    aux = filt_photoVector_fmri(falling_edges(i):rising_edges(i));
+
+    if (length(aux) >= 55) && (length(aux) <= 75)
+    
+        if(min(aux) < 140)
+            seg_nontarget_fmri = [seg_nontarget_fmri, falling_edges(i)];
+        else
+            seg_target_fmri = [seg_target_fmri, falling_edges(i)];
+        end
+
     end
+
 end
 
 seg_target_fmri = unique(seg_target_fmri);
@@ -316,7 +334,7 @@ rising_edges = [];
 
 for i = 1:length(filt_photoVector_lying)
     photoresistor = filt_photoVector_lying(i);
-    if photoresistor <= 235 % Possible falling edge
+    if photoresistor <= 16.5 % Possible falling edge
         if last_high % Found falling edge
             falling_edges = [falling_edges;i];
         end
@@ -324,7 +342,7 @@ for i = 1:length(filt_photoVector_lying)
         last_low = true; 
         last_high = false;
 
-    elseif photoresistor >= 230 % Possible rising edge
+    elseif photoresistor >= 16.5 % Possible rising edge
         if last_low % Found rising edge
             rising_edges = [rising_edges; i];
         end
@@ -334,21 +352,36 @@ for i = 1:length(filt_photoVector_lying)
 end
 
 rising_edges(1) = [];
-falling_edges(end) = [];
+rising_edges(end) = [];
+falling_edges(1) = [];
+
 
 seg_target_lying = [];
 seg_nontarget_lying = [];
 
 for i = 1:length(falling_edges) % Verificar quais blocos pertecem aos targets e não targets
-    if(min(filt_photoVector_lying(falling_edges(i):rising_edges(i))) < 125)
-        seg_nontarget_lying = [seg_nontarget_lying, falling_edges(i)];
-    else
-        seg_target_lying = [seg_target_lying, falling_edges(i)];
+
+    aux = filt_photoVector_lying(rising_edges(i):falling_edges(i));
+
+    if (length(aux) >= 55) && (length(aux) <= 75)
+
+        if(max(aux) < 90)
+            seg_nontarget_lying = [seg_nontarget_lying, falling_edges(i)];
+        else
+            seg_target_lying = [seg_target_lying, falling_edges(i)];
+        end
+
     end
 end
 
 seg_target_lying = unique(seg_target_lying);
 seg_nontarget_lying = unique(seg_nontarget_lying);
+
+%% Verificar índices da segmentação num plot 
+
+% figure(fig)
+% fig = fig +1;
+% plot(falling_edges, filt_photoVector_seated(falling_edges),'r*');
 
 %% Segmentação do EEG
 
@@ -1005,71 +1038,69 @@ cbh2.Label.Rotation=0;
 % 
 % end
 
-%% 2D movie of topographic ERPs (Target - Seated)
-
-figure('units','pixels','position',[0 0 1920 1080]); 
-set(gcf, 'WindowState', 'maximized');
-
-targ_seated = eegmovie(tERP_seated', fs, nch_locs ,...
-     'time','on','startsec',-0.200 , 'topoplotopt', ...
-     {'numcontour' n_cont},'minmax',clim,'title','EEG seated');
-
-seemovie(targ_seated,0,clim);
-
-%% 2D movie of topographic ERPs (Target - Lying)
-
-figure('units','pixels','position',[0 0 1920 1080]); 
-set(gcf, 'WindowState', 'maximized');
-
-targ_lying = eegmovie(tERP_lying', fs, nch_locs ,...
-     'time','on','startsec',-0.200 , 'topoplotopt', ...
-     {'numcontour' n_cont},'minmax',clim,'title','EEG lying');
-
-seemovie(targ_lying,0,clim);
-
-%% 2D movie of topographic ERPs (Target - fMRI)
-
-figure('units','pixels','position',[0 0 1920 1080]); 
-set(gcf, 'WindowState', 'maximized');
-
-targ_fmri = eegmovie(tERP_fmri', fs, nch_locs ,...
-     'time','on','startsec',-0.200 , 'topoplotopt', ...
-     {'numcontour' n_cont},'minmax',clim,'title','EEG w/ fMRI');
-
-seemovie(targ_fmri,0,clim);
-
-%% 2D movie of topographic ERPs (NonTarget - Seated)
-
-figure('units','pixels','position',[0 0 1920 1080]); 
-set(gcf, 'WindowState', 'maximized');
-
-nontarg_seated = eegmovie(ntERP_seated', fs, nch_locs ,...
-     'time','on','startsec',-0.200 , 'topoplotopt', ...
-     {'numcontour' n_cont},'minmax',clim,'title','EEG seated');
-
-seemovie(nontarg_seated,0,clim);
-
-%% 2D movie of topographic ERPs (NonTarget - Lying)
-
-figure('units','pixels','position',[0 0 1920 1080]); 
-set(gcf, 'WindowState', 'maximized');
-
-nontarg_lying = eegmovie(ntERP_lying', fs, nch_locs ,...
-     'time','on','startsec',-0.200 , 'topoplotopt', ...
-     {'numcontour' n_cont},'minmax',clim,'title','EEG lying');
-
-seemovie(nontarg_lying,0,clim);
-
-%% 2D movie of topographic ERPs (NonTarget - fMRI)
-
-figure('units','pixels','position',[0 0 1920 1080]); 
-set(gcf, 'WindowState', 'maximized');
-
-nontarg_fmri = eegmovie(ntERP_fmri', fs, nch_locs ,...
-     'time','on','startsec',-0.200 , 'topoplotopt', ...
-     {'numcontour' n_cont},'minmax',clim,'title','EEG w/ fMRI');
-
-seemovie(nontarg_fmri,0,clim);
-
-%%
-[x,y] = runica(data_seated');
+% %% 2D movie of topographic ERPs (Target - Seated)
+% 
+% figure('units','pixels','position',[0 0 1920 1080]); 
+% set(gcf, 'WindowState', 'maximized');
+% 
+% targ_seated = eegmovie(tERP_seated', fs, nch_locs ,...
+%      'time','on','startsec',-0.200 , 'topoplotopt', ...
+%      {'numcontour' n_cont},'minmax',clim,'title','EEG seated');
+% 
+% seemovie(targ_seated,0,clim);
+% 
+% %% 2D movie of topographic ERPs (Target - Lying)
+% 
+% figure('units','pixels','position',[0 0 1920 1080]); 
+% set(gcf, 'WindowState', 'maximized');
+% 
+% targ_lying = eegmovie(tERP_lying', fs, nch_locs ,...
+%      'time','on','startsec',-0.200 , 'topoplotopt', ...
+%      {'numcontour' n_cont},'minmax',clim,'title','EEG lying');
+% 
+% seemovie(targ_lying,0,clim);
+% 
+% %% 2D movie of topographic ERPs (Target - fMRI)
+% 
+% figure('units','pixels','position',[0 0 1920 1080]); 
+% set(gcf, 'WindowState', 'maximized');
+% 
+% targ_fmri = eegmovie(tERP_fmri', fs, nch_locs ,...
+%      'time','on','startsec',-0.200 , 'topoplotopt', ...
+%      {'numcontour' n_cont},'minmax',clim,'title','EEG w/ fMRI');
+% 
+% seemovie(targ_fmri,0,clim);
+% 
+% %% 2D movie of topographic ERPs (NonTarget - Seated)
+% 
+% figure('units','pixels','position',[0 0 1920 1080]); 
+% set(gcf, 'WindowState', 'maximized');
+% 
+% nontarg_seated = eegmovie(ntERP_seated', fs, nch_locs ,...
+%      'time','on','startsec',-0.200 , 'topoplotopt', ...
+%      {'numcontour' n_cont},'minmax',clim,'title','EEG seated');
+% 
+% seemovie(nontarg_seated,0,clim);
+% 
+% %% 2D movie of topographic ERPs (NonTarget - Lying)
+% 
+% figure('units','pixels','position',[0 0 1920 1080]); 
+% set(gcf, 'WindowState', 'maximized');
+% 
+% nontarg_lying = eegmovie(ntERP_lying', fs, nch_locs ,...
+%      'time','on','startsec',-0.200 , 'topoplotopt', ...
+%      {'numcontour' n_cont},'minmax',clim,'title','EEG lying');
+% 
+% seemovie(nontarg_lying,0,clim);
+% 
+% %% 2D movie of topographic ERPs (NonTarget - fMRI)
+% 
+% figure('units','pixels','position',[0 0 1920 1080]); 
+% set(gcf, 'WindowState', 'maximized');
+% 
+% nontarg_fmri = eegmovie(ntERP_fmri', fs, nch_locs ,...
+%      'time','on','startsec',-0.200 , 'topoplotopt', ...
+%      {'numcontour' n_cont},'minmax',clim,'title','EEG w/ fMRI');
+% 
+% seemovie(nontarg_fmri,0,clim);
+% 
