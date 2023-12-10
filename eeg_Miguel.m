@@ -24,6 +24,8 @@
 close all;
 clc, clear;
 
+fig = 1;
+
 % EEGLAB functions documentation: https://sccn.ucsd.edu/~arno/eeglab/auto/indexfunc.html
 
 addpath(genpath('eeglab2023.0')); % Path do EEGLAB 
@@ -31,6 +33,9 @@ ch_locs=readlocs('BioSemi64.loc'); % Ficheiro com localização dos elétrodos
 
 data_seated = readtable("S3_25_Male.csv");
 data_seated = table2array(data_seated);
+
+data_seatedsound = readtable("S2_25_sentado_som_2023-06-21_18-18.csv");
+data_seatedsound = table2array(data_seatedsound);
 
 data_fmri = readtable("S2_25_Male_2023-06-02_16-21.csv");
 data_fmri = table2array(data_fmri);
@@ -54,7 +59,7 @@ nch_locs = ch_locs(logical(idx)); % Elétrodos usados
 
 %% 2D plot
 
-fig = 1;
+
 %figure (fig), topoplot([], nch_locs, 'style', 'blank', 'electrodes', 'ptslabels');
 %title(["2D Channel Locations";""]);
 
@@ -62,9 +67,9 @@ fig = 1;
 
 %% Headplot
 
-%splfile='FileHeadPlot.spl';
+splfile='FileHeadPlot.spl';
 %headplot('setup',nch_locs,splfile,'Param','Value');
-%headplot(data_fmri(100000,1:end-1),splfile,'electrodes','on','labels',2,'maplimits', 'absmax','colormap', sky(64));
+headplot(data_fmri(100000,1:end-1),splfile,'electrodes','on','labels',2,'maplimits', 'absmax','colormap', sky(64));
 
 %% Verificar o efeito dos filtros na fase dos sinais
 
@@ -91,6 +96,11 @@ t_seated = ((0:length(photoVector_seated)-1)*1/fs)/60;
 n_pnts = 20;
 filt_photoVector_seated = movmedian(photoVector_seated,20);
 
+photoVector_seatedsound=(data_seatedsound(:,end));
+
+t_seatedsound = ((0:length(photoVector_seatedsound)-1)*1/fs)/60;
+filt_photoVector_seatedsound = movmedian(photoVector_seatedsound,20);
+
 % lpFilt = designfilt('lowpassfir','FilterOrder',1000,'PassbandFrequency',2, ...
 %          'StopbandFrequency',2.5,'SampleRate',fs);
 %fvtool(lpFilt)
@@ -113,6 +123,9 @@ filt_photoVector_lying = movmedian(photoVector_lying,20);
 figure (fig); plot(t_seated,filt_photoVector_seated), title("Fotoresistência (Mediana flutuante com "+n_pnts+" pontos) - EEG Sentado"), xlabel('Tempo (min)');
 fig = fig + 1;
 
+figure (fig); plot(t_seatedsound,filt_photoVector_seatedsound), title("Fotoresistência (Mediana flutuante com "+n_pnts+" pontos) - EEG Sentado com som"), xlabel('Tempo (min)');
+fig = fig + 1;
+
 % figure (fig); plot(t,lpFilt_phVec), title("Fotoresistência (Filtro passa-baixo)"), xlabel('Tempo (min)');
 % fig = fig + 1;
 
@@ -125,6 +138,7 @@ fig = fig + 1;
 %% Re-referenciação do EEG 
 
 eeg_data_seated = data_seated(:,1:end-1);
+eeg_data_seatedsound = data_seatedsound(:,1:end-1);
 eeg_data_fmri = data_fmri(:,1:end-1);
 eeg_data_lying = data_lying(:,1:end-1);
 
@@ -147,10 +161,9 @@ bpFilt = designfilt('bandpassfir','FilterOrder',3000, ...
 %filt_data = filtfilt(bpFilt,lap');
 
 filt_data_seated = filtfilt(bpFilt,eeg_data_seated); % Aplica ZeroPhase
+filt_data_seatedsound = filtfilt(bpFilt,eeg_data_seatedsound);
 filt_data_fmri = filtfilt(bpFilt,eeg_data_fmri);
 filt_data_lying = filtfilt(bpFilt,eeg_data_lying);
-
-save('filt_data_lying.mat','filt_data_lying');
 
 %% FFT do sinal 
 
@@ -161,9 +174,9 @@ save('filt_data_lying.mat','filt_data_lying');
 % ----- Sentado -----
 
 T = 1/fs; % Sampling period
-L = length(eeg_data_seated(:,12)); % Length of signal
+L = length(filt_data_seated(:,12)); % Length of signal
 tm = (0:L-1)*T; % Time vector
-Y = fft(eeg_data_seated(:,8)); % Fourier transform
+Y = fft(filt_data_seated(:,8)); % Fourier transform
 P2 = abs(Y/L); % Two-sided spectrum
 P1 = P2(1:floor(L/2)+1); % Single-sided spectrum
 P1(2:end-1) = 2*P1(2:end-1);
@@ -173,6 +186,24 @@ figure(fig)
 fig = fig +1;
 plot(f,P1) 
 title('Espectro de Amplitudes X(t) - Sentado')
+xlabel('f (Hz)')
+ylabel('|P1(f)|')
+
+% ----- Sentado som -----
+
+T = 1/fs; % Sampling period
+L = length(filt_data_seatedsound(:,8)); % Length of signal
+tm = (0:L-1)*T; % Time vector
+Y = fft(filt_data_seatedsound(:,8)); % Fourier transform
+P2 = abs(Y/L); % Two-sided spectrum
+P1 = P2(1:floor(L/2)+1); % Single-sided spectrum
+P1(2:end-1) = 2*P1(2:end-1);
+f = fs*(0:(L/2))/L; % Frequency vector
+
+figure(fig)
+fig = fig +1;
+plot(f,P1) 
+title('Espectro de Amplitudes X(t) - Sentado com som')
 xlabel('f (Hz)')
 ylabel('|P1(f)|')
 
@@ -215,12 +246,13 @@ ylabel('|P1(f)|')
 %% Retirar sub-harmónica dos 25 Hz
 
 %Band-stop
-bsFilt = designfilt('bandstopfir','FilterOrder',1000, ...
-         'CutoffFrequency1',24.7,'CutoffFrequency2',25.3, ...
+bsFilt = designfilt('bandstopfir','FilterOrder',3000, ...
+         'CutoffFrequency1',24.8,'CutoffFrequency2',25.2, ...
          'SampleRate',fs);
 %fvtool(bsFilt)
 
 filt_data_seated = filtfilt(bsFilt,filt_data_seated);
+filt_data_seatedsound = filtfilt(bsFilt,filt_data_seatedsound);
 filt_data_fmri = filtfilt(bsFilt,filt_data_fmri);
 filt_data_lying = filtfilt(bsFilt,filt_data_lying);
 
@@ -281,6 +313,61 @@ end
 
 seg_target_seated = unique(seg_target_seated);
 seg_nontarget_seated = unique(seg_nontarget_seated);
+
+
+% ----- Seated w/ sound -----
+
+last_low = true; 
+last_high = false;
+
+falling_edges = [];
+rising_edges = [];
+
+for i = 1:length(filt_photoVector_seatedsound)
+    photoresistor = filt_photoVector_seatedsound(i);
+    if photoresistor <= 232 % Possible falling edge
+        if last_high % Found falling edge
+            falling_edges = [falling_edges;i];
+        end
+
+        last_low = true; 
+        last_high = false;
+
+    elseif photoresistor >= 232 % Possible rising edge
+        if last_low % Found rising edge
+            rising_edges = [rising_edges; i];
+        end
+        last_low = false;
+        last_high = true; 
+    end
+end
+
+falling_edges(1:2) = [];
+rising_edges(1:3) = [];
+
+falling_edges(end) = [];
+
+seg_target_seatedsound = [];
+seg_nontarget_seatedsound = [];
+
+for i = 1:length(falling_edges) % Verificar quais blocos pertecem aos targets e não targets
+    
+    aux = filt_photoVector_seatedsound(falling_edges(i):rising_edges(i));
+
+    if (length(aux)>=50) && (length(aux)<=75)
+    
+        if(min(aux) < 130)
+            seg_nontarget_seatedsound = [seg_nontarget_seatedsound, falling_edges(i)];
+        else
+            seg_target_seatedsound = [seg_target_seatedsound, falling_edges(i)];
+        end
+
+    end
+
+end
+
+seg_target_seatedsound = unique(seg_target_seatedsound);
+seg_nontarget_seatedsound = unique(seg_nontarget_seatedsound);
 
 % ----- fMRI -----
 
@@ -410,6 +497,21 @@ for i=1:length(seg_nontarget_seated)
 end
 
 % -------------------
+% Target - Sentado c/ som
+
+[targetEEG_seatedsound, nontargetEEG_seatedsound] = deal(zeros(length(seg_target_seatedsound), length(time), length(channel_labels))); % Pré-alocação dos dados
+
+for i=1:length(seg_target_seatedsound)
+    targetEEG_seatedsound(i,:,:) = cat(3,filt_data_seatedsound((seg_target_seatedsound(i)+idx_bf):(seg_target_seatedsound(i)+idx_af),:));
+end
+
+% Non-target - Sentado c/ som
+
+for i=1:length(seg_nontarget_seatedsound)
+    nontargetEEG_seatedsound(i,:,:) = cat(3,filt_data_seatedsound((seg_nontarget_seatedsound(i)+idx_bf):(seg_nontarget_seatedsound(i)+idx_af),:));
+end
+
+% -------------------
 % Target - fMRI
 
 [targetEEG_fmri, nontargetEEG_fmri] = deal(zeros(length(seg_target_fmri), length(time), length(channel_labels))); % Pré-alocação dos dados
@@ -462,6 +564,22 @@ for t=1:size(nontargetEEG_seated,1)
     end
 end 
 
+% ----- Sentado c/som -----
+
+for t=1:size(targetEEG_seatedsound,1)
+    for e=1:size(targetEEG_seatedsound,3)
+        tmn = mean(targetEEG_seatedsound(t,baseidx(1):baseidx(2),e));   
+        targetEEG_seatedsound(t,:,e) = targetEEG_seatedsound(t,:,e) - tmn;
+    end
+end 
+
+for t=1:size(nontargetEEG_seatedsound,1)
+    for e=1:size(nontargetEEG_seatedsound,3)
+        tmn = mean(nontargetEEG_seatedsound(t,baseidx(1):baseidx(2),e));   
+        nontargetEEG_seatedsound(t,:,e) = nontargetEEG_seatedsound(t,:,e) - tmn;
+    end
+end 
+
 % ----- fMRI -----
 
 for t=1:size(targetEEG_fmri,1)
@@ -500,6 +618,12 @@ end
 
 tERP_seated = squeeze(mean(targetEEG_seated, 1)); % ERP target (média do sinal na dimensão trials)
 ntERP_seated = squeeze(mean(nontargetEEG_seated, 1)); % ERP não-target
+
+% ----- Sentado c/ som -----
+
+tERP_seatedsound = squeeze(mean(targetEEG_seatedsound, 1)); % ERP target (média do sinal na dimensão trials)
+ntERP_seatedsound = squeeze(mean(nontargetEEG_seatedsound, 1)); % ERP não-target
+
 
 % ----- fMRI -----
 
@@ -578,65 +702,211 @@ plot(time,targetEEG_fmri(101,:,8),'b','LineWidth',2);
 
 % Definição do tempo dos picos e respetivos índices 
 
-tN170 = [90; 120]; % ms
+tN170 = [90; 130]; % ms
 idxN170 = dsearchn(time',tN170);
 
-tN2 = [180; 220];
+tN2 = [180; 230];
 idxN2 = dsearchn(time',tN2);
 
 tP3 = [240; 340];
 idxP3 = dsearchn(time',tP3);
 
-% % % Gráficos dos ERPs no tempo
-% 
-% clim = [floor(min(min(tERP_seated))),ceil(max(max(tERP_seated)))];
-% 
-% aux = 0;
-% 
-% for i=1:length(channel_labels)
-%     figure(fig)
-%     hold on,
-%     fig = fig + 1;
-%     plot(time,tERP_seated(:,i),'b','LineWidth',2);
-%     plot(time,ntERP_seated(:,i),'r','LineWidth',2);
-%     xline(0, '--')    
-%     ylim([(clim(1)+aux),(clim(2)-aux)])
-%     xlim([min(time),max(time)])
-%     title(channel_labels(i) + " - Sentado"), xlabel('Tempo (ms)'), ylabel('Amplitude (\muv)'), grid on
-% 
-%     if(contains(channel_labels(i),"z") || (contains(channel_labels(i),"C") && ~(contains(channel_labels(i),"P"))) ) % VPP
-%         c = 'blue';
-%         a = 'VPP';
-%         N2 = [tN2(1), tN2(2), tN2(2), tN2(1)];
-%     else % N170
-%         c = 'cyan';
-%         a = 'N170';
-%         N2 = [tN2(1), tN2(2), tN2(2), tN2(1)];
-%     end
-% 
-%     N170 = [tN170(1), tN170(2), tN170(2), tN170(1)];
-%     P3 = [tP3(1), tP3(2), tP3(2), tP3(1)];
-% 
-%     % Estas patches precisam de ser ajustadas
-% 
-%     ph0 = patch([baseline(1) baseline(2) baseline(2) baseline(1)],[clim(1) clim(1) clim(2) clim(2)],'black');
-%     set(ph0,'facealpha',.1,'edgecolor','none')
-% 
-%     ph1 = patch(N170,[clim(1) clim(1) clim(2) clim(2)],c);
-%     set(ph1,'facealpha',.1,'edgecolor','none')
-% 
-%     ph2 = patch(N2,[clim(1) clim(1) clim(2) clim(2)],'y');
-%     set(ph2,'facealpha',.1,'edgecolor','none')
-% 
-%     ph3 = patch(P3,[clim(1) clim(1) clim(2) clim(2)],'r');
-%     set(ph3,'facealpha',.1,'edgecolor','none')
-% 
-%     legend('Target','Non-target','Stimulus','Baseline',a, 'N2', 'P3','AutoUpdate', 'off')
-% 
-%     yline(0, '--')
-% 
-%     hold off
-% end
+%% Gráficos dos ERPs no tempo
+
+i = 7;
+
+save('tERP_seatedPO8.mat','tERP_seated')
+
+clim = [floor(min(min(tERP_seated(:,i)))),ceil(max(max(tERP_seated(:,i))))];
+
+aux = 0;
+
+figure(fig)
+hold on,
+fig = fig + 1;
+plot(time,tERP_seated(:,i),'b','LineWidth',2);
+plot(time,ntERP_seated(:,i),'r','LineWidth',2);
+xline(0, '--')    
+ylim([(clim(1)+aux),(clim(2)-aux)])
+xlim([min(time),max(time)])
+title(channel_labels(i) + " - Seated"), xlabel('Time (ms)'), ylabel('Amplitude (\muv)'), grid on
+
+if(contains(channel_labels(i),"z") || (contains(channel_labels(i),"C") && ~(contains(channel_labels(i),"P"))) ) % VPP
+    c = 'blue';
+    a = 'VPP';
+    N2 = [tN2(1), tN2(2), tN2(2), tN2(1)];
+else % N170
+    c = 'cyan';
+    a = 'N170';
+    N2 = [tN2(1), tN2(2), tN2(2), tN2(1)];
+end
+
+N170 = [tN170(1), tN170(2), tN170(2), tN170(1)];
+P3 = [tP3(1), tP3(2), tP3(2), tP3(1)];
+
+% Estas patches precisam de ser ajustadas
+
+ph0 = patch([baseline(1) baseline(2) baseline(2) baseline(1)],[clim(1) clim(1) clim(2) clim(2)],'black');
+set(ph0,'facealpha',.1,'edgecolor','none')
+
+ph1 = patch(N170,[clim(1) clim(1) clim(2) clim(2)],c);
+set(ph1,'facealpha',.1,'edgecolor','none')
+
+ph2 = patch(N2,[clim(1) clim(1) clim(2) clim(2)],'y');
+set(ph2,'facealpha',.1,'edgecolor','none')
+
+ph3 = patch(P3,[clim(1) clim(1) clim(2) clim(2)],'r');
+set(ph3,'facealpha',.1,'edgecolor','none')
+
+legend('Target','Non-target','Stimulus','Baseline',a,'N2','AutoUpdate', 'off')
+
+yline(0, '--')
+
+hold off
+
+%
+clim = [floor(min(min(tERP_seatedsound(:,i)))),ceil(max(max(tERP_seatedsound(:,i))))];
+
+aux = 0;
+
+figure(fig)
+hold on,
+fig = fig + 1;
+plot(time,tERP_seatedsound(:,i),'b','LineWidth',2);
+plot(time,ntERP_seatedsound(:,i),'r','LineWidth',2);
+xline(0, '--')    
+ylim([(clim(1)+aux),(clim(2)-aux)])
+xlim([min(time),max(time)])
+title(channel_labels(i) + " - Seated w/ sound"), xlabel('Time (ms)'), ylabel('Amplitude (\muv)'), grid on
+
+if(contains(channel_labels(i),"z") || (contains(channel_labels(i),"C") && ~(contains(channel_labels(i),"P"))) ) % VPP
+    c = 'blue';
+    a = 'VPP';
+    N2 = [tN2(1), tN2(2), tN2(2), tN2(1)];
+else % N170
+    c = 'cyan';
+    a = 'N170';
+    N2 = [tN2(1), tN2(2), tN2(2), tN2(1)];
+end
+
+N170 = [tN170(1), tN170(2), tN170(2), tN170(1)];
+P3 = [tP3(1), tP3(2), tP3(2), tP3(1)];
+
+% Estas patches precisam de ser ajustadas
+
+ph0 = patch([baseline(1) baseline(2) baseline(2) baseline(1)],[clim(1) clim(1) clim(2) clim(2)],'black');
+set(ph0,'facealpha',.1,'edgecolor','none')
+
+ph1 = patch(N170,[clim(1) clim(1) clim(2) clim(2)],c);
+set(ph1,'facealpha',.1,'edgecolor','none')
+
+ph2 = patch(N2,[clim(1) clim(1) clim(2) clim(2)],'y');
+set(ph2,'facealpha',.1,'edgecolor','none')
+
+% ph3 = patch(P3,[clim(1) clim(1) clim(2) clim(2)],'r');
+% set(ph3,'facealpha',.1,'edgecolor','none')
+
+legend('Target','Non-target','Stimulus','Baseline',a,'N2','AutoUpdate', 'off')
+
+yline(0, '--')
+
+hold off
+
+clim = [floor(min(min(tERP_lying(:,i)))),ceil(max(max(tERP_lying(:,i))))];
+
+aux = 0;
+
+figure(fig)
+hold on,
+fig = fig + 1;
+plot(time,tERP_lying(:,i),'b','LineWidth',2);
+plot(time,ntERP_lying(:,i),'r','LineWidth',2);
+xline(0, '--')    
+ylim([(clim(1)+aux),(clim(2)-aux)])
+xlim([min(time),max(time)])
+title(channel_labels(i) + " - Lying"), xlabel('Time (ms)'), ylabel('Amplitude (\muv)'), grid on
+
+if(contains(channel_labels(i),"z") || (contains(channel_labels(i),"C") && ~(contains(channel_labels(i),"P"))) ) % VPP
+    c = 'blue';
+    a = 'VPP';
+    N2 = [tN2(1), tN2(2), tN2(2), tN2(1)];
+else % N170
+    c = 'cyan';
+    a = 'N170';
+    N2 = [tN2(1), tN2(2), tN2(2), tN2(1)];
+end
+
+N170 = [tN170(1), tN170(2), tN170(2), tN170(1)];
+P3 = [tP3(1), tP3(2), tP3(2), tP3(1)];
+
+% Estas patches precisam de ser ajustadas
+
+ph0 = patch([baseline(1) baseline(2) baseline(2) baseline(1)],[clim(1) clim(1) clim(2) clim(2)],'black');
+set(ph0,'facealpha',.1,'edgecolor','none')
+
+ph1 = patch(N170,[clim(1) clim(1) clim(2) clim(2)],c);
+set(ph1,'facealpha',.1,'edgecolor','none')
+
+ph2 = patch(N2,[clim(1) clim(1) clim(2) clim(2)],'y');
+set(ph2,'facealpha',.1,'edgecolor','none')
+
+% ph3 = patch(P3,[clim(1) clim(1) clim(2) clim(2)],'r');
+% set(ph3,'facealpha',.1,'edgecolor','none')
+
+legend('Target','Non-target','Stimulus','Baseline',a,'N2','AutoUpdate', 'off')
+
+yline(0, '--')
+
+hold off
+
+%
+clim = [floor(min(min(tERP_fmri(:,i)))),ceil(max(max(tERP_fmri(:,i))))];
+
+aux = 0;
+
+figure(fig)
+hold on,
+fig = fig + 1;
+plot(time,tERP_fmri(:,i),'b','LineWidth',2);
+plot(time,ntERP_fmri(:,i),'r','LineWidth',2);
+xline(0, '--')    
+ylim([(clim(1)+aux),(clim(2)-aux)])
+xlim([min(time),max(time)])
+title(channel_labels(i) + " - Lying w/ fRMI"), xlabel('Time (ms)'), ylabel('Amplitude (\muv)'), grid on
+
+if(contains(channel_labels(i),"z") || (contains(channel_labels(i),"C") && ~(contains(channel_labels(i),"P"))) ) % VPP
+    c = 'blue';
+    a = 'VPP';
+    N2 = [tN2(1), tN2(2), tN2(2), tN2(1)];
+else % N170
+    c = 'cyan';
+    a = 'N170';
+    N2 = [tN2(1), tN2(2), tN2(2), tN2(1)];
+end
+
+N170 = [tN170(1), tN170(2), tN170(2), tN170(1)];
+P3 = [tP3(1), tP3(2), tP3(2), tP3(1)];
+
+% Estas patches precisam de ser ajustadas
+
+ph0 = patch([baseline(1) baseline(2) baseline(2) baseline(1)],[clim(1) clim(1) clim(2) clim(2)],'black');
+set(ph0,'facealpha',.1,'edgecolor','none')
+
+ph1 = patch(N170,[clim(1) clim(1) clim(2) clim(2)],c);
+set(ph1,'facealpha',.1,'edgecolor','none')
+
+ph2 = patch(N2,[clim(1) clim(1) clim(2) clim(2)],'y');
+set(ph2,'facealpha',.1,'edgecolor','none')
+
+% ph3 = patch(P3,[clim(1) clim(1) clim(2) clim(2)],'r');
+% set(ph3,'facealpha',.1,'edgecolor','none')
+
+legend('Target','Non-target','Stimulus','Baseline',a,'N2','AutoUpdate', 'off')
+
+yline(0, '--')
+
+hold off
+
 % 
 % % Mapas topográficos
 % 
@@ -871,11 +1141,12 @@ for i=1:length(channel_labels)
     figure(fig)
     hold on,
     fig = fig + 1;
-    plot(time,tERP_seated(:,i),'r','LineWidth',2);
-    % plot(time,tERP_lying(:,i),'r','LineWidth',2);
-    % plot(time,tERP_fmri(:,i),'g','LineWidth',2);
+    plot(time,tERP_seated(:,i),'b','LineWidth',2);
+    plot(time,tERP_seatedsound(:,i),'k','LineWidth',2);
+    plot(time,tERP_lying(:,i),'r','LineWidth',2);
+    plot(time,tERP_fmri(:,i),'g','LineWidth',2);
     xline(0, '--','LineWidth',1.5)    
-    %ylim([(clim(1)+aux),(clim(2)-aux)])
+    ylim([(clim(1)+aux),(clim(2)-aux)])
     xlim([min(time),max(time)])
     title(channel_labels(i) + " - Target"), xlabel('Time (ms)'), ylabel('Amplitude (\muv)'), grid on
     
@@ -897,16 +1168,16 @@ for i=1:length(channel_labels)
     ph0 = patch([baseline(1) baseline(2) baseline(2) baseline(1)],[clim(1) clim(1) clim(2) clim(2)],'black');
     set(ph0,'facealpha',.1,'edgecolor','none')
 
-    ph1 = patch(N170,[clim(1) clim(1) clim(2) clim(2)],c);
-    set(ph1,'facealpha',.1,'edgecolor','none')
-
-    ph2 = patch(N2,[clim(1) clim(1) clim(2) clim(2)],'y');
-    set(ph2,'facealpha',.1,'edgecolor','none')
+    % ph1 = patch(N170,[clim(1) clim(1) clim(2) clim(2)],c);
+    % set(ph1,'facealpha',.1,'edgecolor','none')
+    % 
+    % ph2 = patch(N2,[clim(1) clim(1) clim(2) clim(2)],'y');
+    % set(ph2,'facealpha',.1,'edgecolor','none')
     
-    ph3 = patch(P3,[clim(1) clim(1) clim(2) clim(2)],'r');
-    set(ph3,'facealpha',.1,'edgecolor','none')
+    % ph3 = patch(P3,[clim(1) clim(1) clim(2) clim(2)],'r');
+    % set(ph3,'facealpha',.1,'edgecolor','none')
 
-    legend('EEG Seated','Stimulus','Baseline',a, 'N2', 'P3','AutoUpdate', 'off')
+    legend('Seated','Seated w/ fMRI', 'Lying', 'Lying w/ fMRI','Stimulus','Baseline', 'P3','AutoUpdate', 'off')
     
     yline(0, ':','LineWidth',1.5)
     hold off
@@ -917,8 +1188,8 @@ end
 
 figure(fig)
 fig = fig + 1;
-tlo1=tiledlayout(3,3,'TileSpacing','tight','Padding','tight');
-title(tlo1, ["Target | EEG seated (Top) | EEG Lying (Middle) | EEG w/ fMRI (Low) ";""], 'FontSize', 15, 'FontWeight','Bold');
+tlo1=tiledlayout(4,3,'TileSpacing','none','Padding','none');
+title(tlo1, ["Target";""], 'FontSize', 15, 'FontWeight','Bold');
 
 n_cont = 10;
 
@@ -934,10 +1205,19 @@ ax3=nexttile(tlo1);
 topoplot(mean(tERP_seated(idxP3(1):idxP3(2),:)),nch_locs,'maplimits',clim,'numcontour',n_cont,'electrodes','on');
 title(ax3,"P3 (" + tP3(1) +" - "+ tP3(2) + " ms)",'FontSize',12)
 
+ax14=nexttile(tlo1);
+topoplot(mean(tERP_seatedsound(idxN170(1):idxN170(2),:)),nch_locs,'maplimits',clim,'numcontour',n_cont,'electrodes','on');
+
+ax15=nexttile(tlo1);
+topoplot(mean(tERP_seatedsound(idxN2(1):idxN2(2),:)),nch_locs,'maplimits',clim,'numcontour',n_cont,'electrodes','on');
+
+ax16=nexttile(tlo1);
+topoplot(mean(tERP_seatedsound(idxP3(1):idxP3(2),:)),nch_locs,'maplimits',clim,'numcontour',n_cont,'electrodes','on');
+
 ax4=nexttile(tlo1);
 topoplot(mean(tERP_lying(idxN170(1):idxN170(2),:)),nch_locs,'maplimits',clim,'numcontour',n_cont,'electrodes','on');
 
-ax5=nexttile(tlo1);
+ax4=nexttile(tlo1);
 topoplot(mean(tERP_lying(idxN2(1):idxN2(2),:)),nch_locs,'maplimits',clim,'numcontour',n_cont,'electrodes','on');
 
 ax6=nexttile(tlo1);
@@ -1020,8 +1300,8 @@ clim = [min(min(clim)),max(max(clim))];
 
 figure(fig)
 fig = fig + 1;
-tlo1=tiledlayout(3,3,'TileSpacing','tight','Padding','tight');
-title(tlo1, ["NonTarget | EEG seated (Top) | EEG Lying (Middle) | EEG w/ fMRI (Low) ";""], 'FontSize', 15, 'FontWeight','Bold');
+tlo1=tiledlayout(4,3,'TileSpacing','none','Padding','none');
+title(tlo1, ["NonTarget";""], 'FontSize', 15, 'FontWeight','Bold');
 
 ax1=nexttile(tlo1);
 topoplot(mean(ntERP_seated(idxN170(1):idxN170(2),:)),nch_locs,'maplimits',clim,'numcontour',n_cont,'electrodes','on');
@@ -1034,6 +1314,15 @@ title(ax2,"N2 (" + tN2(1) +" - "+ tN2(2) + " ms)",'FontSize',12)
 ax3=nexttile(tlo1);
 topoplot(mean(ntERP_seated(idxP3(1):idxP3(2),:)),nch_locs,'maplimits',clim,'numcontour',n_cont,'electrodes','on');
 title(ax3,"P3 (" + tP3(1) +" - "+ tP3(2) + " ms)",'FontSize',12)
+
+ax14=nexttile(tlo1);
+topoplot(mean(ntERP_seatedsound(idxN170(1):idxN170(2),:)),nch_locs,'maplimits',clim,'numcontour',n_cont,'electrodes','on');
+
+ax15=nexttile(tlo1);
+topoplot(mean(ntERP_seatedsound(idxN2(1):idxN2(2),:)),nch_locs,'maplimits',clim,'numcontour',n_cont,'electrodes','on');
+
+ax16=nexttile(tlo1);
+topoplot(mean(ntERP_seatedsound(idxP3(1):idxP3(2),:)),nch_locs,'maplimits',clim,'numcontour',n_cont,'electrodes','on');
 
 ax4=nexttile(tlo1);
 topoplot(mean(ntERP_lying(idxN170(1):idxN170(2),:)),nch_locs,'maplimits',clim,'numcontour',n_cont,'electrodes','on');

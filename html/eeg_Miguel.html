@@ -1,0 +1,2976 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>eeg_Miguel</title><meta name="generator" content="MATLAB 9.14"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2023-06-23"><meta name="DC.source" content="eeg_Miguel.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h2>Contents</h2><div><ul><li><a href="#1">Falta fazer:</a></li><li><a href="#2">Informa&ccedil;&atilde;o dos picos</a></li><li><a href="#3">Importar os dados e inicializar vari&aacute;veis</a></li><li><a href="#4">2D plot</a></li><li><a href="#5">Headplot</a></li><li><a href="#6">Verificar o efeito dos filtros na fase dos sinais</a></li><li><a href="#7">Dados da fotoresist&ecirc;ncia</a></li><li><a href="#8">Re-referencia&ccedil;&atilde;o do EEG</a></li><li><a href="#9">Pr&eacute;-processamento do EEG</a></li><li><a href="#10">FFT do sinal</a></li><li><a href="#11">Retirar sub-harm&oacute;nica dos 25 Hz</a></li><li><a href="#12">Dete&ccedil;&atilde;o dos &iacute;ndices de segmenta&ccedil;&atilde;o</a></li><li><a href="#13">Segmenta&ccedil;&atilde;o do EEG</a></li><li><a href="#14">Corre&ccedil;&atilde;o da linha de base</a></li><li><a href="#15">Computa&ccedil;&atilde;o dos ERPs</a></li><li><a href="#16">Corre&ccedil;&atilde;o da linha de base</a></li><li><a href="#17">Baseline vs no baseline</a></li><li><a href="#18">Single trial plot</a></li><li><a href="#19">Gr&aacute;ficos - Sentado</a></li><li><a href="#20">Gr&aacute;ficos dos ERPs no tempo</a></li><li><a href="#21">Compara&ccedil;&atilde;o entre condi&ccedil;&otilde;es - Target</a></li><li><a href="#22">Mapas topogr&aacute;ficos - Target</a></li><li><a href="#23">Compara&ccedil;&atilde;o entre condi&ccedil;&otilde;es - Non-Target</a></li><li><a href="#24">Mapas topogr&aacute;ficos - Non-target</a></li><li><a href="#25">Compara&ccedil;&atilde;o entre condi&ccedil;&otilde;es - Target vs Non-Target</a></li></ul></div><h2 id="1">Falta fazer:</h2><pre class="codeinput"><span class="comment">% - An&aacute;lises estat&iacute;stica dos picos</span>
+<span class="comment">% - Ajustar os thesholds dos picos e ver melhor literatura dos picos entre o</span>
+<span class="comment">% N170/VPP e P300</span>
+<span class="comment">% Se der tempo, aplicar ICA</span>
+</pre><h2 id="2">Informa&ccedil;&atilde;o dos picos</h2><pre class="codeinput"><span class="comment">% N170 (100-200 ms) - Potencial com amplitude maior durante a apresen&ccedil;&atilde;o de faces em</span>
+<span class="comment">% compara&ccedil;&atilde;o com outros objetos/est&iacute;mulos visuais. El&eacute;trodos: P7, P8, PO7, PO8.</span>
+<span class="comment">% Geralmente &eacute; mais pronunciando no hemisf&eacute;rio direito.</span>
+<span class="comment">% Vertex Positive Potential (VPP) - 100 - 200 ms. Parece ser gerado pelo mesmo</span>
+<span class="comment">% processo neuronal de reconhecimento facil mas &eacute; captado nos el&eacute;trodos centrais:</span>
+<span class="comment">% FZ, CZ, apesar do poder haver pequenas diferen&ccedil;as de lat&ecirc;ncia.</span>
+<span class="comment">% Mais sobre o N170 e VPP: https://psyc.bbk.ac.uk/brainb/wp-content/uploads/sites/13/2019/05/eimer_N170_oxford.pdf</span>
+
+<span class="comment">% N2 (200-400 ms): FZ, Cz</span>
+<span class="comment">% P3 (300-600 ms): FZ, Fz, Pz</span>
+<span class="comment">% https://onlinelibrary.wiley.com/doi/pdfdirect/10.1111/j.1469-8986.2007.00602.x</span>
+</pre><h2 id="3">Importar os dados e inicializar vari&aacute;veis</h2><pre class="codeinput">close <span class="string">all</span>;
+clc, clear;
+
+fig = 1;
+
+<span class="comment">% EEGLAB functions documentation: https://sccn.ucsd.edu/~arno/eeglab/auto/indexfunc.html</span>
+
+addpath(genpath(<span class="string">'eeglab2023.0'</span>)); <span class="comment">% Path do EEGLAB</span>
+ch_locs=readlocs(<span class="string">'BioSemi64.loc'</span>); <span class="comment">% Ficheiro com localiza&ccedil;&atilde;o dos el&eacute;trodos</span>
+
+data_seated = readtable(<span class="string">"S3_25_Male.csv"</span>);
+data_seated = table2array(data_seated);
+
+data_seatedsound = readtable(<span class="string">"S2_25_sentado_som_2023-06-21_18-18.csv"</span>);
+data_seatedsound = table2array(data_seatedsound);
+
+data_fmri = readtable(<span class="string">"S2_25_Male_2023-06-02_16-21.csv"</span>);
+data_fmri = table2array(data_fmri);
+
+data_lying = readtable(<span class="string">"S22_25_Male_2023-06-02_17-03.csv"</span>);
+data_lying = table2array(data_lying);
+
+fs = 125;
+channel_labels = [<span class="string">"C3"</span>;<span class="string">"CP3"</span>;<span class="string">"P3"</span>;<span class="string">"P7"</span>;<span class="string">"PO7"</span>;<span class="string">"PO3"</span>;<span class="string">"Pz"</span>;<span class="string">"CPz"</span>;<span class="string">"Fz"</span>;<span class="string">"Cz"</span>;<span class="string">"C4"</span>;<span class="string">"CP4"</span>;<span class="string">"P4"</span>;<span class="string">"P8"</span>;<span class="string">"PO8"</span>;<span class="string">"PO4"</span>];
+
+idx = zeros(length(channel_labels),1);
+
+<span class="keyword">for</span> i = 1:length(ch_locs)
+    cur_lb = string(ch_locs(i).labels);
+    <span class="keyword">if</span> (nonzeros(channel_labels == cur_lb))
+        idx(i) = 1;
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+nch_locs = ch_locs(logical(idx)); <span class="comment">% El&eacute;trodos usados</span>
+</pre><pre class="codeoutput">readlocs(): 'loc' format assumed from file extension
+</pre><h2 id="4">2D plot</h2><pre class="codeinput"><span class="comment">%figure (fig), topoplot([], nch_locs, 'style', 'blank', 'electrodes', 'ptslabels');</span>
+<span class="comment">%title(["2D Channel Locations";""]);</span>
+
+<span class="comment">%fig = fig + 1;</span>
+</pre><h2 id="5">Headplot</h2><pre class="codeinput">splfile=<span class="string">'FileHeadPlot.spl'</span>;
+<span class="comment">%headplot('setup',nch_locs,splfile,'Param','Value');</span>
+headplot(data_fmri(100000,1:end-1),splfile,<span class="string">'electrodes'</span>,<span class="string">'on'</span>,<span class="string">'labels'</span>,2,<span class="string">'maplimits'</span>, <span class="string">'absmax'</span>,<span class="string">'colormap'</span>, sky(64));
+</pre><pre class="codeoutput">Loaded mesh file mheadnew.mat
+</pre><img vspace="5" hspace="5" src="eeg_Miguel_01.png" alt=""> <h2 id="6">Verificar o efeito dos filtros na fase dos sinais</h2><pre class="codeinput"><span class="comment">% t = (-1:1/fs:1)';</span>
+<span class="comment">% s = 5*square(2*pi*t); % Sinal com a mesma frequ&ecirc;ncia que o sinal da fotoresist&ecirc;ncia</span>
+<span class="comment">%</span>
+<span class="comment">% sqwave = awgn(s, 20, 'measured'); % Gaussian white noise</span>
+<span class="comment">%</span>
+<span class="comment">% plot(t, [sqwave, movmean(sqwave,20), movmedian(sqwave,20)]),</span>
+<span class="comment">% title('Filter effects on the phase of the phoresistor signal'),</span>
+<span class="comment">% xlabel('Time (s)'),</span>
+<span class="comment">% legend('Original Signal','Moving average','Moving median');</span>
+
+<span class="comment">% Resumindo, a mediana flutuante n&atilde;o distorce tanto as fases do sinal,</span>
+<span class="comment">% principalmente no in&iacute;cio das rising edges e falling edges. Isto &eacute;</span>
+<span class="comment">% extremamente importante em an&aacute;lises como as dos ERPs pois &eacute; preciso</span>
+<span class="comment">% saber com exatid&atilde;o o instante em que o est&iacute;mulo &eacute; apresentado.</span>
+</pre><h2 id="7">Dados da fotoresist&ecirc;ncia</h2><pre class="codeinput">photoVector_seated=(data_seated(:,end));
+
+t_seated = ((0:length(photoVector_seated)-1)*1/fs)/60;
+n_pnts = 20;
+filt_photoVector_seated = movmedian(photoVector_seated,20);
+
+photoVector_seatedsound=(data_seatedsound(:,end));
+
+t_seatedsound = ((0:length(photoVector_seatedsound)-1)*1/fs)/60;
+filt_photoVector_seatedsound = movmedian(photoVector_seatedsound,20);
+
+<span class="comment">% lpFilt = designfilt('lowpassfir','FilterOrder',1000,'PassbandFrequency',2, ...</span>
+<span class="comment">%          'StopbandFrequency',2.5,'SampleRate',fs);</span>
+<span class="comment">%fvtool(lpFilt)</span>
+
+<span class="comment">%lpFilt_phVec = filtfilt(lpFilt,photoVector);</span>
+
+photoVector_fmri=(data_fmri(:,end));
+
+t_fmri = ((0:length(photoVector_fmri)-1)*1/fs)/60;
+filt_photoVector_fmri = movmedian(photoVector_fmri,20);
+
+photoVector_lying=(data_lying(:,end));
+
+t_lying = ((0:length(photoVector_lying)-1)*1/fs)/60;
+filt_photoVector_lying = movmedian(photoVector_lying,20);
+
+<span class="comment">%figure (fig); plot(t,photoVector), title('Fotoresist&ecirc;ncia'), xlabel('Tempo (min)'); % Sem filtros</span>
+<span class="comment">%fig = fig + 1;</span>
+
+figure (fig); plot(t_seated,filt_photoVector_seated), title(<span class="string">"Fotoresist&ecirc;ncia (Mediana flutuante com "</span>+n_pnts+<span class="string">" pontos) - EEG Sentado"</span>), xlabel(<span class="string">'Tempo (min)'</span>);
+fig = fig + 1;
+
+figure (fig); plot(t_seatedsound,filt_photoVector_seatedsound), title(<span class="string">"Fotoresist&ecirc;ncia (Mediana flutuante com "</span>+n_pnts+<span class="string">" pontos) - EEG Sentado com som"</span>), xlabel(<span class="string">'Tempo (min)'</span>);
+fig = fig + 1;
+
+<span class="comment">% figure (fig); plot(t,lpFilt_phVec), title("Fotoresist&ecirc;ncia (Filtro passa-baixo)"), xlabel('Tempo (min)');</span>
+<span class="comment">% fig = fig + 1;</span>
+
+figure (fig); plot(t_fmri,filt_photoVector_fmri), title(<span class="string">"Fotoresist&ecirc;ncia (Mediana flutuante com "</span>+n_pnts+<span class="string">" pontos) - EEG com fMRI"</span>), xlabel(<span class="string">'Tempo (min)'</span>);
+fig = fig + 1;
+
+figure (fig); plot(t_lying,filt_photoVector_lying), title(<span class="string">"Fotoresist&ecirc;ncia (Mediana flutuante com "</span>+n_pnts+<span class="string">" pontos) - EEG Deitado"</span>), xlabel(<span class="string">'Tempo (min)'</span>);
+fig = fig + 1;
+</pre><img vspace="5" hspace="5" src="eeg_Miguel_02.png" alt=""> <img vspace="5" hspace="5" src="eeg_Miguel_03.png" alt=""> <img vspace="5" hspace="5" src="eeg_Miguel_04.png" alt=""> <img vspace="5" hspace="5" src="eeg_Miguel_05.png" alt=""> <h2 id="8">Re-referencia&ccedil;&atilde;o do EEG</h2><pre class="codeinput">eeg_data_seated = data_seated(:,1:end-1);
+eeg_data_seatedsound = data_seatedsound(:,1:end-1);
+eeg_data_fmri = data_fmri(:,1:end-1);
+eeg_data_lying = data_lying(:,1:end-1);
+
+<span class="comment">%car = bsxfun(@minus, eeg_data, mean(eeg_data,2));</span>
+<span class="comment">%lap = laplacian_perrinX(eeg_data',[nch_locs.X],[nch_locs.Y],[nch_locs.Z]);</span>
+</pre><h2 id="9">Pr&eacute;-processamento do EEG</h2><pre class="codeinput"><span class="comment">% Filtragem</span>
+<span class="comment">% De acordo com o artigo com a literatura dos ERPs, um</span>
+<span class="comment">% filtro passa-banda entre 0.5 e 30/40 Hz ser&aacute; usado.</span>
+
+<span class="comment">% Band-pass</span>
+bpFilt = designfilt(<span class="string">'bandpassfir'</span>,<span class="string">'FilterOrder'</span>,3000, <span class="keyword">...</span>
+         <span class="string">'CutoffFrequency1'</span>,0.1,<span class="string">'CutoffFrequency2'</span>,30, <span class="keyword">...</span>
+         <span class="string">'SampleRate'</span>,fs);
+<span class="comment">%fvtool(bpFilt) % Visualizar resposta em frequ&ecirc;ncia e fase do filtro</span>
+
+<span class="comment">%filt_data = filtfilt(bpFilt,car);</span>
+<span class="comment">%filt_data = filtfilt(bpFilt,lap');</span>
+
+filt_data_seated = filtfilt(bpFilt,eeg_data_seated); <span class="comment">% Aplica ZeroPhase</span>
+filt_data_seatedsound = filtfilt(bpFilt,eeg_data_seatedsound);
+filt_data_fmri = filtfilt(bpFilt,eeg_data_fmri);
+filt_data_lying = filtfilt(bpFilt,eeg_data_lying);
+</pre><h2 id="10">FFT do sinal</h2><pre class="codeinput"><span class="comment">% Verificar se o sinal &eacute; um EEG. Para isso, o sinal no dom&iacute;no das</span>
+<span class="comment">% frequ&ecirc;ncias tem que seguir a forma 1/f.</span>
+<span class="comment">% Isto ap&oacute;s retirar as componentes DC e dos 50Hz da rede el&eacute;trica.</span>
+
+<span class="comment">% ----- Sentado -----</span>
+
+T = 1/fs; <span class="comment">% Sampling period</span>
+L = length(filt_data_seated(:,12)); <span class="comment">% Length of signal</span>
+tm = (0:L-1)*T; <span class="comment">% Time vector</span>
+Y = fft(filt_data_seated(:,8)); <span class="comment">% Fourier transform</span>
+P2 = abs(Y/L); <span class="comment">% Two-sided spectrum</span>
+P1 = P2(1:floor(L/2)+1); <span class="comment">% Single-sided spectrum</span>
+P1(2:end-1) = 2*P1(2:end-1);
+f = fs*(0:(L/2))/L; <span class="comment">% Frequency vector</span>
+
+figure(fig)
+fig = fig +1;
+plot(f,P1)
+title(<span class="string">'Espectro de Amplitudes X(t) - Sentado'</span>)
+xlabel(<span class="string">'f (Hz)'</span>)
+ylabel(<span class="string">'|P1(f)|'</span>)
+
+<span class="comment">% ----- Sentado som -----</span>
+
+T = 1/fs; <span class="comment">% Sampling period</span>
+L = length(filt_data_seatedsound(:,8)); <span class="comment">% Length of signal</span>
+tm = (0:L-1)*T; <span class="comment">% Time vector</span>
+Y = fft(filt_data_seatedsound(:,8)); <span class="comment">% Fourier transform</span>
+P2 = abs(Y/L); <span class="comment">% Two-sided spectrum</span>
+P1 = P2(1:floor(L/2)+1); <span class="comment">% Single-sided spectrum</span>
+P1(2:end-1) = 2*P1(2:end-1);
+f = fs*(0:(L/2))/L; <span class="comment">% Frequency vector</span>
+
+figure(fig)
+fig = fig +1;
+plot(f,P1)
+title(<span class="string">'Espectro de Amplitudes X(t) - Sentado com som'</span>)
+xlabel(<span class="string">'f (Hz)'</span>)
+ylabel(<span class="string">'|P1(f)|'</span>)
+
+<span class="comment">% ----- fMRI -----</span>
+
+T = 1/fs; <span class="comment">% Sampling period</span>
+L = length(filt_data_fmri(:,8)); <span class="comment">% Length of signal</span>
+tm = (0:L-1)*T; <span class="comment">% Time vector</span>
+Y = fft(filt_data_fmri(:,8)); <span class="comment">% Fourier transform</span>
+P2 = abs(Y/L); <span class="comment">% Two-sided spectrum</span>
+P1 = P2(1:floor(L/2)+1); <span class="comment">% Single-sided spectrum</span>
+P1(2:end-1) = 2*P1(2:end-1);
+f = fs*(0:(L/2))/L; <span class="comment">% Frequency vector</span>
+
+figure(fig)
+fig = fig +1;
+plot(f,P1)
+title(<span class="string">'Espectro de Amplitudes X(t) - EEG com fMRI'</span>)
+xlabel(<span class="string">'f (Hz)'</span>)
+ylabel(<span class="string">'|P1(f)|'</span>)
+
+<span class="comment">% ----- Deitado -----</span>
+
+T = 1/fs; <span class="comment">% Sampling period</span>
+L = length(filt_data_lying(:,8)); <span class="comment">% Length of signal</span>
+tm = (0:L-1)*T; <span class="comment">% Time vector</span>
+Y = fft(filt_data_lying(:,8)); <span class="comment">% Fourier transform</span>
+P2 = abs(Y/L); <span class="comment">% Two-sided spectrum</span>
+P1 = P2(1:floor(L/2)+1); <span class="comment">% Single-sided spectrum</span>
+P1(2:end-1) = 2*P1(2:end-1);
+f = fs*(0:(L/2))/L; <span class="comment">% Frequency vector</span>
+
+figure(fig)
+fig = fig +1;
+plot(f,P1)
+title(<span class="string">'Espectro de Amplitudes X(t) - Deitado'</span>)
+xlabel(<span class="string">'f (Hz)'</span>)
+ylabel(<span class="string">'|P1(f)|'</span>)
+</pre><img vspace="5" hspace="5" src="eeg_Miguel_06.png" alt=""> <img vspace="5" hspace="5" src="eeg_Miguel_07.png" alt=""> <img vspace="5" hspace="5" src="eeg_Miguel_08.png" alt=""> <img vspace="5" hspace="5" src="eeg_Miguel_09.png" alt=""> <h2 id="11">Retirar sub-harm&oacute;nica dos 25 Hz</h2><pre class="codeinput"><span class="comment">%Band-stop</span>
+bsFilt = designfilt(<span class="string">'bandstopfir'</span>,<span class="string">'FilterOrder'</span>,3000, <span class="keyword">...</span>
+         <span class="string">'CutoffFrequency1'</span>,24.8,<span class="string">'CutoffFrequency2'</span>,25.2, <span class="keyword">...</span>
+         <span class="string">'SampleRate'</span>,fs);
+<span class="comment">%fvtool(bsFilt)</span>
+
+filt_data_seated = filtfilt(bsFilt,filt_data_seated);
+filt_data_seatedsound = filtfilt(bsFilt,filt_data_seatedsound);
+filt_data_fmri = filtfilt(bsFilt,filt_data_fmri);
+filt_data_lying = filtfilt(bsFilt,filt_data_lying);
+
+<span class="comment">% ICA</span>
+
+<span class="comment">%filt_data_seated = pop_loadset()</span>
+</pre><h2 id="12">Dete&ccedil;&atilde;o dos &iacute;ndices de segmenta&ccedil;&atilde;o</h2><pre class="codeinput"><span class="comment">% ----- Seated -----</span>
+
+last_low = true;
+last_high = false;
+
+falling_edges = [];
+rising_edges = [];
+
+<span class="keyword">for</span> i = 1:length(filt_photoVector_seated)
+    photoresistor = filt_photoVector_seated(i);
+    <span class="keyword">if</span> photoresistor &lt;= 235 <span class="comment">% Possible falling edge</span>
+        <span class="keyword">if</span> last_high <span class="comment">% Found falling edge</span>
+            falling_edges = [falling_edges;i];
+        <span class="keyword">end</span>
+
+        last_low = true;
+        last_high = false;
+
+    <span class="keyword">elseif</span> photoresistor &gt;= 235 <span class="comment">% Possible rising edge</span>
+        <span class="keyword">if</span> last_low <span class="comment">% Found rising edge</span>
+            rising_edges = [rising_edges; i];
+        <span class="keyword">end</span>
+        last_low = false;
+        last_high = true;
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+rising_edges(1) = [];
+
+seg_target_seated = [];
+seg_nontarget_seated = [];
+
+<span class="keyword">for</span> i = 1:length(falling_edges) <span class="comment">% Verificar quais blocos pertecem aos targets e n&atilde;o targets</span>
+
+    aux = filt_photoVector_seated(falling_edges(i):rising_edges(i));
+
+    <span class="keyword">if</span> (length(aux)&gt;=60) &amp;&amp; (length(aux)&lt;=85)
+
+        <span class="keyword">if</span>(min(aux) &lt; 140)
+            seg_nontarget_seated = [seg_nontarget_seated, falling_edges(i)];
+        <span class="keyword">else</span>
+            seg_target_seated = [seg_target_seated, falling_edges(i)];
+        <span class="keyword">end</span>
+
+    <span class="keyword">end</span>
+
+<span class="keyword">end</span>
+
+seg_target_seated = unique(seg_target_seated);
+seg_nontarget_seated = unique(seg_nontarget_seated);
+
+
+<span class="comment">% ----- Seated w/ sound -----</span>
+
+last_low = true;
+last_high = false;
+
+falling_edges = [];
+rising_edges = [];
+
+<span class="keyword">for</span> i = 1:length(filt_photoVector_seatedsound)
+    photoresistor = filt_photoVector_seatedsound(i);
+    <span class="keyword">if</span> photoresistor &lt;= 232 <span class="comment">% Possible falling edge</span>
+        <span class="keyword">if</span> last_high <span class="comment">% Found falling edge</span>
+            falling_edges = [falling_edges;i];
+        <span class="keyword">end</span>
+
+        last_low = true;
+        last_high = false;
+
+    <span class="keyword">elseif</span> photoresistor &gt;= 232 <span class="comment">% Possible rising edge</span>
+        <span class="keyword">if</span> last_low <span class="comment">% Found rising edge</span>
+            rising_edges = [rising_edges; i];
+        <span class="keyword">end</span>
+        last_low = false;
+        last_high = true;
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+falling_edges(1:2) = [];
+rising_edges(1:3) = [];
+
+falling_edges(end) = [];
+
+seg_target_seatedsound = [];
+seg_nontarget_seatedsound = [];
+
+<span class="keyword">for</span> i = 1:length(falling_edges) <span class="comment">% Verificar quais blocos pertecem aos targets e n&atilde;o targets</span>
+
+    aux = filt_photoVector_seatedsound(falling_edges(i):rising_edges(i));
+
+    <span class="keyword">if</span> (length(aux)&gt;=50) &amp;&amp; (length(aux)&lt;=75)
+
+        <span class="keyword">if</span>(min(aux) &lt; 130)
+            seg_nontarget_seatedsound = [seg_nontarget_seatedsound, falling_edges(i)];
+        <span class="keyword">else</span>
+            seg_target_seatedsound = [seg_target_seatedsound, falling_edges(i)];
+        <span class="keyword">end</span>
+
+    <span class="keyword">end</span>
+
+<span class="keyword">end</span>
+
+seg_target_seatedsound = unique(seg_target_seatedsound);
+seg_nontarget_seatedsound = unique(seg_nontarget_seatedsound);
+
+<span class="comment">% ----- fMRI -----</span>
+
+last_low = true;
+last_high = false;
+
+falling_edges = [];
+rising_edges = [];
+
+<span class="keyword">for</span> i = 1:length(filt_photoVector_fmri)
+    photoresistor = filt_photoVector_fmri(i);
+    <span class="keyword">if</span> photoresistor &lt;= 233 <span class="comment">% Possible falling edge</span>
+        <span class="keyword">if</span> last_high <span class="comment">% Found falling edge</span>
+            falling_edges = [falling_edges;i];
+        <span class="keyword">end</span>
+
+        last_low = true;
+        last_high = false;
+
+    <span class="keyword">elseif</span> photoresistor &gt;= 233 <span class="comment">% Possible rising edge</span>
+        <span class="keyword">if</span> last_low <span class="comment">% Found rising edge</span>
+            rising_edges = [rising_edges; i];
+        <span class="keyword">end</span>
+        last_low = false;
+        last_high = true;
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+rising_edges(1) = [];
+falling_edges(end) = [];
+
+seg_target_fmri = [];
+seg_nontarget_fmri = [];
+
+<span class="keyword">for</span> i = 1:length(falling_edges) <span class="comment">% Verificar quais blocos pertecem aos targets e n&atilde;o targets</span>
+
+    aux = filt_photoVector_fmri(falling_edges(i):rising_edges(i));
+
+    <span class="keyword">if</span> (length(aux)&gt;=60) &amp;&amp; (length(aux)&lt;=80)
+
+        <span class="keyword">if</span>(min(aux) &lt; 130)
+            seg_nontarget_fmri = [seg_nontarget_fmri, falling_edges(i)];
+        <span class="keyword">else</span>
+            seg_target_fmri = [seg_target_fmri, falling_edges(i)];
+        <span class="keyword">end</span>
+
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+seg_target_fmri = unique(seg_target_fmri);
+seg_nontarget_fmri = unique(seg_nontarget_fmri);
+
+<span class="comment">% ----- Deitado -----</span>
+
+last_low = true;
+last_high = false;
+
+falling_edges = [];
+rising_edges = [];
+
+<span class="keyword">for</span> i = 1:length(filt_photoVector_lying)
+    photoresistor = filt_photoVector_lying(i);
+    <span class="keyword">if</span> photoresistor &lt;= 235 <span class="comment">% Possible falling edge</span>
+        <span class="keyword">if</span> last_high <span class="comment">% Found falling edge</span>
+            falling_edges = [falling_edges;i];
+        <span class="keyword">end</span>
+
+        last_low = true;
+        last_high = false;
+
+    <span class="keyword">elseif</span> photoresistor &gt;= 230 <span class="comment">% Possible rising edge</span>
+        <span class="keyword">if</span> last_low <span class="comment">% Found rising edge</span>
+            rising_edges = [rising_edges; i];
+        <span class="keyword">end</span>
+        last_low = false;
+        last_high = true;
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+rising_edges(1) = [];
+falling_edges(end) = [];
+
+seg_target_lying = [];
+seg_nontarget_lying = [];
+
+<span class="keyword">for</span> i = 1:length(falling_edges) <span class="comment">% Verificar quais blocos pertecem aos targets e n&atilde;o targets</span>
+
+    aux = filt_photoVector_lying(falling_edges(i):rising_edges(i));
+
+    <span class="keyword">if</span> (length(aux)&gt;=60) &amp;&amp; (length(aux)&lt;=80)
+
+        <span class="keyword">if</span>(min(filt_photoVector_lying(falling_edges(i):rising_edges(i))) &lt; 130)
+            seg_nontarget_lying = [seg_nontarget_lying, falling_edges(i)];
+        <span class="keyword">else</span>
+            seg_target_lying = [seg_target_lying, falling_edges(i)];
+        <span class="keyword">end</span>
+
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+seg_target_lying = unique(seg_target_lying);
+seg_nontarget_lying = unique(seg_nontarget_lying);
+</pre><h2 id="13">Segmenta&ccedil;&atilde;o do EEG</h2><pre class="codeinput">bf = -0.200; <span class="comment">% 100 ms antes do est&iacute;mulo</span>
+af = 0.800; <span class="comment">% 800 ms ap&oacute;s o est&iacute;mulo</span>
+
+idx_bf = floor(bf * fs);
+idx_af = ceil(af * fs);
+
+time = ((idx_bf:idx_af)/fs) * 1000; <span class="comment">% Vetor do tempo</span>
+
+<span class="comment">% -------------------</span>
+<span class="comment">% Target - Sentado</span>
+
+[targetEEG_seated, nontargetEEG_seated] = deal(zeros(length(seg_target_seated), length(time), length(channel_labels))); <span class="comment">% Pr&eacute;-aloca&ccedil;&atilde;o dos dados</span>
+
+<span class="keyword">for</span> i=1:length(seg_target_seated)
+    targetEEG_seated(i,:,:) = cat(3,filt_data_seated((seg_target_seated(i)+idx_bf):(seg_target_seated(i)+idx_af),:));
+<span class="keyword">end</span>
+
+<span class="comment">% Non-target - Sentado</span>
+
+<span class="keyword">for</span> i=1:length(seg_nontarget_seated)
+    nontargetEEG_seated(i,:,:) = cat(3,filt_data_seated((seg_nontarget_seated(i)+idx_bf):(seg_nontarget_seated(i)+idx_af),:));
+<span class="keyword">end</span>
+
+<span class="comment">% -------------------</span>
+<span class="comment">% Target - Sentado c/ som</span>
+
+[targetEEG_seatedsound, nontargetEEG_seatedsound] = deal(zeros(length(seg_target_seatedsound), length(time), length(channel_labels))); <span class="comment">% Pr&eacute;-aloca&ccedil;&atilde;o dos dados</span>
+
+<span class="keyword">for</span> i=1:length(seg_target_seatedsound)
+    targetEEG_seatedsound(i,:,:) = cat(3,filt_data_seatedsound((seg_target_seatedsound(i)+idx_bf):(seg_target_seatedsound(i)+idx_af),:));
+<span class="keyword">end</span>
+
+<span class="comment">% Non-target - Sentado c/ som</span>
+
+<span class="keyword">for</span> i=1:length(seg_nontarget_seatedsound)
+    nontargetEEG_seatedsound(i,:,:) = cat(3,filt_data_seatedsound((seg_nontarget_seatedsound(i)+idx_bf):(seg_nontarget_seatedsound(i)+idx_af),:));
+<span class="keyword">end</span>
+
+<span class="comment">% -------------------</span>
+<span class="comment">% Target - fMRI</span>
+
+[targetEEG_fmri, nontargetEEG_fmri] = deal(zeros(length(seg_target_fmri), length(time), length(channel_labels))); <span class="comment">% Pr&eacute;-aloca&ccedil;&atilde;o dos dados</span>
+
+<span class="keyword">for</span> i=1:length(seg_target_fmri)
+    targetEEG_fmri(i,:,:) = cat(3,filt_data_fmri((seg_target_fmri(i)+idx_bf):(seg_target_fmri(i)+idx_af),:));
+<span class="keyword">end</span>
+
+<span class="comment">% Non-target - fMRI</span>
+
+<span class="keyword">for</span> i=1:length(seg_nontarget_fmri)
+    nontargetEEG_fmri(i,:,:) = cat(3,filt_data_fmri((seg_nontarget_fmri(i)+idx_bf):(seg_nontarget_fmri(i)+idx_af),:));
+<span class="keyword">end</span>
+
+<span class="comment">% -------------------</span>
+<span class="comment">% Target - Deitado</span>
+
+[targetEEG_lying, nontargetEEG_lying] = deal(zeros(length(seg_target_lying), length(time), length(channel_labels))); <span class="comment">% Pr&eacute;-aloca&ccedil;&atilde;o dos dados</span>
+
+<span class="keyword">for</span> i=1:length(seg_target_lying)
+    targetEEG_lying(i,:,:) = cat(3,filt_data_lying((seg_target_lying(i)+idx_bf):(seg_target_lying(i)+idx_af),:));
+<span class="keyword">end</span>
+
+<span class="comment">% Non-target - Deitado</span>
+
+<span class="keyword">for</span> i=1:length(seg_nontarget_lying)
+    nontargetEEG_lying(i,:,:) = cat(3,filt_data_lying((seg_nontarget_lying(i)+idx_bf):(seg_nontarget_lying(i)+idx_af),:));
+<span class="keyword">end</span>
+</pre><h2 id="14">Corre&ccedil;&atilde;o da linha de base</h2><pre class="codeinput">baseline = [-200;0];
+
+baseidx = dsearchn(time',baseline);
+
+<span class="comment">% ----- Sentado -----</span>
+
+<span class="keyword">for</span> t=1:size(targetEEG_seated,1)
+    <span class="keyword">for</span> e=1:size(targetEEG_seated,3)
+        tmn = mean(targetEEG_seated(t,baseidx(1):baseidx(2),e));
+        targetEEG_seated(t,:,e) = targetEEG_seated(t,:,e) - tmn;
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+<span class="keyword">for</span> t=1:size(nontargetEEG_seated,1)
+    <span class="keyword">for</span> e=1:size(nontargetEEG_seated,3)
+        tmn = mean(nontargetEEG_seated(t,baseidx(1):baseidx(2),e));
+        nontargetEEG_seated(t,:,e) = nontargetEEG_seated(t,:,e) - tmn;
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+<span class="comment">% ----- Sentado c/som -----</span>
+
+<span class="keyword">for</span> t=1:size(targetEEG_seatedsound,1)
+    <span class="keyword">for</span> e=1:size(targetEEG_seatedsound,3)
+        tmn = mean(targetEEG_seatedsound(t,baseidx(1):baseidx(2),e));
+        targetEEG_seatedsound(t,:,e) = targetEEG_seatedsound(t,:,e) - tmn;
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+<span class="keyword">for</span> t=1:size(nontargetEEG_seatedsound,1)
+    <span class="keyword">for</span> e=1:size(nontargetEEG_seatedsound,3)
+        tmn = mean(nontargetEEG_seatedsound(t,baseidx(1):baseidx(2),e));
+        nontargetEEG_seatedsound(t,:,e) = nontargetEEG_seatedsound(t,:,e) - tmn;
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+<span class="comment">% ----- fMRI -----</span>
+
+<span class="keyword">for</span> t=1:size(targetEEG_fmri,1)
+    <span class="keyword">for</span> e=1:size(targetEEG_fmri,3)
+        tmn = mean(targetEEG_fmri(t,baseidx(1):baseidx(2),e));
+        targetEEG_fmri(t,:,e) = targetEEG_fmri(t,:,e) - tmn;
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+<span class="keyword">for</span> t=1:size(nontargetEEG_fmri,1)
+    <span class="keyword">for</span> e=1:size(nontargetEEG_fmri,3)
+        tmn = mean(nontargetEEG_fmri(t,baseidx(1):baseidx(2),e));
+        nontargetEEG_fmri(t,:,e) = nontargetEEG_fmri(t,:,e) - tmn;
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+<span class="comment">% ----- Deitado -----</span>
+
+<span class="keyword">for</span> t=1:size(targetEEG_lying,1)
+    <span class="keyword">for</span> e=1:size(targetEEG_lying,3)
+        tmn = mean(targetEEG_lying(t,baseidx(1):baseidx(2),e));
+        targetEEG_lying(t,:,e) = targetEEG_lying(t,:,e) - tmn;
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+<span class="keyword">for</span> t=1:size(nontargetEEG_lying,1)
+    <span class="keyword">for</span> e=1:size(nontargetEEG_lying,3)
+        tmn = mean(nontargetEEG_lying(t,baseidx(1):baseidx(2),e));
+        nontargetEEG_lying(t,:,e) = nontargetEEG_lying(t,:,e) - tmn;
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+</pre><h2 id="15">Computa&ccedil;&atilde;o dos ERPs</h2><pre class="codeinput"><span class="comment">% ----- Sentado -----</span>
+
+tERP_seated = squeeze(mean(targetEEG_seated, 1)); <span class="comment">% ERP target (m&eacute;dia do sinal na dimens&atilde;o trials)</span>
+ntERP_seated = squeeze(mean(nontargetEEG_seated, 1)); <span class="comment">% ERP n&atilde;o-target</span>
+
+<span class="comment">% ----- Sentado c/ som -----</span>
+
+tERP_seatedsound = squeeze(mean(targetEEG_seatedsound, 1)); <span class="comment">% ERP target (m&eacute;dia do sinal na dimens&atilde;o trials)</span>
+ntERP_seatedsound = squeeze(mean(nontargetEEG_seatedsound, 1)); <span class="comment">% ERP n&atilde;o-target</span>
+
+
+<span class="comment">% ----- fMRI -----</span>
+
+tERP_fmri = squeeze(mean(targetEEG_fmri, 1)); <span class="comment">% ERP target (m&eacute;dia do sinal na dimens&atilde;o trials)</span>
+ntERP_fmri = squeeze(mean(nontargetEEG_fmri, 1)); <span class="comment">% ERP n&atilde;o-target</span>
+
+<span class="comment">% ----- Deitado -----</span>
+
+tERP_lying = squeeze(mean(targetEEG_lying, 1)); <span class="comment">% ERP target (m&eacute;dia do sinal na dimens&atilde;o trials)</span>
+ntERP_lying = squeeze(mean(nontargetEEG_lying, 1)); <span class="comment">% ERP n&atilde;o-target</span>
+</pre><h2 id="16">Corre&ccedil;&atilde;o da linha de base</h2><pre class="codeinput"><span class="comment">% nobaseline = tERP_seated;</span>
+<span class="comment">%</span>
+<span class="comment">% baseline = [-200;-100];</span>
+<span class="comment">%</span>
+<span class="comment">% baseidx = dsearchn(time',baseline);</span>
+<span class="comment">%</span>
+<span class="comment">% % ----- Sentado -----</span>
+<span class="comment">%</span>
+<span class="comment">% for e=1:length(channel_labels)</span>
+<span class="comment">%     tmn = mean(tERP_seated(baseidx(1):baseidx(2),e));</span>
+<span class="comment">%     ntmn = mean(ntERP_seated(baseidx(1):baseidx(2),e));</span>
+<span class="comment">%</span>
+<span class="comment">%     tERP_seated(:,e) = tERP_seated(:,e) - tmn;</span>
+<span class="comment">%     ntERP_seated(:,e) = ntERP_seated(:,e) - ntmn;</span>
+<span class="comment">% end</span>
+<span class="comment">%</span>
+<span class="comment">% % ----- fMRI -----</span>
+<span class="comment">%</span>
+<span class="comment">% for e=1:length(channel_labels)</span>
+<span class="comment">%     tmn = mean(tERP_fmri(baseidx(1):baseidx(2),e));</span>
+<span class="comment">%     ntmn = mean(ntERP_fmri(baseidx(1):baseidx(2),e));</span>
+<span class="comment">%</span>
+<span class="comment">%     tERP_fmri(:,e) = tERP_fmri(:,e) - tmn;</span>
+<span class="comment">%     ntERP_fmri(:,e) = ntERP_fmri(:,e) - ntmn;</span>
+<span class="comment">% end</span>
+<span class="comment">%</span>
+<span class="comment">% % ----- Deitado -----</span>
+<span class="comment">%</span>
+<span class="comment">% for e=1:length(channel_labels)</span>
+<span class="comment">%     tmn = mean(tERP_lying(baseidx(1):baseidx(2),e));</span>
+<span class="comment">%     ntmn = mean(ntERP_lying(baseidx(1):baseidx(2),e));</span>
+<span class="comment">%</span>
+<span class="comment">%     tERP_lying(:,e) = tERP_lying(:,e) - tmn;</span>
+<span class="comment">%     ntERP_lying(:,e) = ntERP_lying(:,e) - ntmn;</span>
+<span class="comment">% end</span>
+</pre><h2 id="17">Baseline vs no baseline</h2><pre class="codeinput"><span class="comment">% fig = fig + 1;</span>
+<span class="comment">% figure(fig)</span>
+<span class="comment">% hold on,</span>
+<span class="comment">% xline(0, '--','LineWidth',1.5)</span>
+<span class="comment">% plot(time,tERP_seated(:,8),'b','LineWidth',2);</span>
+<span class="comment">% plot(time,nobaseline(:,8),'r','LineWidth',2);</span>
+<span class="comment">% title("Baseline vs No baseline correction"), xlabel('Time (ms)'), ylabel('Amplitude (\muv)'), grid on</span>
+<span class="comment">% ph0 = patch([baseline(1) baseline(2) baseline(2) baseline(1)],[12 12 -8 -8],'black');</span>
+<span class="comment">% set(ph0,'facealpha',.15,'edgecolor','none')</span>
+<span class="comment">% legend('Stimuli Onset','Baseline corrected','No baseline corrected','Baseline period', 'AutoUpdate', 'off');</span>
+<span class="comment">% yline(0, ':','LineWidth',1.5)</span>
+<span class="comment">% hold off,</span>
+</pre><h2 id="18">Single trial plot</h2><pre class="codeinput">fig = fig + 1;
+figure(fig)
+hold <span class="string">on</span>, grid <span class="string">on</span>,
+xline(0, <span class="string">'--'</span>,<span class="string">'LineWidth'</span>,1.5)
+yline(0, <span class="string">':'</span>,<span class="string">'LineWidth'</span>,1.5)
+title(nch_locs(8).labels)
+plot(time,targetEEG_fmri(101,:,8),<span class="string">'b'</span>,<span class="string">'LineWidth'</span>,2);
+</pre><img vspace="5" hspace="5" src="eeg_Miguel_10.png" alt=""> <h2 id="19">Gr&aacute;ficos - Sentado</h2><pre class="codeinput"><span class="comment">% Defini&ccedil;&atilde;o do tempo dos picos e respetivos &iacute;ndices</span>
+
+tN170 = [90; 130]; <span class="comment">% ms</span>
+idxN170 = dsearchn(time',tN170);
+
+tN2 = [180; 230];
+idxN2 = dsearchn(time',tN2);
+
+tP3 = [240; 340];
+idxP3 = dsearchn(time',tP3);
+</pre><h2 id="20">Gr&aacute;ficos dos ERPs no tempo</h2><pre class="codeinput">i = 15;
+
+clim = [floor(min(min(tERP_seated(:,i)))),ceil(max(max(tERP_seated(:,i))))];
+
+aux = 0;
+
+figure(fig)
+hold <span class="string">on</span>,
+fig = fig + 1;
+plot(time,tERP_seated(:,i),<span class="string">'b'</span>,<span class="string">'LineWidth'</span>,2);
+plot(time,ntERP_seated(:,i),<span class="string">'r'</span>,<span class="string">'LineWidth'</span>,2);
+xline(0, <span class="string">'--'</span>)
+ylim([(clim(1)+aux),(clim(2)-aux)])
+xlim([min(time),max(time)])
+title(channel_labels(i) + <span class="string">" - Seated"</span>), xlabel(<span class="string">'Time (ms)'</span>), ylabel(<span class="string">'Amplitude (\muv)'</span>), grid <span class="string">on</span>
+
+<span class="keyword">if</span>(contains(channel_labels(i),<span class="string">"z"</span>) || (contains(channel_labels(i),<span class="string">"C"</span>) &amp;&amp; ~(contains(channel_labels(i),<span class="string">"P"</span>))) ) <span class="comment">% VPP</span>
+    c = <span class="string">'blue'</span>;
+    a = <span class="string">'VPP'</span>;
+    N2 = [tN2(1), tN2(2), tN2(2), tN2(1)];
+<span class="keyword">else</span> <span class="comment">% N170</span>
+    c = <span class="string">'cyan'</span>;
+    a = <span class="string">'N170'</span>;
+    N2 = [tN2(1), tN2(2), tN2(2), tN2(1)];
+<span class="keyword">end</span>
+
+N170 = [tN170(1), tN170(2), tN170(2), tN170(1)];
+P3 = [tP3(1), tP3(2), tP3(2), tP3(1)];
+
+<span class="comment">% Estas patches precisam de ser ajustadas</span>
+
+ph0 = patch([baseline(1) baseline(2) baseline(2) baseline(1)],[clim(1) clim(1) clim(2) clim(2)],<span class="string">'black'</span>);
+set(ph0,<span class="string">'facealpha'</span>,.1,<span class="string">'edgecolor'</span>,<span class="string">'none'</span>)
+
+ph1 = patch(N170,[clim(1) clim(1) clim(2) clim(2)],c);
+set(ph1,<span class="string">'facealpha'</span>,.1,<span class="string">'edgecolor'</span>,<span class="string">'none'</span>)
+
+ph2 = patch(N2,[clim(1) clim(1) clim(2) clim(2)],<span class="string">'y'</span>);
+set(ph2,<span class="string">'facealpha'</span>,.1,<span class="string">'edgecolor'</span>,<span class="string">'none'</span>)
+
+<span class="comment">% ph3 = patch(P3,[clim(1) clim(1) clim(2) clim(2)],'r');</span>
+<span class="comment">% set(ph3,'facealpha',.1,'edgecolor','none')</span>
+
+legend(<span class="string">'Target'</span>,<span class="string">'Non-target'</span>,<span class="string">'Stimulus'</span>,<span class="string">'Baseline'</span>,a,<span class="string">'N2'</span>,<span class="string">'AutoUpdate'</span>, <span class="string">'off'</span>)
+
+yline(0, <span class="string">'--'</span>)
+
+hold <span class="string">off</span>
+
+<span class="comment">%</span>
+clim = [floor(min(min(tERP_seatedsound(:,i)))),ceil(max(max(tERP_seatedsound(:,i))))];
+
+aux = 0;
+
+figure(fig)
+hold <span class="string">on</span>,
+fig = fig + 1;
+plot(time,tERP_seatedsound(:,i),<span class="string">'b'</span>,<span class="string">'LineWidth'</span>,2);
+plot(time,ntERP_seatedsound(:,i),<span class="string">'r'</span>,<span class="string">'LineWidth'</span>,2);
+xline(0, <span class="string">'--'</span>)
+ylim([(clim(1)+aux),(clim(2)-aux)])
+xlim([min(time),max(time)])
+title(channel_labels(i) + <span class="string">" - Seated w/ sound"</span>), xlabel(<span class="string">'Time (ms)'</span>), ylabel(<span class="string">'Amplitude (\muv)'</span>), grid <span class="string">on</span>
+
+<span class="keyword">if</span>(contains(channel_labels(i),<span class="string">"z"</span>) || (contains(channel_labels(i),<span class="string">"C"</span>) &amp;&amp; ~(contains(channel_labels(i),<span class="string">"P"</span>))) ) <span class="comment">% VPP</span>
+    c = <span class="string">'blue'</span>;
+    a = <span class="string">'VPP'</span>;
+    N2 = [tN2(1), tN2(2), tN2(2), tN2(1)];
+<span class="keyword">else</span> <span class="comment">% N170</span>
+    c = <span class="string">'cyan'</span>;
+    a = <span class="string">'N170'</span>;
+    N2 = [tN2(1), tN2(2), tN2(2), tN2(1)];
+<span class="keyword">end</span>
+
+N170 = [tN170(1), tN170(2), tN170(2), tN170(1)];
+P3 = [tP3(1), tP3(2), tP3(2), tP3(1)];
+
+<span class="comment">% Estas patches precisam de ser ajustadas</span>
+
+ph0 = patch([baseline(1) baseline(2) baseline(2) baseline(1)],[clim(1) clim(1) clim(2) clim(2)],<span class="string">'black'</span>);
+set(ph0,<span class="string">'facealpha'</span>,.1,<span class="string">'edgecolor'</span>,<span class="string">'none'</span>)
+
+ph1 = patch(N170,[clim(1) clim(1) clim(2) clim(2)],c);
+set(ph1,<span class="string">'facealpha'</span>,.1,<span class="string">'edgecolor'</span>,<span class="string">'none'</span>)
+
+ph2 = patch(N2,[clim(1) clim(1) clim(2) clim(2)],<span class="string">'y'</span>);
+set(ph2,<span class="string">'facealpha'</span>,.1,<span class="string">'edgecolor'</span>,<span class="string">'none'</span>)
+
+<span class="comment">% ph3 = patch(P3,[clim(1) clim(1) clim(2) clim(2)],'r');</span>
+<span class="comment">% set(ph3,'facealpha',.1,'edgecolor','none')</span>
+
+legend(<span class="string">'Target'</span>,<span class="string">'Non-target'</span>,<span class="string">'Stimulus'</span>,<span class="string">'Baseline'</span>,a,<span class="string">'N2'</span>,<span class="string">'AutoUpdate'</span>, <span class="string">'off'</span>)
+
+yline(0, <span class="string">'--'</span>)
+
+hold <span class="string">off</span>
+
+clim = [floor(min(min(tERP_lying(:,i)))),ceil(max(max(tERP_lying(:,i))))];
+
+aux = 0;
+
+figure(fig)
+hold <span class="string">on</span>,
+fig = fig + 1;
+plot(time,tERP_lying(:,i),<span class="string">'b'</span>,<span class="string">'LineWidth'</span>,2);
+plot(time,ntERP_lying(:,i),<span class="string">'r'</span>,<span class="string">'LineWidth'</span>,2);
+xline(0, <span class="string">'--'</span>)
+ylim([(clim(1)+aux),(clim(2)-aux)])
+xlim([min(time),max(time)])
+title(channel_labels(i) + <span class="string">" - Lying"</span>), xlabel(<span class="string">'Time (ms)'</span>), ylabel(<span class="string">'Amplitude (\muv)'</span>), grid <span class="string">on</span>
+
+<span class="keyword">if</span>(contains(channel_labels(i),<span class="string">"z"</span>) || (contains(channel_labels(i),<span class="string">"C"</span>) &amp;&amp; ~(contains(channel_labels(i),<span class="string">"P"</span>))) ) <span class="comment">% VPP</span>
+    c = <span class="string">'blue'</span>;
+    a = <span class="string">'VPP'</span>;
+    N2 = [tN2(1), tN2(2), tN2(2), tN2(1)];
+<span class="keyword">else</span> <span class="comment">% N170</span>
+    c = <span class="string">'cyan'</span>;
+    a = <span class="string">'N170'</span>;
+    N2 = [tN2(1), tN2(2), tN2(2), tN2(1)];
+<span class="keyword">end</span>
+
+N170 = [tN170(1), tN170(2), tN170(2), tN170(1)];
+P3 = [tP3(1), tP3(2), tP3(2), tP3(1)];
+
+<span class="comment">% Estas patches precisam de ser ajustadas</span>
+
+ph0 = patch([baseline(1) baseline(2) baseline(2) baseline(1)],[clim(1) clim(1) clim(2) clim(2)],<span class="string">'black'</span>);
+set(ph0,<span class="string">'facealpha'</span>,.1,<span class="string">'edgecolor'</span>,<span class="string">'none'</span>)
+
+ph1 = patch(N170,[clim(1) clim(1) clim(2) clim(2)],c);
+set(ph1,<span class="string">'facealpha'</span>,.1,<span class="string">'edgecolor'</span>,<span class="string">'none'</span>)
+
+ph2 = patch(N2,[clim(1) clim(1) clim(2) clim(2)],<span class="string">'y'</span>);
+set(ph2,<span class="string">'facealpha'</span>,.1,<span class="string">'edgecolor'</span>,<span class="string">'none'</span>)
+
+<span class="comment">% ph3 = patch(P3,[clim(1) clim(1) clim(2) clim(2)],'r');</span>
+<span class="comment">% set(ph3,'facealpha',.1,'edgecolor','none')</span>
+
+legend(<span class="string">'Target'</span>,<span class="string">'Non-target'</span>,<span class="string">'Stimulus'</span>,<span class="string">'Baseline'</span>,a,<span class="string">'N2'</span>,<span class="string">'AutoUpdate'</span>, <span class="string">'off'</span>)
+
+yline(0, <span class="string">'--'</span>)
+
+hold <span class="string">off</span>
+
+<span class="comment">%</span>
+clim = [floor(min(min(tERP_fmri(:,i)))),ceil(max(max(tERP_fmri(:,i))))];
+
+aux = 0;
+
+figure(fig)
+hold <span class="string">on</span>,
+fig = fig + 1;
+plot(time,tERP_fmri(:,i),<span class="string">'b'</span>,<span class="string">'LineWidth'</span>,2);
+plot(time,ntERP_fmri(:,i),<span class="string">'r'</span>,<span class="string">'LineWidth'</span>,2);
+xline(0, <span class="string">'--'</span>)
+ylim([(clim(1)+aux),(clim(2)-aux)])
+xlim([min(time),max(time)])
+title(channel_labels(i) + <span class="string">" - Lying w/ fRMI"</span>), xlabel(<span class="string">'Time (ms)'</span>), ylabel(<span class="string">'Amplitude (\muv)'</span>), grid <span class="string">on</span>
+
+<span class="keyword">if</span>(contains(channel_labels(i),<span class="string">"z"</span>) || (contains(channel_labels(i),<span class="string">"C"</span>) &amp;&amp; ~(contains(channel_labels(i),<span class="string">"P"</span>))) ) <span class="comment">% VPP</span>
+    c = <span class="string">'blue'</span>;
+    a = <span class="string">'VPP'</span>;
+    N2 = [tN2(1), tN2(2), tN2(2), tN2(1)];
+<span class="keyword">else</span> <span class="comment">% N170</span>
+    c = <span class="string">'cyan'</span>;
+    a = <span class="string">'N170'</span>;
+    N2 = [tN2(1), tN2(2), tN2(2), tN2(1)];
+<span class="keyword">end</span>
+
+N170 = [tN170(1), tN170(2), tN170(2), tN170(1)];
+P3 = [tP3(1), tP3(2), tP3(2), tP3(1)];
+
+<span class="comment">% Estas patches precisam de ser ajustadas</span>
+
+ph0 = patch([baseline(1) baseline(2) baseline(2) baseline(1)],[clim(1) clim(1) clim(2) clim(2)],<span class="string">'black'</span>);
+set(ph0,<span class="string">'facealpha'</span>,.1,<span class="string">'edgecolor'</span>,<span class="string">'none'</span>)
+
+ph1 = patch(N170,[clim(1) clim(1) clim(2) clim(2)],c);
+set(ph1,<span class="string">'facealpha'</span>,.1,<span class="string">'edgecolor'</span>,<span class="string">'none'</span>)
+
+ph2 = patch(N2,[clim(1) clim(1) clim(2) clim(2)],<span class="string">'y'</span>);
+set(ph2,<span class="string">'facealpha'</span>,.1,<span class="string">'edgecolor'</span>,<span class="string">'none'</span>)
+
+<span class="comment">% ph3 = patch(P3,[clim(1) clim(1) clim(2) clim(2)],'r');</span>
+<span class="comment">% set(ph3,'facealpha',.1,'edgecolor','none')</span>
+
+legend(<span class="string">'Target'</span>,<span class="string">'Non-target'</span>,<span class="string">'Stimulus'</span>,<span class="string">'Baseline'</span>,a,<span class="string">'N2'</span>,<span class="string">'AutoUpdate'</span>, <span class="string">'off'</span>)
+
+yline(0, <span class="string">'--'</span>)
+
+hold <span class="string">off</span>
+
+<span class="comment">%</span>
+<span class="comment">% % Mapas topogr&aacute;ficos</span>
+<span class="comment">%</span>
+<span class="comment">% figure(fig)</span>
+<span class="comment">% fig = fig + 1;</span>
+<span class="comment">% tlo1=tiledlayout(2,3,'TileSpacing','tight','Padding','tight');</span>
+<span class="comment">% title(tlo1, ["Sentado - Target (Em cima) vs Non-Target (Em baixo)";""], 'FontSize', 15, 'FontWeight','Bold');</span>
+<span class="comment">%</span>
+<span class="comment">% ax1=nexttile(tlo1);</span>
+<span class="comment">% topoplot(mean(tERP_seated(idxN170(1):idxN170(2),:)),nch_locs,'maplimits',clim,'numcontour',6,'electrodes','on');</span>
+<span class="comment">% title(ax1,"N170 - VPP (" + tN170(1) +" - "+ tN170(2) + " ms)"  ,'FontSize',12)</span>
+<span class="comment">%</span>
+<span class="comment">% ax2=nexttile(tlo1);</span>
+<span class="comment">% topoplot(mean(tERP_seated(idxN2(1):idxN2(2),:)),nch_locs,'maplimits',clim,'numcontour',6,'electrodes','on');</span>
+<span class="comment">% title(ax2,"N2 (" + tN2(1) +" - "+ tN2(2) + " ms)",'FontSize',12)</span>
+<span class="comment">%</span>
+<span class="comment">% ax3=nexttile(tlo1);</span>
+<span class="comment">% topoplot(mean(tERP_seated(idxP3(1):idxP3(2),:)),nch_locs,'maplimits',clim,'numcontour',6,'electrodes','on');</span>
+<span class="comment">% title(ax3,"P3 (" + tP3(1) +" - "+ tP3(2) + " ms)",'FontSize',12)</span>
+<span class="comment">%</span>
+<span class="comment">% ax4=nexttile(tlo1);</span>
+<span class="comment">% topoplot(mean(ntERP_seated(idxN170(1):idxN170(2),:)),nch_locs,'maplimits',clim,'numcontour',6,'electrodes','on');</span>
+<span class="comment">% title(ax4,"N170 - VPP (" + tN170(1) +" - "+ tN170(2) + " ms)"  ,'FontSize',12)</span>
+<span class="comment">%</span>
+<span class="comment">% ax5=nexttile(tlo1);</span>
+<span class="comment">% topoplot(mean(ntERP_seated(idxN2(1):idxN2(2),:)),nch_locs,'maplimits',clim,'numcontour',6,'electrodes','on');</span>
+<span class="comment">% title(ax5,"N2 (" + tN2(1) +" - "+ tN2(2) + " ms)",'FontSize',12)</span>
+<span class="comment">%</span>
+<span class="comment">% ax6=nexttile(tlo1);</span>
+<span class="comment">% topoplot(mean(ntERP_seated(idxP3(1):idxP3(2),:)),nch_locs,'maplimits',clim,'numcontour',6,'electrodes','on');</span>
+<span class="comment">% title(ax6,"P3 (" + tP3(1) +" - "+ tP3(2) + " ms)",'FontSize',12)</span>
+<span class="comment">%</span>
+<span class="comment">% cbh2=colorbar(ax6);</span>
+<span class="comment">% cbh2.Layout.Tile = 'east';</span>
+<span class="comment">% cbh2.Label.String='\muV';</span>
+<span class="comment">% chh2.Label.FontSize = 12;</span>
+<span class="comment">% cbh2.Label.Rotation=0;</span>
+<span class="comment">%</span>
+<span class="comment">% %% Gr&aacute;ficos - fMRI</span>
+<span class="comment">%</span>
+<span class="comment">% % Gr&aacute;ficos dos ERPs no tempo</span>
+<span class="comment">%</span>
+<span class="comment">% clim = [floor(min(min(tERP_fmri))),ceil(max(max(tERP_fmri)))];</span>
+<span class="comment">%</span>
+<span class="comment">% aux = 0;</span>
+<span class="comment">%</span>
+<span class="comment">% for i=1:length(channel_labels)</span>
+<span class="comment">%     figure(fig)</span>
+<span class="comment">%     hold on,</span>
+<span class="comment">%     fig = fig + 1;</span>
+<span class="comment">%     plot(time,tERP_fmri(:,i),'b','LineWidth',2);</span>
+<span class="comment">%     plot(time,ntERP_fmri(:,i),'r','LineWidth',2);</span>
+<span class="comment">%     xline(0, '--')</span>
+<span class="comment">%     ylim([(clim(1)+aux),(clim(2)-aux)])</span>
+<span class="comment">%     xlim([min(time),max(time)])</span>
+<span class="comment">%     title(channel_labels(i) + " - EEG com fMRI"), xlabel('Tempo (ms)'), ylabel('Amplitude (\muv)'), grid on</span>
+<span class="comment">%</span>
+<span class="comment">%     if(contains(channel_labels(i),"z") || (contains(channel_labels(i),"C") &amp;&amp; ~(contains(channel_labels(i),"P"))) ) % VPP</span>
+<span class="comment">%         c = 'blue';</span>
+<span class="comment">%         a = 'VPP';</span>
+<span class="comment">%         N2 = [tN2(1), tN2(2), tN2(2), tN2(1)];</span>
+<span class="comment">%     else % N170</span>
+<span class="comment">%         c = 'cyan';</span>
+<span class="comment">%         a = 'N170';</span>
+<span class="comment">%         N2 = [tN2(1), tN2(2), tN2(2), tN2(1)];</span>
+<span class="comment">%     end</span>
+<span class="comment">%</span>
+<span class="comment">%     N170 = [tN170(1), tN170(2), tN170(2), tN170(1)];</span>
+<span class="comment">%     P3 = [tP3(1), tP3(2), tP3(2), tP3(1)];</span>
+<span class="comment">%</span>
+<span class="comment">%     % Estas patches precisam de ser ajustadas</span>
+<span class="comment">%</span>
+<span class="comment">%     ph0 = patch([baseline(1) baseline(2) baseline(2) baseline(1)],[clim(1) clim(1) clim(2) clim(2)],'black');</span>
+<span class="comment">%     set(ph0,'facealpha',.1,'edgecolor','none')</span>
+<span class="comment">%</span>
+<span class="comment">%     ph1 = patch(N170,[clim(1) clim(1) clim(2) clim(2)],c);</span>
+<span class="comment">%     set(ph1,'facealpha',.1,'edgecolor','none')</span>
+<span class="comment">%</span>
+<span class="comment">%     ph2 = patch(N2,[clim(1) clim(1) clim(2) clim(2)],'y');</span>
+<span class="comment">%     set(ph2,'facealpha',.1,'edgecolor','none')</span>
+<span class="comment">%</span>
+<span class="comment">%     ph3 = patch(P3,[clim(1) clim(1) clim(2) clim(2)],'r');</span>
+<span class="comment">%     set(ph3,'facealpha',.1,'edgecolor','none')</span>
+<span class="comment">%</span>
+<span class="comment">%     legend('Target','Non-target','Stimulus','Baseline',a, 'N2', 'P3','AutoUpdate', 'off')</span>
+<span class="comment">%</span>
+<span class="comment">%     yline(0, '--')</span>
+<span class="comment">%     hold off</span>
+<span class="comment">%</span>
+<span class="comment">% end</span>
+<span class="comment">%</span>
+<span class="comment">% % Mapas topogr&aacute;ficos</span>
+<span class="comment">%</span>
+<span class="comment">% figure(fig)</span>
+<span class="comment">% fig = fig + 1;</span>
+<span class="comment">% tlo1=tiledlayout(2,3,'TileSpacing','tight','Padding','tight');</span>
+<span class="comment">% title(tlo1, ["EEG com fMRI - Target (Em cima) vs Non-Target (Em baixo)";""], 'FontSize', 15, 'FontWeight','Bold');</span>
+<span class="comment">%</span>
+<span class="comment">% ax1=nexttile(tlo1);</span>
+<span class="comment">% topoplot(mean(tERP_fmri(idxN170(1):idxN170(2),:)),nch_locs,'maplimits',clim,'numcontour',6,'electrodes','on');</span>
+<span class="comment">% title(ax1,"N170 - VPP (" + tN170(1) +" - "+ tN170(2) + " ms)"  ,'FontSize',12)</span>
+<span class="comment">%</span>
+<span class="comment">% ax2=nexttile(tlo1);</span>
+<span class="comment">% topoplot(mean(tERP_fmri(idxN2(1):idxN2(2),:)),nch_locs,'maplimits',clim,'numcontour',6,'electrodes','on');</span>
+<span class="comment">% title(ax2,"N2 (" + tN2(1) +" - "+ tN2(2) + " ms)",'FontSize',12)</span>
+<span class="comment">%</span>
+<span class="comment">% ax3=nexttile(tlo1);</span>
+<span class="comment">% topoplot(mean(tERP_fmri(idxP3(1):idxP3(2),:)),nch_locs,'maplimits',clim,'numcontour',6,'electrodes','on');</span>
+<span class="comment">% title(ax3,"P3 (" + tP3(1) +" - "+ tP3(2) + " ms)",'FontSize',12)</span>
+<span class="comment">%</span>
+<span class="comment">% ax4=nexttile(tlo1);</span>
+<span class="comment">% topoplot(mean(ntERP_fmri(idxN170(1):idxN170(2),:)),nch_locs,'maplimits',clim,'numcontour',6,'electrodes','on');</span>
+<span class="comment">% title(ax4,"N170 - VPP (" + tN170(1) +" - "+ tN170(2) + " ms)"  ,'FontSize',12)</span>
+<span class="comment">%</span>
+<span class="comment">% ax5=nexttile(tlo1);</span>
+<span class="comment">% topoplot(mean(ntERP_fmri(idxN2(1):idxN2(2),:)),nch_locs,'maplimits',clim,'numcontour',6,'electrodes','on');</span>
+<span class="comment">% title(ax5,"N2 (" + tN2(1) +" - "+ tN2(2) + " ms)",'FontSize',12)</span>
+<span class="comment">%</span>
+<span class="comment">% ax6=nexttile(tlo1);</span>
+<span class="comment">% topoplot(mean(ntERP_fmri(idxP3(1):idxP3(2),:)),nch_locs,'maplimits',clim,'numcontour',6,'electrodes','on');</span>
+<span class="comment">% title(ax6,"P3 (" + tP3(1) +" - "+ tP3(2) + " ms)",'FontSize',12)</span>
+<span class="comment">%</span>
+<span class="comment">% cbh2=colorbar(ax6);</span>
+<span class="comment">% cbh2.Layout.Tile = 'east';</span>
+<span class="comment">% cbh2.Label.String='\muV';</span>
+<span class="comment">% chh2.Label.FontSize = 12;</span>
+<span class="comment">% cbh2.Label.Rotation=0;</span>
+<span class="comment">%</span>
+<span class="comment">% %% Gr&aacute;ficos - Deitado</span>
+<span class="comment">%</span>
+<span class="comment">% % Gr&aacute;ficos dos ERPs no tempo</span>
+<span class="comment">%</span>
+<span class="comment">% clim = [floor(min(min(tERP_lying))),ceil(max(max(tERP_lying)))];</span>
+<span class="comment">%</span>
+<span class="comment">% aux = 0;</span>
+<span class="comment">%</span>
+<span class="comment">% for i=1:length(channel_labels)</span>
+<span class="comment">%     figure(fig)</span>
+<span class="comment">%     hold on,</span>
+<span class="comment">%     fig = fig + 1;</span>
+<span class="comment">%     plot(time,tERP_lying(:,i),'b','LineWidth',2);</span>
+<span class="comment">%     plot(time,ntERP_lying(:,i),'r','LineWidth',2);</span>
+<span class="comment">%     xline(0, '--')</span>
+<span class="comment">%     ylim([(clim(1)+aux),(clim(2)-aux)])</span>
+<span class="comment">%     xlim([min(time),max(time)])</span>
+<span class="comment">%     title(channel_labels(i) + " - Deitado"), xlabel('Tempo (ms)'), ylabel('Amplitude (\muv)'), grid on</span>
+<span class="comment">%</span>
+<span class="comment">%     if(contains(channel_labels(i),"z") || (contains(channel_labels(i),"C") &amp;&amp; ~(contains(channel_labels(i),"P"))) ) % VPP</span>
+<span class="comment">%         c = 'blue';</span>
+<span class="comment">%         a = 'VPP';</span>
+<span class="comment">%         N2 = [tN2(1), tN2(2), tN2(2), tN2(1)];</span>
+<span class="comment">%     else % N170</span>
+<span class="comment">%         c = 'cyan';</span>
+<span class="comment">%         a = 'N170';</span>
+<span class="comment">%         N2 = [tN2(1), tN2(2), tN2(2), tN2(1)];</span>
+<span class="comment">%     end</span>
+<span class="comment">%</span>
+<span class="comment">%     N170 = [tN170(1), tN170(2), tN170(2), tN170(1)];</span>
+<span class="comment">%     P3 = [tP3(1), tP3(2), tP3(2), tP3(1)];</span>
+<span class="comment">%</span>
+<span class="comment">%     % Estas patches precisam de ser ajustadas</span>
+<span class="comment">%</span>
+<span class="comment">%     ph0 = patch([baseline(1) baseline(2) baseline(2) baseline(1)],[clim(1) clim(1) clim(2) clim(2)],'black');</span>
+<span class="comment">%     set(ph0,'facealpha',.1,'edgecolor','none')</span>
+<span class="comment">%</span>
+<span class="comment">%     ph1 = patch(N170,[clim(1) clim(1) clim(2) clim(2)],c);</span>
+<span class="comment">%     set(ph1,'facealpha',.1,'edgecolor','none')</span>
+<span class="comment">%</span>
+<span class="comment">%     ph2 = patch(N2,[clim(1) clim(1) clim(2) clim(2)],'y');</span>
+<span class="comment">%     set(ph2,'facealpha',.1,'edgecolor','none')</span>
+<span class="comment">%</span>
+<span class="comment">%     ph3 = patch(P3,[clim(1) clim(1) clim(2) clim(2)],'r');</span>
+<span class="comment">%     set(ph3,'facealpha',.1,'edgecolor','none')</span>
+<span class="comment">%</span>
+<span class="comment">%     legend('Target','Non-target','Stimulus','Baseline',a, 'N2', 'P3','AutoUpdate', 'off')</span>
+<span class="comment">%</span>
+<span class="comment">%     yline(0, '--')</span>
+<span class="comment">%     hold off</span>
+<span class="comment">%</span>
+<span class="comment">% end</span>
+<span class="comment">%</span>
+<span class="comment">% % Mapas topogr&aacute;ficos</span>
+<span class="comment">%</span>
+<span class="comment">% figure(fig)</span>
+<span class="comment">% fig = fig + 1;</span>
+<span class="comment">% tlo1=tiledlayout(2,3,'TileSpacing','tight','Padding','tight');</span>
+<span class="comment">% title(tlo1, ["Deitado - Target (Em cima) vs Non-Target (Em baixo)";""], 'FontSize', 15, 'FontWeight','Bold');</span>
+<span class="comment">%</span>
+<span class="comment">% ax1=nexttile(tlo1);</span>
+<span class="comment">% topoplot(mean(tERP_lying(idxN170(1):idxN170(2),:)),nch_locs,'maplimits',clim,'numcontour',6,'electrodes','on');</span>
+<span class="comment">% title(ax1,"N170 - VPP (" + tN170(1) +" - "+ tN170(2) + " ms)"  ,'FontSize',12)</span>
+<span class="comment">%</span>
+<span class="comment">% ax2=nexttile(tlo1);</span>
+<span class="comment">% topoplot(mean(tERP_lying(idxN2(1):idxN2(2),:)),nch_locs,'maplimits',clim,'numcontour',6,'electrodes','on');</span>
+<span class="comment">% title(ax2,"N2 (" + tN2(1) +" - "+ tN2(2) + " ms)",'FontSize',12)</span>
+<span class="comment">%</span>
+<span class="comment">% ax3=nexttile(tlo1);</span>
+<span class="comment">% topoplot(mean(tERP_lying(idxP3(1):idxP3(2),:)),nch_locs,'maplimits',clim,'numcontour',6,'electrodes','on');</span>
+<span class="comment">% title(ax3,"P3 (" + tP3(1) +" - "+ tP3(2) + " ms)",'FontSize',12)</span>
+<span class="comment">%</span>
+<span class="comment">% ax4=nexttile(tlo1);</span>
+<span class="comment">% topoplot(mean(ntERP_lying(idxN170(1):idxN170(2),:)),nch_locs,'maplimits',clim,'numcontour',6,'electrodes','on');</span>
+<span class="comment">% title(ax4,"N170 - VPP (" + tN170(1) +" - "+ tN170(2) + " ms)"  ,'FontSize',12)</span>
+<span class="comment">%</span>
+<span class="comment">% ax5=nexttile(tlo1);</span>
+<span class="comment">% topoplot(mean(ntERP_lying(idxN2(1):idxN2(2),:)),nch_locs,'maplimits',clim,'numcontour',6,'electrodes','on');</span>
+<span class="comment">% title(ax5,"N2 (" + tN2(1) +" - "+ tN2(2) + " ms)",'FontSize',12)</span>
+<span class="comment">%</span>
+<span class="comment">% ax6=nexttile(tlo1);</span>
+<span class="comment">% topoplot(mean(ntERP_lying(idxP3(1):idxP3(2),:)),nch_locs,'maplimits',clim,'numcontour',6,'electrodes','on');</span>
+<span class="comment">% title(ax6,"P3 (" + tP3(1) +" - "+ tP3(2) + " ms)",'FontSize',12)</span>
+<span class="comment">%</span>
+<span class="comment">% cbh2=colorbar(ax6);</span>
+<span class="comment">% cbh2.Layout.Tile = 'east';</span>
+<span class="comment">% cbh2.Label.String='\muV';</span>
+<span class="comment">% chh2.Label.FontSize = 12;</span>
+<span class="comment">% cbh2.Label.Rotation=0;</span>
+</pre><img vspace="5" hspace="5" src="eeg_Miguel_11.png" alt=""> <img vspace="5" hspace="5" src="eeg_Miguel_12.png" alt=""> <img vspace="5" hspace="5" src="eeg_Miguel_13.png" alt=""> <img vspace="5" hspace="5" src="eeg_Miguel_14.png" alt=""> <h2 id="21">Compara&ccedil;&atilde;o entre condi&ccedil;&otilde;es - Target</h2><pre class="codeinput"><span class="comment">% Gr&aacute;ficos dos ERPs no tempo</span>
+
+clim = [floor(min(min(tERP_seated))),ceil(max(max(tERP_seated))),
+        floor(min(min(tERP_fmri))),ceil(max(max(tERP_fmri))),
+        floor(min(min(tERP_lying))),ceil(max(max(tERP_lying)))];
+
+clim = [min(min(clim)),max(max(clim))];
+
+aux = 0;
+
+<span class="keyword">for</span> i=1:length(channel_labels)
+    figure(fig)
+    hold <span class="string">on</span>,
+    fig = fig + 1;
+    plot(time,tERP_seated(:,i),<span class="string">'b'</span>,<span class="string">'LineWidth'</span>,2);
+    plot(time,tERP_seatedsound(:,i),<span class="string">'k'</span>,<span class="string">'LineWidth'</span>,2);
+    plot(time,tERP_lying(:,i),<span class="string">'r'</span>,<span class="string">'LineWidth'</span>,2);
+    plot(time,tERP_fmri(:,i),<span class="string">'g'</span>,<span class="string">'LineWidth'</span>,2);
+    xline(0, <span class="string">'--'</span>,<span class="string">'LineWidth'</span>,1.5)
+    ylim([(clim(1)+aux),(clim(2)-aux)])
+    xlim([min(time),max(time)])
+    title(channel_labels(i) + <span class="string">" - Target"</span>), xlabel(<span class="string">'Time (ms)'</span>), ylabel(<span class="string">'Amplitude (\muv)'</span>), grid <span class="string">on</span>
+
+    <span class="keyword">if</span>(contains(channel_labels(i),<span class="string">"z"</span>) || (contains(channel_labels(i),<span class="string">"C"</span>) &amp;&amp; ~(contains(channel_labels(i),<span class="string">"P"</span>))) ) <span class="comment">% VPP</span>
+        c = <span class="string">'blue'</span>;
+        a = <span class="string">'VPP'</span>;
+        N2 = [tN2(1), tN2(2), tN2(2), tN2(1)];
+    <span class="keyword">else</span> <span class="comment">% N170</span>
+        c = <span class="string">'cyan'</span>;
+        a = <span class="string">'N170'</span>;
+        N2 = [tN2(1), tN2(2), tN2(2), tN2(1)];
+    <span class="keyword">end</span>
+
+    N170 = [tN170(1), tN170(2), tN170(2), tN170(1)];
+    P3 = [tP3(1), tP3(2), tP3(2), tP3(1)];
+
+    <span class="comment">% Estas patches precisam de ser ajustadas</span>
+
+    ph0 = patch([baseline(1) baseline(2) baseline(2) baseline(1)],[clim(1) clim(1) clim(2) clim(2)],<span class="string">'black'</span>);
+    set(ph0,<span class="string">'facealpha'</span>,.1,<span class="string">'edgecolor'</span>,<span class="string">'none'</span>)
+
+    <span class="comment">% ph1 = patch(N170,[clim(1) clim(1) clim(2) clim(2)],c);</span>
+    <span class="comment">% set(ph1,'facealpha',.1,'edgecolor','none')</span>
+    <span class="comment">%</span>
+    <span class="comment">% ph2 = patch(N2,[clim(1) clim(1) clim(2) clim(2)],'y');</span>
+    <span class="comment">% set(ph2,'facealpha',.1,'edgecolor','none')</span>
+
+    <span class="comment">% ph3 = patch(P3,[clim(1) clim(1) clim(2) clim(2)],'r');</span>
+    <span class="comment">% set(ph3,'facealpha',.1,'edgecolor','none')</span>
+
+    legend(<span class="string">'Seated'</span>,<span class="string">'Seated w/ fMRI'</span>, <span class="string">'Lying'</span>, <span class="string">'Lying w/ fMRI'</span>,<span class="string">'Stimulus'</span>,<span class="string">'Baseline'</span>, <span class="string">'P3'</span>,<span class="string">'AutoUpdate'</span>, <span class="string">'off'</span>)
+
+    yline(0, <span class="string">':'</span>,<span class="string">'LineWidth'</span>,1.5)
+    hold <span class="string">off</span>
+
+<span class="keyword">end</span>
+</pre><pre class="codeoutput">Warning: Ignoring extra legend entries. 
+Warning: Ignoring extra legend entries. 
+Warning: Ignoring extra legend entries. 
+Warning: Ignoring extra legend entries. 
+Warning: Ignoring extra legend entries. 
+Warning: Ignoring extra legend entries. 
+Warning: Ignoring extra legend entries. 
+Warning: Ignoring extra legend entries. 
+Warning: Ignoring extra legend entries. 
+Warning: Ignoring extra legend entries. 
+Warning: Ignoring extra legend entries. 
+Warning: Ignoring extra legend entries. 
+Warning: Ignoring extra legend entries. 
+Warning: Ignoring extra legend entries. 
+Warning: Ignoring extra legend entries. 
+Warning: Ignoring extra legend entries. 
+</pre><img vspace="5" hspace="5" src="eeg_Miguel_15.png" alt=""> <img vspace="5" hspace="5" src="eeg_Miguel_16.png" alt=""> <img vspace="5" hspace="5" src="eeg_Miguel_17.png" alt=""> <img vspace="5" hspace="5" src="eeg_Miguel_18.png" alt=""> <img vspace="5" hspace="5" src="eeg_Miguel_19.png" alt=""> <img vspace="5" hspace="5" src="eeg_Miguel_20.png" alt=""> <img vspace="5" hspace="5" src="eeg_Miguel_21.png" alt=""> <img vspace="5" hspace="5" src="eeg_Miguel_22.png" alt=""> <img vspace="5" hspace="5" src="eeg_Miguel_23.png" alt=""> <img vspace="5" hspace="5" src="eeg_Miguel_24.png" alt=""> <img vspace="5" hspace="5" src="eeg_Miguel_25.png" alt=""> <img vspace="5" hspace="5" src="eeg_Miguel_26.png" alt=""> <img vspace="5" hspace="5" src="eeg_Miguel_27.png" alt=""> <img vspace="5" hspace="5" src="eeg_Miguel_28.png" alt=""> <img vspace="5" hspace="5" src="eeg_Miguel_29.png" alt=""> <img vspace="5" hspace="5" src="eeg_Miguel_30.png" alt=""> <h2 id="22">Mapas topogr&aacute;ficos - Target</h2><pre class="codeinput">figure(fig)
+fig = fig + 1;
+tlo1=tiledlayout(4,3,<span class="string">'TileSpacing'</span>,<span class="string">'none'</span>,<span class="string">'Padding'</span>,<span class="string">'none'</span>);
+title(tlo1, [<span class="string">"Target"</span>;<span class="string">""</span>], <span class="string">'FontSize'</span>, 15, <span class="string">'FontWeight'</span>,<span class="string">'Bold'</span>);
+
+n_cont = 10;
+
+ax1=nexttile(tlo1);
+topoplot(mean(tERP_seated(idxN170(1):idxN170(2),:)),nch_locs,<span class="string">'maplimits'</span>,clim,<span class="string">'numcontour'</span>,n_cont,<span class="string">'electrodes'</span>,<span class="string">'on'</span>);
+title(ax1,<span class="string">"N170 - VPP ("</span> + tN170(1) +<span class="string">" - "</span>+ tN170(2) + <span class="string">" ms)"</span>  ,<span class="string">'FontSize'</span>,12)
+
+ax2=nexttile(tlo1);
+topoplot(mean(tERP_seated(idxN2(1):idxN2(2),:)),nch_locs,<span class="string">'maplimits'</span>,clim,<span class="string">'numcontour'</span>,n_cont,<span class="string">'electrodes'</span>,<span class="string">'on'</span>);
+title(ax2,<span class="string">"N2 ("</span> + tN2(1) +<span class="string">" - "</span>+ tN2(2) + <span class="string">" ms)"</span>,<span class="string">'FontSize'</span>,12)
+
+ax3=nexttile(tlo1);
+topoplot(mean(tERP_seated(idxP3(1):idxP3(2),:)),nch_locs,<span class="string">'maplimits'</span>,clim,<span class="string">'numcontour'</span>,n_cont,<span class="string">'electrodes'</span>,<span class="string">'on'</span>);
+title(ax3,<span class="string">"P3 ("</span> + tP3(1) +<span class="string">" - "</span>+ tP3(2) + <span class="string">" ms)"</span>,<span class="string">'FontSize'</span>,12)
+
+ax14=nexttile(tlo1);
+topoplot(mean(tERP_seatedsound(idxN170(1):idxN170(2),:)),nch_locs,<span class="string">'maplimits'</span>,clim,<span class="string">'numcontour'</span>,n_cont,<span class="string">'electrodes'</span>,<span class="string">'on'</span>);
+
+ax15=nexttile(tlo1);
+topoplot(mean(tERP_seatedsound(idxN2(1):idxN2(2),:)),nch_locs,<span class="string">'maplimits'</span>,clim,<span class="string">'numcontour'</span>,n_cont,<span class="string">'electrodes'</span>,<span class="string">'on'</span>);
+
+ax16=nexttile(tlo1);
+topoplot(mean(tERP_seatedsound(idxP3(1):idxP3(2),:)),nch_locs,<span class="string">'maplimits'</span>,clim,<span class="string">'numcontour'</span>,n_cont,<span class="string">'electrodes'</span>,<span class="string">'on'</span>);
+
+ax4=nexttile(tlo1);
+topoplot(mean(tERP_lying(idxN170(1):idxN170(2),:)),nch_locs,<span class="string">'maplimits'</span>,clim,<span class="string">'numcontour'</span>,n_cont,<span class="string">'electrodes'</span>,<span class="string">'on'</span>);
+
+ax4=nexttile(tlo1);
+topoplot(mean(tERP_lying(idxN2(1):idxN2(2),:)),nch_locs,<span class="string">'maplimits'</span>,clim,<span class="string">'numcontour'</span>,n_cont,<span class="string">'electrodes'</span>,<span class="string">'on'</span>);
+
+ax6=nexttile(tlo1);
+topoplot(mean(tERP_lying(idxP3(1):idxP3(2),:)),nch_locs,<span class="string">'maplimits'</span>,clim,<span class="string">'numcontour'</span>,n_cont,<span class="string">'electrodes'</span>,<span class="string">'on'</span>);
+
+ax7=nexttile(tlo1);
+topoplot(mean(tERP_fmri(idxN170(1):idxN170(2),:)),nch_locs,<span class="string">'maplimits'</span>,clim,<span class="string">'numcontour'</span>,n_cont,<span class="string">'electrodes'</span>,<span class="string">'on'</span>);
+
+ax8=nexttile(tlo1);
+topoplot(mean(tERP_fmri(idxN2(1):idxN2(2),:)),nch_locs,<span class="string">'maplimits'</span>,clim,<span class="string">'numcontour'</span>,n_cont,<span class="string">'electrodes'</span>,<span class="string">'on'</span>);
+
+ax9=nexttile(tlo1);
+topoplot(mean(tERP_fmri(idxP3(1):idxP3(2),:)),nch_locs,<span class="string">'maplimits'</span>,clim,<span class="string">'numcontour'</span>,n_cont,<span class="string">'electrodes'</span>,<span class="string">'on'</span>);
+
+cbh2=colorbar(ax9);
+cbh2.Layout.Tile = <span class="string">'east'</span>;
+cbh2.Label.String=<span class="string">'\muV'</span>;
+chh2.Label.FontSize = 16;
+cbh2.Label.Rotation=0;
+</pre><pre class="codeoutput">Warning: Unable to set 'Position', 'InnerPosition', 'OuterPosition', or
+'PositionConstraint' for objects in a TiledChartLayout 
+Warning: Unable to set 'Position', 'InnerPosition', 'OuterPosition', or
+'PositionConstraint' for objects in a TiledChartLayout 
+Warning: Unable to set 'Position', 'InnerPosition', 'OuterPosition', or
+'PositionConstraint' for objects in a TiledChartLayout 
+Warning: Unable to set 'Position', 'InnerPosition', 'OuterPosition', or
+'PositionConstraint' for objects in a TiledChartLayout 
+Warning: Unable to set 'Position', 'InnerPosition', 'OuterPosition', or
+'PositionConstraint' for objects in a TiledChartLayout 
+Warning: Unable to set 'Position', 'InnerPosition', 'OuterPosition', or
+'PositionConstraint' for objects in a TiledChartLayout 
+Warning: Unable to set 'Position', 'InnerPosition', 'OuterPosition', or
+'PositionConstraint' for objects in a TiledChartLayout 
+Warning: Unable to set 'Position', 'InnerPosition', 'OuterPosition', or
+'PositionConstraint' for objects in a TiledChartLayout 
+Warning: Unable to set 'Position', 'InnerPosition', 'OuterPosition', or
+'PositionConstraint' for objects in a TiledChartLayout 
+Warning: Unable to set 'Position', 'InnerPosition', 'OuterPosition', or
+'PositionConstraint' for objects in a TiledChartLayout 
+Warning: Unable to set 'Position', 'InnerPosition', 'OuterPosition', or
+'PositionConstraint' for objects in a TiledChartLayout 
+Warning: Unable to set 'Position', 'InnerPosition', 'OuterPosition', or
+'PositionConstraint' for objects in a TiledChartLayout 
+</pre><img vspace="5" hspace="5" src="eeg_Miguel_31.png" alt=""> <h2 id="23">Compara&ccedil;&atilde;o entre condi&ccedil;&otilde;es - Non-Target</h2><pre class="codeinput"><span class="comment">% Gr&aacute;ficos dos ERPs no tempo</span>
+
+aux = 0;
+
+<span class="keyword">for</span> i=1:length(channel_labels)
+    figure(fig)
+    hold <span class="string">on</span>,
+    fig = fig + 1;
+    plot(time,ntERP_seated(:,i),<span class="string">'b'</span>,<span class="string">'LineWidth'</span>,2);
+    plot(time,ntERP_lying(:,i),<span class="string">'r'</span>,<span class="string">'LineWidth'</span>,2);
+    plot(time,ntERP_fmri(:,i),<span class="string">'g'</span>,<span class="string">'LineWidth'</span>,2);
+    xline(0, <span class="string">'--'</span>)
+    ylim([(clim(1)+aux),(clim(2)-aux)])
+    xlim([min(time),max(time)])
+    title(channel_labels(i) + <span class="string">" - Non-Target"</span>), xlabel(<span class="string">'Tempo (ms)'</span>), ylabel(<span class="string">'Amplitude (\muv)'</span>), grid <span class="string">on</span>
+
+    <span class="keyword">if</span>(contains(channel_labels(i),<span class="string">"z"</span>) || (contains(channel_labels(i),<span class="string">"C"</span>) &amp;&amp; ~(contains(channel_labels(i),<span class="string">"P"</span>))) ) <span class="comment">% VPP</span>
+        c = <span class="string">'blue'</span>;
+        a = <span class="string">'VPP'</span>;
+        N2 = [tN2(1), tN2(2), tN2(2), tN2(1)];
+    <span class="keyword">else</span> <span class="comment">% N170</span>
+        c = <span class="string">'cyan'</span>;
+        a = <span class="string">'N170'</span>;
+        N2 = [tN2(1), tN2(2), tN2(2), tN2(1)];
+    <span class="keyword">end</span>
+
+    N170 = [tN170(1), tN170(2), tN170(2), tN170(1)];
+    P3 = [tP3(1), tP3(2), tP3(2), tP3(1)];
+
+    <span class="comment">% Estas patches precisam de ser ajustadas</span>
+
+    ph0 = patch([baseline(1) baseline(2) baseline(2) baseline(1)],[clim(1) clim(1) clim(2) clim(2)],<span class="string">'black'</span>);
+    set(ph0,<span class="string">'facealpha'</span>,.1,<span class="string">'edgecolor'</span>,<span class="string">'none'</span>)
+
+    ph1 = patch(N170,[clim(1) clim(1) clim(2) clim(2)],c);
+    set(ph1,<span class="string">'facealpha'</span>,.1,<span class="string">'edgecolor'</span>,<span class="string">'none'</span>)
+
+    ph2 = patch(N2,[clim(1) clim(1) clim(2) clim(2)],<span class="string">'y'</span>);
+    set(ph2,<span class="string">'facealpha'</span>,.1,<span class="string">'edgecolor'</span>,<span class="string">'none'</span>)
+
+    ph3 = patch(P3,[clim(1) clim(1) clim(2) clim(2)],<span class="string">'r'</span>);
+    set(ph3,<span class="string">'facealpha'</span>,.1,<span class="string">'edgecolor'</span>,<span class="string">'none'</span>)
+
+    legend(<span class="string">'EEG Seated'</span>,<span class="string">'EEG Lying'</span>,<span class="string">'EEG w/ fMRI'</span>,<span class="string">'Stimulus'</span>,<span class="string">'Baseline'</span>,a, <span class="string">'N2'</span>, <span class="string">'P3'</span>,<span class="string">'AutoUpdate'</span>, <span class="string">'off'</span>)
+
+    yline(0, <span class="string">':'</span>)
+    hold <span class="string">off</span>
+
+<span class="keyword">end</span>
+</pre><img vspace="5" hspace="5" src="eeg_Miguel_32.png" alt=""> <img vspace="5" hspace="5" src="eeg_Miguel_33.png" alt=""> <img vspace="5" hspace="5" src="eeg_Miguel_34.png" alt=""> <img vspace="5" hspace="5" src="eeg_Miguel_35.png" alt=""> <img vspace="5" hspace="5" src="eeg_Miguel_36.png" alt=""> <img vspace="5" hspace="5" src="eeg_Miguel_37.png" alt=""> <img vspace="5" hspace="5" src="eeg_Miguel_38.png" alt=""> <img vspace="5" hspace="5" src="eeg_Miguel_39.png" alt=""> <img vspace="5" hspace="5" src="eeg_Miguel_40.png" alt=""> <img vspace="5" hspace="5" src="eeg_Miguel_41.png" alt=""> <img vspace="5" hspace="5" src="eeg_Miguel_42.png" alt=""> <img vspace="5" hspace="5" src="eeg_Miguel_43.png" alt=""> <img vspace="5" hspace="5" src="eeg_Miguel_44.png" alt=""> <img vspace="5" hspace="5" src="eeg_Miguel_45.png" alt=""> <img vspace="5" hspace="5" src="eeg_Miguel_46.png" alt=""> <img vspace="5" hspace="5" src="eeg_Miguel_47.png" alt=""> <h2 id="24">Mapas topogr&aacute;ficos - Non-target</h2><pre class="codeinput">clim = [floor(min(min(tERP_seated))),ceil(max(max(tERP_seated))),
+        floor(min(min(tERP_fmri))),ceil(max(max(tERP_fmri))),
+        floor(min(min(tERP_lying))),ceil(max(max(tERP_lying)))];
+
+clim = [min(min(clim)),max(max(clim))];
+
+figure(fig)
+fig = fig + 1;
+tlo1=tiledlayout(3,3,<span class="string">'TileSpacing'</span>,<span class="string">'tight'</span>,<span class="string">'Padding'</span>,<span class="string">'tight'</span>);
+title(tlo1, [<span class="string">"NonTarget | EEG seated (Top) | EEG Lying (Middle) | EEG w/ fMRI (Low) "</span>;<span class="string">""</span>], <span class="string">'FontSize'</span>, 15, <span class="string">'FontWeight'</span>,<span class="string">'Bold'</span>);
+
+ax1=nexttile(tlo1);
+topoplot(mean(ntERP_seated(idxN170(1):idxN170(2),:)),nch_locs,<span class="string">'maplimits'</span>,clim,<span class="string">'numcontour'</span>,n_cont,<span class="string">'electrodes'</span>,<span class="string">'on'</span>);
+title(ax1,<span class="string">"N170 - VPP ("</span> + tN170(1) +<span class="string">" - "</span>+ tN170(2) + <span class="string">" ms)"</span>  ,<span class="string">'FontSize'</span>,12)
+
+ax2=nexttile(tlo1);
+topoplot(mean(ntERP_seated(idxN2(1):idxN2(2),:)),nch_locs,<span class="string">'maplimits'</span>,clim,<span class="string">'numcontour'</span>,n_cont,<span class="string">'electrodes'</span>,<span class="string">'on'</span>);
+title(ax2,<span class="string">"N2 ("</span> + tN2(1) +<span class="string">" - "</span>+ tN2(2) + <span class="string">" ms)"</span>,<span class="string">'FontSize'</span>,12)
+
+ax3=nexttile(tlo1);
+topoplot(mean(ntERP_seated(idxP3(1):idxP3(2),:)),nch_locs,<span class="string">'maplimits'</span>,clim,<span class="string">'numcontour'</span>,n_cont,<span class="string">'electrodes'</span>,<span class="string">'on'</span>);
+title(ax3,<span class="string">"P3 ("</span> + tP3(1) +<span class="string">" - "</span>+ tP3(2) + <span class="string">" ms)"</span>,<span class="string">'FontSize'</span>,12)
+
+ax4=nexttile(tlo1);
+topoplot(mean(ntERP_lying(idxN170(1):idxN170(2),:)),nch_locs,<span class="string">'maplimits'</span>,clim,<span class="string">'numcontour'</span>,n_cont,<span class="string">'electrodes'</span>,<span class="string">'on'</span>);
+
+ax5=nexttile(tlo1);
+topoplot(mean(ntERP_lying(idxN2(1):idxN2(2),:)),nch_locs,<span class="string">'maplimits'</span>,clim,<span class="string">'numcontour'</span>,n_cont,<span class="string">'electrodes'</span>,<span class="string">'on'</span>);
+
+ax6=nexttile(tlo1);
+topoplot(mean(ntERP_lying(idxP3(1):idxP3(2),:)),nch_locs,<span class="string">'maplimits'</span>,clim,<span class="string">'numcontour'</span>,n_cont,<span class="string">'electrodes'</span>,<span class="string">'on'</span>);
+
+ax7=nexttile(tlo1);
+topoplot(mean(ntERP_fmri(idxN170(1):idxN170(2),:)),nch_locs,<span class="string">'maplimits'</span>,clim,<span class="string">'numcontour'</span>,n_cont,<span class="string">'electrodes'</span>,<span class="string">'on'</span>);
+
+ax8=nexttile(tlo1);
+topoplot(mean(ntERP_fmri(idxN2(1):idxN2(2),:)),nch_locs,<span class="string">'maplimits'</span>,clim,<span class="string">'numcontour'</span>,n_cont,<span class="string">'electrodes'</span>,<span class="string">'on'</span>);
+
+ax9=nexttile(tlo1);
+topoplot(mean(ntERP_fmri(idxP3(1):idxP3(2),:)),nch_locs,<span class="string">'maplimits'</span>,clim,<span class="string">'numcontour'</span>,n_cont,<span class="string">'electrodes'</span>,<span class="string">'on'</span>);
+
+cbh2=colorbar(ax9);
+cbh2.Layout.Tile = <span class="string">'east'</span>;
+cbh2.Label.String=<span class="string">'\muV'</span>;
+chh2.Label.FontSize = 16;
+cbh2.Label.Rotation=0;
+</pre><pre class="codeoutput">Warning: Unable to set 'Position', 'InnerPosition', 'OuterPosition', or
+'PositionConstraint' for objects in a TiledChartLayout 
+Warning: Unable to set 'Position', 'InnerPosition', 'OuterPosition', or
+'PositionConstraint' for objects in a TiledChartLayout 
+Warning: Unable to set 'Position', 'InnerPosition', 'OuterPosition', or
+'PositionConstraint' for objects in a TiledChartLayout 
+Warning: Unable to set 'Position', 'InnerPosition', 'OuterPosition', or
+'PositionConstraint' for objects in a TiledChartLayout 
+Warning: Unable to set 'Position', 'InnerPosition', 'OuterPosition', or
+'PositionConstraint' for objects in a TiledChartLayout 
+Warning: Unable to set 'Position', 'InnerPosition', 'OuterPosition', or
+'PositionConstraint' for objects in a TiledChartLayout 
+Warning: Unable to set 'Position', 'InnerPosition', 'OuterPosition', or
+'PositionConstraint' for objects in a TiledChartLayout 
+Warning: Unable to set 'Position', 'InnerPosition', 'OuterPosition', or
+'PositionConstraint' for objects in a TiledChartLayout 
+Warning: Unable to set 'Position', 'InnerPosition', 'OuterPosition', or
+'PositionConstraint' for objects in a TiledChartLayout 
+</pre><img vspace="5" hspace="5" src="eeg_Miguel_48.png" alt=""> <h2 id="25">Compara&ccedil;&atilde;o entre condi&ccedil;&otilde;es - Target vs Non-Target</h2><pre class="codeinput"><span class="comment">% Gr&aacute;ficos dos ERPs no tempo</span>
+
+<span class="comment">% aux = 0;</span>
+<span class="comment">%</span>
+<span class="comment">% for i=1:length(channel_labels)</span>
+<span class="comment">%     figure(fig)</span>
+<span class="comment">%     hold on,</span>
+<span class="comment">%     fig = fig + 1;</span>
+<span class="comment">%     plot(time,tERP_seated(:,i),'b','LineWidth',2);</span>
+<span class="comment">%     plot(time,tERP_lying(:,i),'r','LineWidth',2);</span>
+<span class="comment">%     plot(time,tERP_fmri(:,i),'g','LineWidth',2);</span>
+<span class="comment">%     plot(time,ntERP_seated(:,i),'b--','LineWidth',2);</span>
+<span class="comment">%     plot(time,ntERP_lying(:,i),'r--','LineWidth',2);</span>
+<span class="comment">%     plot(time,ntERP_fmri(:,i),'g--','LineWidth',2);</span>
+<span class="comment">%     xline(0, '--')</span>
+<span class="comment">%     ylim([(clim(1)+aux),(clim(2)-aux)])</span>
+<span class="comment">%     xlim([min(time),max(time)])</span>
+<span class="comment">%     title(channel_labels(i) + " - Target vs Non-Target"), xlabel('Tempo (ms)'), ylabel('Amplitude (\muv)'), grid on</span>
+<span class="comment">%</span>
+<span class="comment">%     if(contains(channel_labels(i),"z") || (contains(channel_labels(i),"C") &amp;&amp; ~(contains(channel_labels(i),"P"))) ) % VPP</span>
+<span class="comment">%         c = 'blue';</span>
+<span class="comment">%         a = 'VPP';</span>
+<span class="comment">%         N2 = [tN2(1), tN2(2), tN2(2), tN2(1)];</span>
+<span class="comment">%     else % N170</span>
+<span class="comment">%         c = 'cyan';</span>
+<span class="comment">%         a = 'N170';</span>
+<span class="comment">%         N2 = [tN2(1), tN2(2), tN2(2), tN2(1)];</span>
+<span class="comment">%     end</span>
+<span class="comment">%</span>
+<span class="comment">%     N170 = [tN170(1), tN170(2), tN170(2), tN170(1)];</span>
+<span class="comment">%     P3 = [tP3(1), tP3(2), tP3(2), tP3(1)];</span>
+<span class="comment">%</span>
+<span class="comment">%     % Estas patches precisam de ser ajustadas</span>
+<span class="comment">%</span>
+<span class="comment">%     ph0 = patch([baseline(1) baseline(2) baseline(2) baseline(1)],[clim(1) clim(1) clim(2) clim(2)],'black');</span>
+<span class="comment">%     set(ph0,'facealpha',.1,'edgecolor','none')</span>
+<span class="comment">%</span>
+<span class="comment">%     ph1 = patch(N170,[clim(1) clim(1) clim(2) clim(2)],c);</span>
+<span class="comment">%     set(ph1,'facealpha',.1,'edgecolor','none')</span>
+<span class="comment">%</span>
+<span class="comment">%     ph2 = patch(N2,[clim(1) clim(1) clim(2) clim(2)],'y');</span>
+<span class="comment">%     set(ph2,'facealpha',.1,'edgecolor','none')</span>
+<span class="comment">%</span>
+<span class="comment">%     ph3 = patch(P3,[clim(1) clim(1) clim(2) clim(2)],'r');</span>
+<span class="comment">%     set(ph3,'facealpha',.1,'edgecolor','none')</span>
+<span class="comment">%</span>
+<span class="comment">%     legend('EEG Sentado - Target','EEG Deitado - Target','EEG c/ fMRI - Target','EEG Sentado - NonTarget','EEG Deitado - NonTarget','EEG c/ fMRI - NonTarget', ...</span>
+<span class="comment">%            'Stimulus','Baseline',a, 'N2', 'P3','AutoUpdate', 'off')</span>
+<span class="comment">%</span>
+<span class="comment">%     yline(0, ':')</span>
+<span class="comment">%     hold off</span>
+<span class="comment">%</span>
+<span class="comment">% end</span>
+
+<span class="comment">% %% 2D movie of topographic ERPs (Target - Seated)</span>
+<span class="comment">%</span>
+<span class="comment">% figure('units','pixels','position',[0 0 1920 1080]);</span>
+<span class="comment">% set(gcf, 'WindowState', 'maximized');</span>
+<span class="comment">%</span>
+<span class="comment">% targ_seated = eegmovie(tERP_seated', fs, nch_locs ,...</span>
+<span class="comment">%      'time','on','startsec',-0.200 , 'topoplotopt', ...</span>
+<span class="comment">%      {'numcontour' n_cont},'minmax',clim,'title','EEG seated');</span>
+<span class="comment">%</span>
+<span class="comment">% seemovie(targ_seated,0,clim);</span>
+<span class="comment">%</span>
+<span class="comment">% %% 2D movie of topographic ERPs (Target - Lying)</span>
+<span class="comment">%</span>
+<span class="comment">% figure('units','pixels','position',[0 0 1920 1080]);</span>
+<span class="comment">% set(gcf, 'WindowState', 'maximized');</span>
+<span class="comment">%</span>
+<span class="comment">% targ_lying = eegmovie(tERP_lying', fs, nch_locs ,...</span>
+<span class="comment">%      'time','on','startsec',-0.200 , 'topoplotopt', ...</span>
+<span class="comment">%      {'numcontour' n_cont},'minmax',clim,'title','EEG lying');</span>
+<span class="comment">%</span>
+<span class="comment">% seemovie(targ_lying,0,clim);</span>
+<span class="comment">%</span>
+<span class="comment">% %% 2D movie of topographic ERPs (Target - fMRI)</span>
+<span class="comment">%</span>
+<span class="comment">% figure('units','pixels','position',[0 0 1920 1080]);</span>
+<span class="comment">% set(gcf, 'WindowState', 'maximized');</span>
+<span class="comment">%</span>
+<span class="comment">% targ_fmri = eegmovie(tERP_fmri', fs, nch_locs ,...</span>
+<span class="comment">%      'time','on','startsec',-0.200 , 'topoplotopt', ...</span>
+<span class="comment">%      {'numcontour' n_cont},'minmax',clim,'title','EEG w/ fMRI');</span>
+<span class="comment">%</span>
+<span class="comment">% seemovie(targ_fmri,0,clim);</span>
+<span class="comment">%</span>
+<span class="comment">% %% 2D movie of topographic ERPs (NonTarget - Seated)</span>
+<span class="comment">%</span>
+<span class="comment">% figure('units','pixels','position',[0 0 1920 1080]);</span>
+<span class="comment">% set(gcf, 'WindowState', 'maximized');</span>
+<span class="comment">%</span>
+<span class="comment">% nontarg_seated = eegmovie(ntERP_seated', fs, nch_locs ,...</span>
+<span class="comment">%      'time','on','startsec',-0.200 , 'topoplotopt', ...</span>
+<span class="comment">%      {'numcontour' n_cont},'minmax',clim,'title','EEG seated');</span>
+<span class="comment">%</span>
+<span class="comment">% seemovie(nontarg_seated,0,clim);</span>
+<span class="comment">%</span>
+<span class="comment">% %% 2D movie of topographic ERPs (NonTarget - Lying)</span>
+<span class="comment">%</span>
+<span class="comment">% figure('units','pixels','position',[0 0 1920 1080]);</span>
+<span class="comment">% set(gcf, 'WindowState', 'maximized');</span>
+<span class="comment">%</span>
+<span class="comment">% nontarg_lying = eegmovie(ntERP_lying', fs, nch_locs ,...</span>
+<span class="comment">%      'time','on','startsec',-0.200 , 'topoplotopt', ...</span>
+<span class="comment">%      {'numcontour' n_cont},'minmax',clim,'title','EEG lying');</span>
+<span class="comment">%</span>
+<span class="comment">% seemovie(nontarg_lying,0,clim);</span>
+<span class="comment">%</span>
+<span class="comment">% %% 2D movie of topographic ERPs (NonTarget - fMRI)</span>
+<span class="comment">%</span>
+<span class="comment">% figure('units','pixels','position',[0 0 1920 1080]);</span>
+<span class="comment">% set(gcf, 'WindowState', 'maximized');</span>
+<span class="comment">%</span>
+<span class="comment">% nontarg_fmri = eegmovie(ntERP_fmri', fs, nch_locs ,...</span>
+<span class="comment">%      'time','on','startsec',-0.200 , 'topoplotopt', ...</span>
+<span class="comment">%      {'numcontour' n_cont},'minmax',clim,'title','EEG w/ fMRI');</span>
+<span class="comment">%</span>
+<span class="comment">% seemovie(nontarg_fmri,0,clim);</span>
+</pre><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2023a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Falta fazer:
+
+% - Análises estatística dos picos 
+% - Ajustar os thesholds dos picos e ver melhor literatura dos picos entre o
+% N170/VPP e P300
+% Se der tempo, aplicar ICA
+
+%% Informação dos picos
+
+% N170 (100-200 ms) - Potencial com amplitude maior durante a apresenção de faces em
+% comparação com outros objetos/estímulos visuais. Elétrodos: P7, P8, PO7, PO8.
+% Geralmente é mais pronunciando no hemisfério direito.
+% Vertex Positive Potential (VPP) - 100 - 200 ms. Parece ser gerado pelo mesmo 
+% processo neuronal de reconhecimento facil mas é captado nos elétrodos centrais: 
+% FZ, CZ, apesar do poder haver pequenas diferenças de latência.
+% Mais sobre o N170 e VPP: https://psyc.bbk.ac.uk/brainb/wp-content/uploads/sites/13/2019/05/eimer_N170_oxford.pdf
+
+% N2 (200-400 ms): FZ, Cz
+% P3 (300-600 ms): FZ, Fz, Pz
+% https://onlinelibrary.wiley.com/doi/pdfdirect/10.1111/j.1469-8986.2007.00602.x
+
+%% Importar os dados e inicializar variáveis
+
+close all;
+clc, clear;
+
+fig = 1;
+
+% EEGLAB functions documentation: https://sccn.ucsd.edu/~arno/eeglab/auto/indexfunc.html
+
+addpath(genpath('eeglab2023.0')); % Path do EEGLAB 
+ch_locs=readlocs('BioSemi64.loc'); % Ficheiro com localização dos elétrodos
+
+data_seated = readtable("S3_25_Male.csv");
+data_seated = table2array(data_seated);
+
+data_seatedsound = readtable("S2_25_sentado_som_2023-06-21_18-18.csv");
+data_seatedsound = table2array(data_seatedsound);
+
+data_fmri = readtable("S2_25_Male_2023-06-02_16-21.csv");
+data_fmri = table2array(data_fmri);
+
+data_lying = readtable("S22_25_Male_2023-06-02_17-03.csv");
+data_lying = table2array(data_lying);
+
+fs = 125;
+channel_labels = ["C3";"CP3";"P3";"P7";"PO7";"PO3";"Pz";"CPz";"Fz";"Cz";"C4";"CP4";"P4";"P8";"PO8";"PO4"];
+
+idx = zeros(length(channel_labels),1);
+
+for i = 1:length(ch_locs)
+    cur_lb = string(ch_locs(i).labels);
+    if (nonzeros(channel_labels == cur_lb))
+        idx(i) = 1;
+    end
+end
+
+nch_locs = ch_locs(logical(idx)); % Elétrodos usados
+
+%% 2D plot
+
+
+%figure (fig), topoplot([], nch_locs, 'style', 'blank', 'electrodes', 'ptslabels');
+%title(["2D Channel Locations";""]);
+
+%fig = fig + 1;
+
+%% Headplot
+
+splfile='FileHeadPlot.spl';
+%headplot('setup',nch_locs,splfile,'Param','Value');
+headplot(data_fmri(100000,1:end-1),splfile,'electrodes','on','labels',2,'maplimits', 'absmax','colormap', sky(64));
+
+%% Verificar o efeito dos filtros na fase dos sinais
+
+% t = (-1:1/fs:1)';
+% s = 5*square(2*pi*t); % Sinal com a mesma frequência que o sinal da fotoresistência
+% 
+% sqwave = awgn(s, 20, 'measured'); % Gaussian white noise
+% 
+% plot(t, [sqwave, movmean(sqwave,20), movmedian(sqwave,20)]),
+% title('Filter effects on the phase of the phoresistor signal'), 
+% xlabel('Time (s)'),
+% legend('Original Signal','Moving average','Moving median');
+
+% Resumindo, a mediana flutuante não distorce tanto as fases do sinal,
+% principalmente no início das rising edges e falling edges. Isto é
+% extremamente importante em análises como as dos ERPs pois é preciso
+% saber com exatidão o instante em que o estímulo é apresentado.
+
+%% Dados da fotoresistência 
+
+photoVector_seated=(data_seated(:,end));
+
+t_seated = ((0:length(photoVector_seated)-1)*1/fs)/60;
+n_pnts = 20;
+filt_photoVector_seated = movmedian(photoVector_seated,20);
+
+photoVector_seatedsound=(data_seatedsound(:,end));
+
+t_seatedsound = ((0:length(photoVector_seatedsound)-1)*1/fs)/60;
+filt_photoVector_seatedsound = movmedian(photoVector_seatedsound,20);
+
+% lpFilt = designfilt('lowpassfir','FilterOrder',1000,'PassbandFrequency',2, ...
+%          'StopbandFrequency',2.5,'SampleRate',fs);
+%fvtool(lpFilt)
+
+%lpFilt_phVec = filtfilt(lpFilt,photoVector);
+
+photoVector_fmri=(data_fmri(:,end));
+
+t_fmri = ((0:length(photoVector_fmri)-1)*1/fs)/60;
+filt_photoVector_fmri = movmedian(photoVector_fmri,20);
+
+photoVector_lying=(data_lying(:,end));
+
+t_lying = ((0:length(photoVector_lying)-1)*1/fs)/60;
+filt_photoVector_lying = movmedian(photoVector_lying,20);
+
+%figure (fig); plot(t,photoVector), title('Fotoresistência'), xlabel('Tempo (min)'); % Sem filtros
+%fig = fig + 1;
+
+figure (fig); plot(t_seated,filt_photoVector_seated), title("Fotoresistência (Mediana flutuante com "+n_pnts+" pontos) - EEG Sentado"), xlabel('Tempo (min)');
+fig = fig + 1;
+
+figure (fig); plot(t_seatedsound,filt_photoVector_seatedsound), title("Fotoresistência (Mediana flutuante com "+n_pnts+" pontos) - EEG Sentado com som"), xlabel('Tempo (min)');
+fig = fig + 1;
+
+% figure (fig); plot(t,lpFilt_phVec), title("Fotoresistência (Filtro passa-baixo)"), xlabel('Tempo (min)');
+% fig = fig + 1;
+
+figure (fig); plot(t_fmri,filt_photoVector_fmri), title("Fotoresistência (Mediana flutuante com "+n_pnts+" pontos) - EEG com fMRI"), xlabel('Tempo (min)');
+fig = fig + 1;
+
+figure (fig); plot(t_lying,filt_photoVector_lying), title("Fotoresistência (Mediana flutuante com "+n_pnts+" pontos) - EEG Deitado"), xlabel('Tempo (min)');
+fig = fig + 1;
+
+%% Re-referenciação do EEG 
+
+eeg_data_seated = data_seated(:,1:end-1);
+eeg_data_seatedsound = data_seatedsound(:,1:end-1);
+eeg_data_fmri = data_fmri(:,1:end-1);
+eeg_data_lying = data_lying(:,1:end-1);
+
+%car = bsxfun(@minus, eeg_data, mean(eeg_data,2));
+%lap = laplacian_perrinX(eeg_data',[nch_locs.X],[nch_locs.Y],[nch_locs.Z]);
+
+%% Pré-processamento do EEG
+
+% Filtragem
+% De acordo com o artigo com a literatura dos ERPs, um
+% filtro passa-banda entre 0.5 e 30/40 Hz será usado.
+
+% Band-pass
+bpFilt = designfilt('bandpassfir','FilterOrder',3000, ...
+         'CutoffFrequency1',0.1,'CutoffFrequency2',30, ...
+         'SampleRate',fs); 
+%fvtool(bpFilt) % Visualizar resposta em frequência e fase do filtro
+
+%filt_data = filtfilt(bpFilt,car);
+%filt_data = filtfilt(bpFilt,lap');
+
+filt_data_seated = filtfilt(bpFilt,eeg_data_seated); % Aplica ZeroPhase
+filt_data_seatedsound = filtfilt(bpFilt,eeg_data_seatedsound);
+filt_data_fmri = filtfilt(bpFilt,eeg_data_fmri);
+filt_data_lying = filtfilt(bpFilt,eeg_data_lying);
+
+%% FFT do sinal 
+
+% Verificar se o sinal é um EEG. Para isso, o sinal no domíno das
+% frequências tem que seguir a forma 1/f.
+% Isto após retirar as componentes DC e dos 50Hz da rede elétrica.
+
+% REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH- Sentado REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH-
+
+T = 1/fs; % Sampling period
+L = length(filt_data_seated(:,12)); % Length of signal
+tm = (0:L-1)*T; % Time vector
+Y = fft(filt_data_seated(:,8)); % Fourier transform
+P2 = abs(Y/L); % Two-sided spectrum
+P1 = P2(1:floor(L/2)+1); % Single-sided spectrum
+P1(2:end-1) = 2*P1(2:end-1);
+f = fs*(0:(L/2))/L; % Frequency vector
+
+figure(fig)
+fig = fig +1;
+plot(f,P1) 
+title('Espectro de Amplitudes X(t) - Sentado')
+xlabel('f (Hz)')
+ylabel('|P1(f)|')
+
+% REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH- Sentado som REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH-
+
+T = 1/fs; % Sampling period
+L = length(filt_data_seatedsound(:,8)); % Length of signal
+tm = (0:L-1)*T; % Time vector
+Y = fft(filt_data_seatedsound(:,8)); % Fourier transform
+P2 = abs(Y/L); % Two-sided spectrum
+P1 = P2(1:floor(L/2)+1); % Single-sided spectrum
+P1(2:end-1) = 2*P1(2:end-1);
+f = fs*(0:(L/2))/L; % Frequency vector
+
+figure(fig)
+fig = fig +1;
+plot(f,P1) 
+title('Espectro de Amplitudes X(t) - Sentado com som')
+xlabel('f (Hz)')
+ylabel('|P1(f)|')
+
+% REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH- fMRI REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH-
+
+T = 1/fs; % Sampling period
+L = length(filt_data_fmri(:,8)); % Length of signal
+tm = (0:L-1)*T; % Time vector
+Y = fft(filt_data_fmri(:,8)); % Fourier transform
+P2 = abs(Y/L); % Two-sided spectrum
+P1 = P2(1:floor(L/2)+1); % Single-sided spectrum
+P1(2:end-1) = 2*P1(2:end-1);
+f = fs*(0:(L/2))/L; % Frequency vector
+
+figure(fig)
+fig = fig +1;
+plot(f,P1) 
+title('Espectro de Amplitudes X(t) - EEG com fMRI')
+xlabel('f (Hz)')
+ylabel('|P1(f)|')
+
+% REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH- Deitado REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH-
+
+T = 1/fs; % Sampling period
+L = length(filt_data_lying(:,8)); % Length of signal
+tm = (0:L-1)*T; % Time vector
+Y = fft(filt_data_lying(:,8)); % Fourier transform
+P2 = abs(Y/L); % Two-sided spectrum
+P1 = P2(1:floor(L/2)+1); % Single-sided spectrum
+P1(2:end-1) = 2*P1(2:end-1);
+f = fs*(0:(L/2))/L; % Frequency vector
+
+figure(fig)
+fig = fig +1;
+plot(f,P1) 
+title('Espectro de Amplitudes X(t) - Deitado')
+xlabel('f (Hz)')
+ylabel('|P1(f)|')
+
+%% Retirar sub-harmónica dos 25 Hz
+
+%Band-stop
+bsFilt = designfilt('bandstopfir','FilterOrder',3000, ...
+         'CutoffFrequency1',24.8,'CutoffFrequency2',25.2, ...
+         'SampleRate',fs);
+%fvtool(bsFilt)
+
+filt_data_seated = filtfilt(bsFilt,filt_data_seated);
+filt_data_seatedsound = filtfilt(bsFilt,filt_data_seatedsound);
+filt_data_fmri = filtfilt(bsFilt,filt_data_fmri);
+filt_data_lying = filtfilt(bsFilt,filt_data_lying);
+
+% ICA
+
+%filt_data_seated = pop_loadset()
+
+
+%% Deteção dos índices de segmentação
+
+% REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH- Seated REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH-
+
+last_low = true; 
+last_high = false;
+
+falling_edges = [];
+rising_edges = [];
+
+for i = 1:length(filt_photoVector_seated)
+    photoresistor = filt_photoVector_seated(i);
+    if photoresistor <= 235 % Possible falling edge
+        if last_high % Found falling edge
+            falling_edges = [falling_edges;i];
+        end
+
+        last_low = true; 
+        last_high = false;
+
+    elseif photoresistor >= 235 % Possible rising edge
+        if last_low % Found rising edge
+            rising_edges = [rising_edges; i];
+        end
+        last_low = false;
+        last_high = true; 
+    end
+end
+
+rising_edges(1) = []; 
+
+seg_target_seated = [];
+seg_nontarget_seated = [];
+
+for i = 1:length(falling_edges) % Verificar quais blocos pertecem aos targets e não targets
+    
+    aux = filt_photoVector_seated(falling_edges(i):rising_edges(i));
+
+    if (length(aux)>=60) && (length(aux)<=85)
+    
+        if(min(aux) < 140)
+            seg_nontarget_seated = [seg_nontarget_seated, falling_edges(i)];
+        else
+            seg_target_seated = [seg_target_seated, falling_edges(i)];
+        end
+
+    end
+
+end
+
+seg_target_seated = unique(seg_target_seated);
+seg_nontarget_seated = unique(seg_nontarget_seated);
+
+
+% REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH- Seated w/ sound REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH-
+
+last_low = true; 
+last_high = false;
+
+falling_edges = [];
+rising_edges = [];
+
+for i = 1:length(filt_photoVector_seatedsound)
+    photoresistor = filt_photoVector_seatedsound(i);
+    if photoresistor <= 232 % Possible falling edge
+        if last_high % Found falling edge
+            falling_edges = [falling_edges;i];
+        end
+
+        last_low = true; 
+        last_high = false;
+
+    elseif photoresistor >= 232 % Possible rising edge
+        if last_low % Found rising edge
+            rising_edges = [rising_edges; i];
+        end
+        last_low = false;
+        last_high = true; 
+    end
+end
+
+falling_edges(1:2) = [];
+rising_edges(1:3) = [];
+
+falling_edges(end) = [];
+
+seg_target_seatedsound = [];
+seg_nontarget_seatedsound = [];
+
+for i = 1:length(falling_edges) % Verificar quais blocos pertecem aos targets e não targets
+    
+    aux = filt_photoVector_seatedsound(falling_edges(i):rising_edges(i));
+
+    if (length(aux)>=50) && (length(aux)<=75)
+    
+        if(min(aux) < 130)
+            seg_nontarget_seatedsound = [seg_nontarget_seatedsound, falling_edges(i)];
+        else
+            seg_target_seatedsound = [seg_target_seatedsound, falling_edges(i)];
+        end
+
+    end
+
+end
+
+seg_target_seatedsound = unique(seg_target_seatedsound);
+seg_nontarget_seatedsound = unique(seg_nontarget_seatedsound);
+
+% REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH- fMRI REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH-
+
+last_low = true; 
+last_high = false;
+
+falling_edges = [];
+rising_edges = [];
+
+for i = 1:length(filt_photoVector_fmri)
+    photoresistor = filt_photoVector_fmri(i);
+    if photoresistor <= 233 % Possible falling edge
+        if last_high % Found falling edge
+            falling_edges = [falling_edges;i];
+        end
+
+        last_low = true; 
+        last_high = false;
+
+    elseif photoresistor >= 233 % Possible rising edge
+        if last_low % Found rising edge
+            rising_edges = [rising_edges; i];
+        end
+        last_low = false;
+        last_high = true; 
+    end
+end
+
+rising_edges(1) = [];
+falling_edges(end) = [];
+
+seg_target_fmri = [];
+seg_nontarget_fmri = [];
+
+for i = 1:length(falling_edges) % Verificar quais blocos pertecem aos targets e não targets
+    
+    aux = filt_photoVector_fmri(falling_edges(i):rising_edges(i));
+    
+    if (length(aux)>=60) && (length(aux)<=80)
+
+        if(min(aux) < 130)
+            seg_nontarget_fmri = [seg_nontarget_fmri, falling_edges(i)];
+        else
+            seg_target_fmri = [seg_target_fmri, falling_edges(i)];
+        end
+
+    end
+end
+
+seg_target_fmri = unique(seg_target_fmri);
+seg_nontarget_fmri = unique(seg_nontarget_fmri);
+
+% REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH- Deitado REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH-
+
+last_low = true; 
+last_high = false;
+
+falling_edges = [];
+rising_edges = [];
+
+for i = 1:length(filt_photoVector_lying)
+    photoresistor = filt_photoVector_lying(i);
+    if photoresistor <= 235 % Possible falling edge
+        if last_high % Found falling edge
+            falling_edges = [falling_edges;i];
+        end
+
+        last_low = true; 
+        last_high = false;
+
+    elseif photoresistor >= 230 % Possible rising edge
+        if last_low % Found rising edge
+            rising_edges = [rising_edges; i];
+        end
+        last_low = false;
+        last_high = true; 
+    end
+end
+
+rising_edges(1) = [];
+falling_edges(end) = [];
+
+seg_target_lying = [];
+seg_nontarget_lying = [];
+
+for i = 1:length(falling_edges) % Verificar quais blocos pertecem aos targets e não targets
+    
+    aux = filt_photoVector_lying(falling_edges(i):rising_edges(i));
+    
+    if (length(aux)>=60) && (length(aux)<=80)
+
+        if(min(filt_photoVector_lying(falling_edges(i):rising_edges(i))) < 130)
+            seg_nontarget_lying = [seg_nontarget_lying, falling_edges(i)];
+        else
+            seg_target_lying = [seg_target_lying, falling_edges(i)];
+        end
+
+    end
+end
+
+seg_target_lying = unique(seg_target_lying);
+seg_nontarget_lying = unique(seg_nontarget_lying);
+
+%% Segmentação do EEG
+
+bf = -0.200; % 100 ms antes do estímulo
+af = 0.800; % 800 ms após o estímulo
+
+idx_bf = floor(bf * fs);
+idx_af = ceil(af * fs);
+
+time = ((idx_bf:idx_af)/fs) * 1000; % Vetor do tempo
+
+% REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH-
+% Target - Sentado
+
+[targetEEG_seated, nontargetEEG_seated] = deal(zeros(length(seg_target_seated), length(time), length(channel_labels))); % Pré-alocação dos dados
+
+for i=1:length(seg_target_seated)
+    targetEEG_seated(i,:,:) = cat(3,filt_data_seated((seg_target_seated(i)+idx_bf):(seg_target_seated(i)+idx_af),:));
+end
+
+% Non-target - Sentado
+
+for i=1:length(seg_nontarget_seated)
+    nontargetEEG_seated(i,:,:) = cat(3,filt_data_seated((seg_nontarget_seated(i)+idx_bf):(seg_nontarget_seated(i)+idx_af),:));
+end
+
+% REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH-
+% Target - Sentado c/ som
+
+[targetEEG_seatedsound, nontargetEEG_seatedsound] = deal(zeros(length(seg_target_seatedsound), length(time), length(channel_labels))); % Pré-alocação dos dados
+
+for i=1:length(seg_target_seatedsound)
+    targetEEG_seatedsound(i,:,:) = cat(3,filt_data_seatedsound((seg_target_seatedsound(i)+idx_bf):(seg_target_seatedsound(i)+idx_af),:));
+end
+
+% Non-target - Sentado c/ som
+
+for i=1:length(seg_nontarget_seatedsound)
+    nontargetEEG_seatedsound(i,:,:) = cat(3,filt_data_seatedsound((seg_nontarget_seatedsound(i)+idx_bf):(seg_nontarget_seatedsound(i)+idx_af),:));
+end
+
+% REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH-
+% Target - fMRI
+
+[targetEEG_fmri, nontargetEEG_fmri] = deal(zeros(length(seg_target_fmri), length(time), length(channel_labels))); % Pré-alocação dos dados
+
+for i=1:length(seg_target_fmri)
+    targetEEG_fmri(i,:,:) = cat(3,filt_data_fmri((seg_target_fmri(i)+idx_bf):(seg_target_fmri(i)+idx_af),:));
+end
+
+% Non-target - fMRI
+
+for i=1:length(seg_nontarget_fmri)
+    nontargetEEG_fmri(i,:,:) = cat(3,filt_data_fmri((seg_nontarget_fmri(i)+idx_bf):(seg_nontarget_fmri(i)+idx_af),:));
+end
+
+% REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH-
+% Target - Deitado
+
+[targetEEG_lying, nontargetEEG_lying] = deal(zeros(length(seg_target_lying), length(time), length(channel_labels))); % Pré-alocação dos dados
+
+for i=1:length(seg_target_lying)
+    targetEEG_lying(i,:,:) = cat(3,filt_data_lying((seg_target_lying(i)+idx_bf):(seg_target_lying(i)+idx_af),:));
+end
+
+% Non-target - Deitado
+
+for i=1:length(seg_nontarget_lying)
+    nontargetEEG_lying(i,:,:) = cat(3,filt_data_lying((seg_nontarget_lying(i)+idx_bf):(seg_nontarget_lying(i)+idx_af),:));
+end
+
+
+%% Correção da linha de base
+
+baseline = [-200;0];
+
+baseidx = dsearchn(time',baseline);
+
+% REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH- Sentado REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH-
+
+for t=1:size(targetEEG_seated,1)
+    for e=1:size(targetEEG_seated,3)
+        tmn = mean(targetEEG_seated(t,baseidx(1):baseidx(2),e));   
+        targetEEG_seated(t,:,e) = targetEEG_seated(t,:,e) - tmn;
+    end
+end 
+
+for t=1:size(nontargetEEG_seated,1)
+    for e=1:size(nontargetEEG_seated,3)
+        tmn = mean(nontargetEEG_seated(t,baseidx(1):baseidx(2),e));   
+        nontargetEEG_seated(t,:,e) = nontargetEEG_seated(t,:,e) - tmn;
+    end
+end 
+
+% REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH- Sentado c/som REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH-
+
+for t=1:size(targetEEG_seatedsound,1)
+    for e=1:size(targetEEG_seatedsound,3)
+        tmn = mean(targetEEG_seatedsound(t,baseidx(1):baseidx(2),e));   
+        targetEEG_seatedsound(t,:,e) = targetEEG_seatedsound(t,:,e) - tmn;
+    end
+end 
+
+for t=1:size(nontargetEEG_seatedsound,1)
+    for e=1:size(nontargetEEG_seatedsound,3)
+        tmn = mean(nontargetEEG_seatedsound(t,baseidx(1):baseidx(2),e));   
+        nontargetEEG_seatedsound(t,:,e) = nontargetEEG_seatedsound(t,:,e) - tmn;
+    end
+end 
+
+% REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH- fMRI REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH-
+
+for t=1:size(targetEEG_fmri,1)
+    for e=1:size(targetEEG_fmri,3)
+        tmn = mean(targetEEG_fmri(t,baseidx(1):baseidx(2),e));   
+        targetEEG_fmri(t,:,e) = targetEEG_fmri(t,:,e) - tmn;
+    end
+end 
+
+for t=1:size(nontargetEEG_fmri,1)
+    for e=1:size(nontargetEEG_fmri,3)
+        tmn = mean(nontargetEEG_fmri(t,baseidx(1):baseidx(2),e));   
+        nontargetEEG_fmri(t,:,e) = nontargetEEG_fmri(t,:,e) - tmn;
+    end
+end 
+
+% REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH- Deitado REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH-
+
+for t=1:size(targetEEG_lying,1)
+    for e=1:size(targetEEG_lying,3)
+        tmn = mean(targetEEG_lying(t,baseidx(1):baseidx(2),e));   
+        targetEEG_lying(t,:,e) = targetEEG_lying(t,:,e) - tmn;
+    end
+end 
+
+for t=1:size(nontargetEEG_lying,1)
+    for e=1:size(nontargetEEG_lying,3)
+        tmn = mean(nontargetEEG_lying(t,baseidx(1):baseidx(2),e));   
+        nontargetEEG_lying(t,:,e) = nontargetEEG_lying(t,:,e) - tmn;
+    end
+end 
+
+%% Computação dos ERPs
+
+% REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH- Sentado REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH-
+
+tERP_seated = squeeze(mean(targetEEG_seated, 1)); % ERP target (média do sinal na dimensão trials)
+ntERP_seated = squeeze(mean(nontargetEEG_seated, 1)); % ERP não-target
+
+% REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH- Sentado c/ som REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH-
+
+tERP_seatedsound = squeeze(mean(targetEEG_seatedsound, 1)); % ERP target (média do sinal na dimensão trials)
+ntERP_seatedsound = squeeze(mean(nontargetEEG_seatedsound, 1)); % ERP não-target
+
+
+% REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH- fMRI REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH-
+
+tERP_fmri = squeeze(mean(targetEEG_fmri, 1)); % ERP target (média do sinal na dimensão trials)
+ntERP_fmri = squeeze(mean(nontargetEEG_fmri, 1)); % ERP não-target
+
+% REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH- Deitado REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH-
+
+tERP_lying = squeeze(mean(targetEEG_lying, 1)); % ERP target (média do sinal na dimensão trials)
+ntERP_lying = squeeze(mean(nontargetEEG_lying, 1)); % ERP não-target
+
+%% Correção da linha de base
+
+% nobaseline = tERP_seated;
+% 
+% baseline = [-200;-100];
+% 
+% baseidx = dsearchn(time',baseline);
+% 
+% % REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH- Sentado REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH-
+% 
+% for e=1:length(channel_labels)
+%     tmn = mean(tERP_seated(baseidx(1):baseidx(2),e));   
+%     ntmn = mean(ntERP_seated(baseidx(1):baseidx(2),e));   
+% 
+%     tERP_seated(:,e) = tERP_seated(:,e) - tmn;
+%     ntERP_seated(:,e) = ntERP_seated(:,e) - ntmn;
+% end
+% 
+% % REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH- fMRI REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH-
+% 
+% for e=1:length(channel_labels)
+%     tmn = mean(tERP_fmri(baseidx(1):baseidx(2),e));   
+%     ntmn = mean(ntERP_fmri(baseidx(1):baseidx(2),e));   
+% 
+%     tERP_fmri(:,e) = tERP_fmri(:,e) - tmn;
+%     ntERP_fmri(:,e) = ntERP_fmri(:,e) - ntmn;
+% end
+% 
+% % REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH- Deitado REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH-
+% 
+% for e=1:length(channel_labels)
+%     tmn = mean(tERP_lying(baseidx(1):baseidx(2),e));   
+%     ntmn = mean(ntERP_lying(baseidx(1):baseidx(2),e));   
+% 
+%     tERP_lying(:,e) = tERP_lying(:,e) - tmn;
+%     ntERP_lying(:,e) = ntERP_lying(:,e) - ntmn;
+% end
+
+%% Baseline vs no baseline
+
+% fig = fig + 1;
+% figure(fig)
+% hold on,
+% xline(0, 'REPLACE_WITH_DASH_DASH','LineWidth',1.5)
+% plot(time,tERP_seated(:,8),'b','LineWidth',2);
+% plot(time,nobaseline(:,8),'r','LineWidth',2);
+% title("Baseline vs No baseline correction"), xlabel('Time (ms)'), ylabel('Amplitude (\muv)'), grid on
+% ph0 = patch([baseline(1) baseline(2) baseline(2) baseline(1)],[12 12 -8 -8],'black');
+% set(ph0,'facealpha',.15,'edgecolor','none')
+% legend('Stimuli Onset','Baseline corrected','No baseline corrected','Baseline period', 'AutoUpdate', 'off');
+% yline(0, ':','LineWidth',1.5)
+% hold off,
+
+%% Single trial plot
+
+fig = fig + 1;
+figure(fig)
+hold on, grid on,
+xline(0, 'REPLACE_WITH_DASH_DASH','LineWidth',1.5)
+yline(0, ':','LineWidth',1.5)
+title(nch_locs(8).labels)
+plot(time,targetEEG_fmri(101,:,8),'b','LineWidth',2);
+
+%% Gráficos - Sentado
+
+% Definição do tempo dos picos e respetivos índices 
+
+tN170 = [90; 130]; % ms
+idxN170 = dsearchn(time',tN170);
+
+tN2 = [180; 230];
+idxN2 = dsearchn(time',tN2);
+
+tP3 = [240; 340];
+idxP3 = dsearchn(time',tP3);
+
+%% Gráficos dos ERPs no tempo
+
+i = 15;
+
+clim = [floor(min(min(tERP_seated(:,i)))),ceil(max(max(tERP_seated(:,i))))];
+
+aux = 0;
+
+figure(fig)
+hold on,
+fig = fig + 1;
+plot(time,tERP_seated(:,i),'b','LineWidth',2);
+plot(time,ntERP_seated(:,i),'r','LineWidth',2);
+xline(0, 'REPLACE_WITH_DASH_DASH')    
+ylim([(clim(1)+aux),(clim(2)-aux)])
+xlim([min(time),max(time)])
+title(channel_labels(i) + " - Seated"), xlabel('Time (ms)'), ylabel('Amplitude (\muv)'), grid on
+
+if(contains(channel_labels(i),"z") || (contains(channel_labels(i),"C") && ~(contains(channel_labels(i),"P"))) ) % VPP
+    c = 'blue';
+    a = 'VPP';
+    N2 = [tN2(1), tN2(2), tN2(2), tN2(1)];
+else % N170
+    c = 'cyan';
+    a = 'N170';
+    N2 = [tN2(1), tN2(2), tN2(2), tN2(1)];
+end
+
+N170 = [tN170(1), tN170(2), tN170(2), tN170(1)];
+P3 = [tP3(1), tP3(2), tP3(2), tP3(1)];
+
+% Estas patches precisam de ser ajustadas
+
+ph0 = patch([baseline(1) baseline(2) baseline(2) baseline(1)],[clim(1) clim(1) clim(2) clim(2)],'black');
+set(ph0,'facealpha',.1,'edgecolor','none')
+
+ph1 = patch(N170,[clim(1) clim(1) clim(2) clim(2)],c);
+set(ph1,'facealpha',.1,'edgecolor','none')
+
+ph2 = patch(N2,[clim(1) clim(1) clim(2) clim(2)],'y');
+set(ph2,'facealpha',.1,'edgecolor','none')
+
+% ph3 = patch(P3,[clim(1) clim(1) clim(2) clim(2)],'r');
+% set(ph3,'facealpha',.1,'edgecolor','none')
+
+legend('Target','Non-target','Stimulus','Baseline',a,'N2','AutoUpdate', 'off')
+
+yline(0, 'REPLACE_WITH_DASH_DASH')
+
+hold off
+
+%
+clim = [floor(min(min(tERP_seatedsound(:,i)))),ceil(max(max(tERP_seatedsound(:,i))))];
+
+aux = 0;
+
+figure(fig)
+hold on,
+fig = fig + 1;
+plot(time,tERP_seatedsound(:,i),'b','LineWidth',2);
+plot(time,ntERP_seatedsound(:,i),'r','LineWidth',2);
+xline(0, 'REPLACE_WITH_DASH_DASH')    
+ylim([(clim(1)+aux),(clim(2)-aux)])
+xlim([min(time),max(time)])
+title(channel_labels(i) + " - Seated w/ sound"), xlabel('Time (ms)'), ylabel('Amplitude (\muv)'), grid on
+
+if(contains(channel_labels(i),"z") || (contains(channel_labels(i),"C") && ~(contains(channel_labels(i),"P"))) ) % VPP
+    c = 'blue';
+    a = 'VPP';
+    N2 = [tN2(1), tN2(2), tN2(2), tN2(1)];
+else % N170
+    c = 'cyan';
+    a = 'N170';
+    N2 = [tN2(1), tN2(2), tN2(2), tN2(1)];
+end
+
+N170 = [tN170(1), tN170(2), tN170(2), tN170(1)];
+P3 = [tP3(1), tP3(2), tP3(2), tP3(1)];
+
+% Estas patches precisam de ser ajustadas
+
+ph0 = patch([baseline(1) baseline(2) baseline(2) baseline(1)],[clim(1) clim(1) clim(2) clim(2)],'black');
+set(ph0,'facealpha',.1,'edgecolor','none')
+
+ph1 = patch(N170,[clim(1) clim(1) clim(2) clim(2)],c);
+set(ph1,'facealpha',.1,'edgecolor','none')
+
+ph2 = patch(N2,[clim(1) clim(1) clim(2) clim(2)],'y');
+set(ph2,'facealpha',.1,'edgecolor','none')
+
+% ph3 = patch(P3,[clim(1) clim(1) clim(2) clim(2)],'r');
+% set(ph3,'facealpha',.1,'edgecolor','none')
+
+legend('Target','Non-target','Stimulus','Baseline',a,'N2','AutoUpdate', 'off')
+
+yline(0, 'REPLACE_WITH_DASH_DASH')
+
+hold off
+
+clim = [floor(min(min(tERP_lying(:,i)))),ceil(max(max(tERP_lying(:,i))))];
+
+aux = 0;
+
+figure(fig)
+hold on,
+fig = fig + 1;
+plot(time,tERP_lying(:,i),'b','LineWidth',2);
+plot(time,ntERP_lying(:,i),'r','LineWidth',2);
+xline(0, 'REPLACE_WITH_DASH_DASH')    
+ylim([(clim(1)+aux),(clim(2)-aux)])
+xlim([min(time),max(time)])
+title(channel_labels(i) + " - Lying"), xlabel('Time (ms)'), ylabel('Amplitude (\muv)'), grid on
+
+if(contains(channel_labels(i),"z") || (contains(channel_labels(i),"C") && ~(contains(channel_labels(i),"P"))) ) % VPP
+    c = 'blue';
+    a = 'VPP';
+    N2 = [tN2(1), tN2(2), tN2(2), tN2(1)];
+else % N170
+    c = 'cyan';
+    a = 'N170';
+    N2 = [tN2(1), tN2(2), tN2(2), tN2(1)];
+end
+
+N170 = [tN170(1), tN170(2), tN170(2), tN170(1)];
+P3 = [tP3(1), tP3(2), tP3(2), tP3(1)];
+
+% Estas patches precisam de ser ajustadas
+
+ph0 = patch([baseline(1) baseline(2) baseline(2) baseline(1)],[clim(1) clim(1) clim(2) clim(2)],'black');
+set(ph0,'facealpha',.1,'edgecolor','none')
+
+ph1 = patch(N170,[clim(1) clim(1) clim(2) clim(2)],c);
+set(ph1,'facealpha',.1,'edgecolor','none')
+
+ph2 = patch(N2,[clim(1) clim(1) clim(2) clim(2)],'y');
+set(ph2,'facealpha',.1,'edgecolor','none')
+
+% ph3 = patch(P3,[clim(1) clim(1) clim(2) clim(2)],'r');
+% set(ph3,'facealpha',.1,'edgecolor','none')
+
+legend('Target','Non-target','Stimulus','Baseline',a,'N2','AutoUpdate', 'off')
+
+yline(0, 'REPLACE_WITH_DASH_DASH')
+
+hold off
+
+%
+clim = [floor(min(min(tERP_fmri(:,i)))),ceil(max(max(tERP_fmri(:,i))))];
+
+aux = 0;
+
+figure(fig)
+hold on,
+fig = fig + 1;
+plot(time,tERP_fmri(:,i),'b','LineWidth',2);
+plot(time,ntERP_fmri(:,i),'r','LineWidth',2);
+xline(0, 'REPLACE_WITH_DASH_DASH')    
+ylim([(clim(1)+aux),(clim(2)-aux)])
+xlim([min(time),max(time)])
+title(channel_labels(i) + " - Lying w/ fRMI"), xlabel('Time (ms)'), ylabel('Amplitude (\muv)'), grid on
+
+if(contains(channel_labels(i),"z") || (contains(channel_labels(i),"C") && ~(contains(channel_labels(i),"P"))) ) % VPP
+    c = 'blue';
+    a = 'VPP';
+    N2 = [tN2(1), tN2(2), tN2(2), tN2(1)];
+else % N170
+    c = 'cyan';
+    a = 'N170';
+    N2 = [tN2(1), tN2(2), tN2(2), tN2(1)];
+end
+
+N170 = [tN170(1), tN170(2), tN170(2), tN170(1)];
+P3 = [tP3(1), tP3(2), tP3(2), tP3(1)];
+
+% Estas patches precisam de ser ajustadas
+
+ph0 = patch([baseline(1) baseline(2) baseline(2) baseline(1)],[clim(1) clim(1) clim(2) clim(2)],'black');
+set(ph0,'facealpha',.1,'edgecolor','none')
+
+ph1 = patch(N170,[clim(1) clim(1) clim(2) clim(2)],c);
+set(ph1,'facealpha',.1,'edgecolor','none')
+
+ph2 = patch(N2,[clim(1) clim(1) clim(2) clim(2)],'y');
+set(ph2,'facealpha',.1,'edgecolor','none')
+
+% ph3 = patch(P3,[clim(1) clim(1) clim(2) clim(2)],'r');
+% set(ph3,'facealpha',.1,'edgecolor','none')
+
+legend('Target','Non-target','Stimulus','Baseline',a,'N2','AutoUpdate', 'off')
+
+yline(0, 'REPLACE_WITH_DASH_DASH')
+
+hold off
+
+% 
+% % Mapas topográficos
+% 
+% figure(fig)
+% fig = fig + 1;
+% tlo1=tiledlayout(2,3,'TileSpacing','tight','Padding','tight');
+% title(tlo1, ["Sentado - Target (Em cima) vs Non-Target (Em baixo)";""], 'FontSize', 15, 'FontWeight','Bold');
+% 
+% ax1=nexttile(tlo1);
+% topoplot(mean(tERP_seated(idxN170(1):idxN170(2),:)),nch_locs,'maplimits',clim,'numcontour',6,'electrodes','on');
+% title(ax1,"N170 - VPP (" + tN170(1) +" - "+ tN170(2) + " ms)"  ,'FontSize',12)
+% 
+% ax2=nexttile(tlo1);
+% topoplot(mean(tERP_seated(idxN2(1):idxN2(2),:)),nch_locs,'maplimits',clim,'numcontour',6,'electrodes','on');
+% title(ax2,"N2 (" + tN2(1) +" - "+ tN2(2) + " ms)",'FontSize',12)
+% 
+% ax3=nexttile(tlo1);
+% topoplot(mean(tERP_seated(idxP3(1):idxP3(2),:)),nch_locs,'maplimits',clim,'numcontour',6,'electrodes','on');
+% title(ax3,"P3 (" + tP3(1) +" - "+ tP3(2) + " ms)",'FontSize',12)
+% 
+% ax4=nexttile(tlo1);
+% topoplot(mean(ntERP_seated(idxN170(1):idxN170(2),:)),nch_locs,'maplimits',clim,'numcontour',6,'electrodes','on');
+% title(ax4,"N170 - VPP (" + tN170(1) +" - "+ tN170(2) + " ms)"  ,'FontSize',12)
+% 
+% ax5=nexttile(tlo1);
+% topoplot(mean(ntERP_seated(idxN2(1):idxN2(2),:)),nch_locs,'maplimits',clim,'numcontour',6,'electrodes','on');
+% title(ax5,"N2 (" + tN2(1) +" - "+ tN2(2) + " ms)",'FontSize',12)
+% 
+% ax6=nexttile(tlo1);
+% topoplot(mean(ntERP_seated(idxP3(1):idxP3(2),:)),nch_locs,'maplimits',clim,'numcontour',6,'electrodes','on');
+% title(ax6,"P3 (" + tP3(1) +" - "+ tP3(2) + " ms)",'FontSize',12)
+% 
+% cbh2=colorbar(ax6);
+% cbh2.Layout.Tile = 'east';
+% cbh2.Label.String='\muV';
+% chh2.Label.FontSize = 12;
+% cbh2.Label.Rotation=0; 
+% 
+% %% Gráficos - fMRI
+% 
+% % Gráficos dos ERPs no tempo
+% 
+% clim = [floor(min(min(tERP_fmri))),ceil(max(max(tERP_fmri)))];
+% 
+% aux = 0;
+% 
+% for i=1:length(channel_labels)
+%     figure(fig)
+%     hold on,
+%     fig = fig + 1;
+%     plot(time,tERP_fmri(:,i),'b','LineWidth',2);
+%     plot(time,ntERP_fmri(:,i),'r','LineWidth',2);
+%     xline(0, 'REPLACE_WITH_DASH_DASH')    
+%     ylim([(clim(1)+aux),(clim(2)-aux)])
+%     xlim([min(time),max(time)])
+%     title(channel_labels(i) + " - EEG com fMRI"), xlabel('Tempo (ms)'), ylabel('Amplitude (\muv)'), grid on
+% 
+%     if(contains(channel_labels(i),"z") || (contains(channel_labels(i),"C") && ~(contains(channel_labels(i),"P"))) ) % VPP
+%         c = 'blue';
+%         a = 'VPP';
+%         N2 = [tN2(1), tN2(2), tN2(2), tN2(1)];
+%     else % N170
+%         c = 'cyan';
+%         a = 'N170';
+%         N2 = [tN2(1), tN2(2), tN2(2), tN2(1)];
+%     end
+% 
+%     N170 = [tN170(1), tN170(2), tN170(2), tN170(1)];
+%     P3 = [tP3(1), tP3(2), tP3(2), tP3(1)];
+% 
+%     % Estas patches precisam de ser ajustadas
+% 
+%     ph0 = patch([baseline(1) baseline(2) baseline(2) baseline(1)],[clim(1) clim(1) clim(2) clim(2)],'black');
+%     set(ph0,'facealpha',.1,'edgecolor','none')
+% 
+%     ph1 = patch(N170,[clim(1) clim(1) clim(2) clim(2)],c);
+%     set(ph1,'facealpha',.1,'edgecolor','none')
+% 
+%     ph2 = patch(N2,[clim(1) clim(1) clim(2) clim(2)],'y');
+%     set(ph2,'facealpha',.1,'edgecolor','none')
+% 
+%     ph3 = patch(P3,[clim(1) clim(1) clim(2) clim(2)],'r');
+%     set(ph3,'facealpha',.1,'edgecolor','none')
+% 
+%     legend('Target','Non-target','Stimulus','Baseline',a, 'N2', 'P3','AutoUpdate', 'off')
+% 
+%     yline(0, 'REPLACE_WITH_DASH_DASH')
+%     hold off
+% 
+% end
+% 
+% % Mapas topográficos
+% 
+% figure(fig)
+% fig = fig + 1;
+% tlo1=tiledlayout(2,3,'TileSpacing','tight','Padding','tight');
+% title(tlo1, ["EEG com fMRI - Target (Em cima) vs Non-Target (Em baixo)";""], 'FontSize', 15, 'FontWeight','Bold');
+% 
+% ax1=nexttile(tlo1);
+% topoplot(mean(tERP_fmri(idxN170(1):idxN170(2),:)),nch_locs,'maplimits',clim,'numcontour',6,'electrodes','on');
+% title(ax1,"N170 - VPP (" + tN170(1) +" - "+ tN170(2) + " ms)"  ,'FontSize',12)
+% 
+% ax2=nexttile(tlo1);
+% topoplot(mean(tERP_fmri(idxN2(1):idxN2(2),:)),nch_locs,'maplimits',clim,'numcontour',6,'electrodes','on');
+% title(ax2,"N2 (" + tN2(1) +" - "+ tN2(2) + " ms)",'FontSize',12)
+% 
+% ax3=nexttile(tlo1);
+% topoplot(mean(tERP_fmri(idxP3(1):idxP3(2),:)),nch_locs,'maplimits',clim,'numcontour',6,'electrodes','on');
+% title(ax3,"P3 (" + tP3(1) +" - "+ tP3(2) + " ms)",'FontSize',12)
+% 
+% ax4=nexttile(tlo1);
+% topoplot(mean(ntERP_fmri(idxN170(1):idxN170(2),:)),nch_locs,'maplimits',clim,'numcontour',6,'electrodes','on');
+% title(ax4,"N170 - VPP (" + tN170(1) +" - "+ tN170(2) + " ms)"  ,'FontSize',12)
+% 
+% ax5=nexttile(tlo1);
+% topoplot(mean(ntERP_fmri(idxN2(1):idxN2(2),:)),nch_locs,'maplimits',clim,'numcontour',6,'electrodes','on');
+% title(ax5,"N2 (" + tN2(1) +" - "+ tN2(2) + " ms)",'FontSize',12)
+% 
+% ax6=nexttile(tlo1);
+% topoplot(mean(ntERP_fmri(idxP3(1):idxP3(2),:)),nch_locs,'maplimits',clim,'numcontour',6,'electrodes','on');
+% title(ax6,"P3 (" + tP3(1) +" - "+ tP3(2) + " ms)",'FontSize',12)
+% 
+% cbh2=colorbar(ax6);
+% cbh2.Layout.Tile = 'east';
+% cbh2.Label.String='\muV';
+% chh2.Label.FontSize = 12;
+% cbh2.Label.Rotation=0; 
+% 
+% %% Gráficos - Deitado
+% 
+% % Gráficos dos ERPs no tempo
+% 
+% clim = [floor(min(min(tERP_lying))),ceil(max(max(tERP_lying)))];
+% 
+% aux = 0;
+% 
+% for i=1:length(channel_labels)
+%     figure(fig)
+%     hold on,
+%     fig = fig + 1;
+%     plot(time,tERP_lying(:,i),'b','LineWidth',2);
+%     plot(time,ntERP_lying(:,i),'r','LineWidth',2);
+%     xline(0, 'REPLACE_WITH_DASH_DASH')    
+%     ylim([(clim(1)+aux),(clim(2)-aux)])
+%     xlim([min(time),max(time)])
+%     title(channel_labels(i) + " - Deitado"), xlabel('Tempo (ms)'), ylabel('Amplitude (\muv)'), grid on
+% 
+%     if(contains(channel_labels(i),"z") || (contains(channel_labels(i),"C") && ~(contains(channel_labels(i),"P"))) ) % VPP
+%         c = 'blue';
+%         a = 'VPP';
+%         N2 = [tN2(1), tN2(2), tN2(2), tN2(1)];
+%     else % N170
+%         c = 'cyan';
+%         a = 'N170';
+%         N2 = [tN2(1), tN2(2), tN2(2), tN2(1)];
+%     end
+% 
+%     N170 = [tN170(1), tN170(2), tN170(2), tN170(1)];
+%     P3 = [tP3(1), tP3(2), tP3(2), tP3(1)];
+% 
+%     % Estas patches precisam de ser ajustadas
+% 
+%     ph0 = patch([baseline(1) baseline(2) baseline(2) baseline(1)],[clim(1) clim(1) clim(2) clim(2)],'black');
+%     set(ph0,'facealpha',.1,'edgecolor','none')
+% 
+%     ph1 = patch(N170,[clim(1) clim(1) clim(2) clim(2)],c);
+%     set(ph1,'facealpha',.1,'edgecolor','none')
+% 
+%     ph2 = patch(N2,[clim(1) clim(1) clim(2) clim(2)],'y');
+%     set(ph2,'facealpha',.1,'edgecolor','none')
+% 
+%     ph3 = patch(P3,[clim(1) clim(1) clim(2) clim(2)],'r');
+%     set(ph3,'facealpha',.1,'edgecolor','none')
+% 
+%     legend('Target','Non-target','Stimulus','Baseline',a, 'N2', 'P3','AutoUpdate', 'off')
+% 
+%     yline(0, 'REPLACE_WITH_DASH_DASH')
+%     hold off
+% 
+% end
+% 
+% % Mapas topográficos
+% 
+% figure(fig)
+% fig = fig + 1;
+% tlo1=tiledlayout(2,3,'TileSpacing','tight','Padding','tight');
+% title(tlo1, ["Deitado - Target (Em cima) vs Non-Target (Em baixo)";""], 'FontSize', 15, 'FontWeight','Bold');
+% 
+% ax1=nexttile(tlo1);
+% topoplot(mean(tERP_lying(idxN170(1):idxN170(2),:)),nch_locs,'maplimits',clim,'numcontour',6,'electrodes','on');
+% title(ax1,"N170 - VPP (" + tN170(1) +" - "+ tN170(2) + " ms)"  ,'FontSize',12)
+% 
+% ax2=nexttile(tlo1);
+% topoplot(mean(tERP_lying(idxN2(1):idxN2(2),:)),nch_locs,'maplimits',clim,'numcontour',6,'electrodes','on');
+% title(ax2,"N2 (" + tN2(1) +" - "+ tN2(2) + " ms)",'FontSize',12)
+% 
+% ax3=nexttile(tlo1);
+% topoplot(mean(tERP_lying(idxP3(1):idxP3(2),:)),nch_locs,'maplimits',clim,'numcontour',6,'electrodes','on');
+% title(ax3,"P3 (" + tP3(1) +" - "+ tP3(2) + " ms)",'FontSize',12)
+% 
+% ax4=nexttile(tlo1);
+% topoplot(mean(ntERP_lying(idxN170(1):idxN170(2),:)),nch_locs,'maplimits',clim,'numcontour',6,'electrodes','on');
+% title(ax4,"N170 - VPP (" + tN170(1) +" - "+ tN170(2) + " ms)"  ,'FontSize',12)
+% 
+% ax5=nexttile(tlo1);
+% topoplot(mean(ntERP_lying(idxN2(1):idxN2(2),:)),nch_locs,'maplimits',clim,'numcontour',6,'electrodes','on');
+% title(ax5,"N2 (" + tN2(1) +" - "+ tN2(2) + " ms)",'FontSize',12)
+% 
+% ax6=nexttile(tlo1);
+% topoplot(mean(ntERP_lying(idxP3(1):idxP3(2),:)),nch_locs,'maplimits',clim,'numcontour',6,'electrodes','on');
+% title(ax6,"P3 (" + tP3(1) +" - "+ tP3(2) + " ms)",'FontSize',12)
+% 
+% cbh2=colorbar(ax6);
+% cbh2.Layout.Tile = 'east';
+% cbh2.Label.String='\muV';
+% chh2.Label.FontSize = 12;
+% cbh2.Label.Rotation=0; 
+
+%% Comparação entre condições - Target
+
+% Gráficos dos ERPs no tempo
+
+clim = [floor(min(min(tERP_seated))),ceil(max(max(tERP_seated))),
+        floor(min(min(tERP_fmri))),ceil(max(max(tERP_fmri))),
+        floor(min(min(tERP_lying))),ceil(max(max(tERP_lying)))];
+
+clim = [min(min(clim)),max(max(clim))];
+
+aux = 0;
+
+for i=1:length(channel_labels)
+    figure(fig)
+    hold on,
+    fig = fig + 1;
+    plot(time,tERP_seated(:,i),'b','LineWidth',2);
+    plot(time,tERP_seatedsound(:,i),'k','LineWidth',2);
+    plot(time,tERP_lying(:,i),'r','LineWidth',2);
+    plot(time,tERP_fmri(:,i),'g','LineWidth',2);
+    xline(0, 'REPLACE_WITH_DASH_DASH','LineWidth',1.5)    
+    ylim([(clim(1)+aux),(clim(2)-aux)])
+    xlim([min(time),max(time)])
+    title(channel_labels(i) + " - Target"), xlabel('Time (ms)'), ylabel('Amplitude (\muv)'), grid on
+    
+    if(contains(channel_labels(i),"z") || (contains(channel_labels(i),"C") && ~(contains(channel_labels(i),"P"))) ) % VPP
+        c = 'blue';
+        a = 'VPP';
+        N2 = [tN2(1), tN2(2), tN2(2), tN2(1)];
+    else % N170
+        c = 'cyan';
+        a = 'N170';
+        N2 = [tN2(1), tN2(2), tN2(2), tN2(1)];
+    end
+   
+    N170 = [tN170(1), tN170(2), tN170(2), tN170(1)];
+    P3 = [tP3(1), tP3(2), tP3(2), tP3(1)];
+
+    % Estas patches precisam de ser ajustadas
+
+    ph0 = patch([baseline(1) baseline(2) baseline(2) baseline(1)],[clim(1) clim(1) clim(2) clim(2)],'black');
+    set(ph0,'facealpha',.1,'edgecolor','none')
+
+    % ph1 = patch(N170,[clim(1) clim(1) clim(2) clim(2)],c);
+    % set(ph1,'facealpha',.1,'edgecolor','none')
+    % 
+    % ph2 = patch(N2,[clim(1) clim(1) clim(2) clim(2)],'y');
+    % set(ph2,'facealpha',.1,'edgecolor','none')
+    
+    % ph3 = patch(P3,[clim(1) clim(1) clim(2) clim(2)],'r');
+    % set(ph3,'facealpha',.1,'edgecolor','none')
+
+    legend('Seated','Seated w/ fMRI', 'Lying', 'Lying w/ fMRI','Stimulus','Baseline', 'P3','AutoUpdate', 'off')
+    
+    yline(0, ':','LineWidth',1.5)
+    hold off
+    
+end
+
+%% Mapas topográficos - Target
+
+figure(fig)
+fig = fig + 1;
+tlo1=tiledlayout(4,3,'TileSpacing','none','Padding','none');
+title(tlo1, ["Target";""], 'FontSize', 15, 'FontWeight','Bold');
+
+n_cont = 10;
+
+ax1=nexttile(tlo1);
+topoplot(mean(tERP_seated(idxN170(1):idxN170(2),:)),nch_locs,'maplimits',clim,'numcontour',n_cont,'electrodes','on');
+title(ax1,"N170 - VPP (" + tN170(1) +" - "+ tN170(2) + " ms)"  ,'FontSize',12)
+
+ax2=nexttile(tlo1);
+topoplot(mean(tERP_seated(idxN2(1):idxN2(2),:)),nch_locs,'maplimits',clim,'numcontour',n_cont,'electrodes','on');
+title(ax2,"N2 (" + tN2(1) +" - "+ tN2(2) + " ms)",'FontSize',12)
+
+ax3=nexttile(tlo1);
+topoplot(mean(tERP_seated(idxP3(1):idxP3(2),:)),nch_locs,'maplimits',clim,'numcontour',n_cont,'electrodes','on');
+title(ax3,"P3 (" + tP3(1) +" - "+ tP3(2) + " ms)",'FontSize',12)
+
+ax14=nexttile(tlo1);
+topoplot(mean(tERP_seatedsound(idxN170(1):idxN170(2),:)),nch_locs,'maplimits',clim,'numcontour',n_cont,'electrodes','on');
+
+ax15=nexttile(tlo1);
+topoplot(mean(tERP_seatedsound(idxN2(1):idxN2(2),:)),nch_locs,'maplimits',clim,'numcontour',n_cont,'electrodes','on');
+
+ax16=nexttile(tlo1);
+topoplot(mean(tERP_seatedsound(idxP3(1):idxP3(2),:)),nch_locs,'maplimits',clim,'numcontour',n_cont,'electrodes','on');
+
+ax4=nexttile(tlo1);
+topoplot(mean(tERP_lying(idxN170(1):idxN170(2),:)),nch_locs,'maplimits',clim,'numcontour',n_cont,'electrodes','on');
+
+ax4=nexttile(tlo1);
+topoplot(mean(tERP_lying(idxN2(1):idxN2(2),:)),nch_locs,'maplimits',clim,'numcontour',n_cont,'electrodes','on');
+
+ax6=nexttile(tlo1);
+topoplot(mean(tERP_lying(idxP3(1):idxP3(2),:)),nch_locs,'maplimits',clim,'numcontour',n_cont,'electrodes','on');
+
+ax7=nexttile(tlo1);
+topoplot(mean(tERP_fmri(idxN170(1):idxN170(2),:)),nch_locs,'maplimits',clim,'numcontour',n_cont,'electrodes','on');
+
+ax8=nexttile(tlo1);
+topoplot(mean(tERP_fmri(idxN2(1):idxN2(2),:)),nch_locs,'maplimits',clim,'numcontour',n_cont,'electrodes','on');
+
+ax9=nexttile(tlo1);
+topoplot(mean(tERP_fmri(idxP3(1):idxP3(2),:)),nch_locs,'maplimits',clim,'numcontour',n_cont,'electrodes','on');
+
+cbh2=colorbar(ax9);
+cbh2.Layout.Tile = 'east';
+cbh2.Label.String='\muV';
+chh2.Label.FontSize = 16;
+cbh2.Label.Rotation=0;
+
+%% Comparação entre condições - Non-Target
+
+% Gráficos dos ERPs no tempo
+
+aux = 0;
+
+for i=1:length(channel_labels)
+    figure(fig)
+    hold on,
+    fig = fig + 1;
+    plot(time,ntERP_seated(:,i),'b','LineWidth',2);
+    plot(time,ntERP_lying(:,i),'r','LineWidth',2);
+    plot(time,ntERP_fmri(:,i),'g','LineWidth',2);
+    xline(0, 'REPLACE_WITH_DASH_DASH')    
+    ylim([(clim(1)+aux),(clim(2)-aux)])
+    xlim([min(time),max(time)])
+    title(channel_labels(i) + " - Non-Target"), xlabel('Tempo (ms)'), ylabel('Amplitude (\muv)'), grid on
+    
+    if(contains(channel_labels(i),"z") || (contains(channel_labels(i),"C") && ~(contains(channel_labels(i),"P"))) ) % VPP
+        c = 'blue';
+        a = 'VPP';
+        N2 = [tN2(1), tN2(2), tN2(2), tN2(1)];
+    else % N170
+        c = 'cyan';
+        a = 'N170';
+        N2 = [tN2(1), tN2(2), tN2(2), tN2(1)];
+    end
+   
+    N170 = [tN170(1), tN170(2), tN170(2), tN170(1)];
+    P3 = [tP3(1), tP3(2), tP3(2), tP3(1)];
+
+    % Estas patches precisam de ser ajustadas
+
+    ph0 = patch([baseline(1) baseline(2) baseline(2) baseline(1)],[clim(1) clim(1) clim(2) clim(2)],'black');
+    set(ph0,'facealpha',.1,'edgecolor','none')
+
+    ph1 = patch(N170,[clim(1) clim(1) clim(2) clim(2)],c);
+    set(ph1,'facealpha',.1,'edgecolor','none')
+
+    ph2 = patch(N2,[clim(1) clim(1) clim(2) clim(2)],'y');
+    set(ph2,'facealpha',.1,'edgecolor','none')
+    
+    ph3 = patch(P3,[clim(1) clim(1) clim(2) clim(2)],'r');
+    set(ph3,'facealpha',.1,'edgecolor','none')
+
+    legend('EEG Seated','EEG Lying','EEG w/ fMRI','Stimulus','Baseline',a, 'N2', 'P3','AutoUpdate', 'off')
+    
+    yline(0, ':')
+    hold off
+    
+end
+
+%% Mapas topográficos - Non-target
+
+clim = [floor(min(min(tERP_seated))),ceil(max(max(tERP_seated))),
+        floor(min(min(tERP_fmri))),ceil(max(max(tERP_fmri))),
+        floor(min(min(tERP_lying))),ceil(max(max(tERP_lying)))];
+
+clim = [min(min(clim)),max(max(clim))];
+
+figure(fig)
+fig = fig + 1;
+tlo1=tiledlayout(3,3,'TileSpacing','tight','Padding','tight');
+title(tlo1, ["NonTarget | EEG seated (Top) | EEG Lying (Middle) | EEG w/ fMRI (Low) ";""], 'FontSize', 15, 'FontWeight','Bold');
+
+ax1=nexttile(tlo1);
+topoplot(mean(ntERP_seated(idxN170(1):idxN170(2),:)),nch_locs,'maplimits',clim,'numcontour',n_cont,'electrodes','on');
+title(ax1,"N170 - VPP (" + tN170(1) +" - "+ tN170(2) + " ms)"  ,'FontSize',12)
+
+ax2=nexttile(tlo1);
+topoplot(mean(ntERP_seated(idxN2(1):idxN2(2),:)),nch_locs,'maplimits',clim,'numcontour',n_cont,'electrodes','on');
+title(ax2,"N2 (" + tN2(1) +" - "+ tN2(2) + " ms)",'FontSize',12)
+
+ax3=nexttile(tlo1);
+topoplot(mean(ntERP_seated(idxP3(1):idxP3(2),:)),nch_locs,'maplimits',clim,'numcontour',n_cont,'electrodes','on');
+title(ax3,"P3 (" + tP3(1) +" - "+ tP3(2) + " ms)",'FontSize',12)
+
+ax4=nexttile(tlo1);
+topoplot(mean(ntERP_lying(idxN170(1):idxN170(2),:)),nch_locs,'maplimits',clim,'numcontour',n_cont,'electrodes','on');
+
+ax5=nexttile(tlo1);
+topoplot(mean(ntERP_lying(idxN2(1):idxN2(2),:)),nch_locs,'maplimits',clim,'numcontour',n_cont,'electrodes','on');
+
+ax6=nexttile(tlo1);
+topoplot(mean(ntERP_lying(idxP3(1):idxP3(2),:)),nch_locs,'maplimits',clim,'numcontour',n_cont,'electrodes','on');
+
+ax7=nexttile(tlo1);
+topoplot(mean(ntERP_fmri(idxN170(1):idxN170(2),:)),nch_locs,'maplimits',clim,'numcontour',n_cont,'electrodes','on');
+
+ax8=nexttile(tlo1);
+topoplot(mean(ntERP_fmri(idxN2(1):idxN2(2),:)),nch_locs,'maplimits',clim,'numcontour',n_cont,'electrodes','on');
+
+ax9=nexttile(tlo1);
+topoplot(mean(ntERP_fmri(idxP3(1):idxP3(2),:)),nch_locs,'maplimits',clim,'numcontour',n_cont,'electrodes','on');
+
+cbh2=colorbar(ax9);
+cbh2.Layout.Tile = 'east';
+cbh2.Label.String='\muV';
+chh2.Label.FontSize = 16;
+cbh2.Label.Rotation=0;
+
+%% Comparação entre condições - Target vs Non-Target
+
+% Gráficos dos ERPs no tempo
+
+% aux = 0;
+% 
+% for i=1:length(channel_labels)
+%     figure(fig)
+%     hold on,
+%     fig = fig + 1;
+%     plot(time,tERP_seated(:,i),'b','LineWidth',2);
+%     plot(time,tERP_lying(:,i),'r','LineWidth',2);
+%     plot(time,tERP_fmri(:,i),'g','LineWidth',2);
+%     plot(time,ntERP_seated(:,i),'bREPLACE_WITH_DASH_DASH','LineWidth',2);
+%     plot(time,ntERP_lying(:,i),'rREPLACE_WITH_DASH_DASH','LineWidth',2);
+%     plot(time,ntERP_fmri(:,i),'gREPLACE_WITH_DASH_DASH','LineWidth',2);
+%     xline(0, 'REPLACE_WITH_DASH_DASH')    
+%     ylim([(clim(1)+aux),(clim(2)-aux)])
+%     xlim([min(time),max(time)])
+%     title(channel_labels(i) + " - Target vs Non-Target"), xlabel('Tempo (ms)'), ylabel('Amplitude (\muv)'), grid on
+% 
+%     if(contains(channel_labels(i),"z") || (contains(channel_labels(i),"C") && ~(contains(channel_labels(i),"P"))) ) % VPP
+%         c = 'blue';
+%         a = 'VPP';
+%         N2 = [tN2(1), tN2(2), tN2(2), tN2(1)];
+%     else % N170
+%         c = 'cyan';
+%         a = 'N170';
+%         N2 = [tN2(1), tN2(2), tN2(2), tN2(1)];
+%     end
+% 
+%     N170 = [tN170(1), tN170(2), tN170(2), tN170(1)];
+%     P3 = [tP3(1), tP3(2), tP3(2), tP3(1)];
+% 
+%     % Estas patches precisam de ser ajustadas
+% 
+%     ph0 = patch([baseline(1) baseline(2) baseline(2) baseline(1)],[clim(1) clim(1) clim(2) clim(2)],'black');
+%     set(ph0,'facealpha',.1,'edgecolor','none')
+% 
+%     ph1 = patch(N170,[clim(1) clim(1) clim(2) clim(2)],c);
+%     set(ph1,'facealpha',.1,'edgecolor','none')
+% 
+%     ph2 = patch(N2,[clim(1) clim(1) clim(2) clim(2)],'y');
+%     set(ph2,'facealpha',.1,'edgecolor','none')
+% 
+%     ph3 = patch(P3,[clim(1) clim(1) clim(2) clim(2)],'r');
+%     set(ph3,'facealpha',.1,'edgecolor','none')
+% 
+%     legend('EEG Sentado - Target','EEG Deitado - Target','EEG c/ fMRI - Target','EEG Sentado - NonTarget','EEG Deitado - NonTarget','EEG c/ fMRI - NonTarget', ...      
+%            'Stimulus','Baseline',a, 'N2', 'P3','AutoUpdate', 'off')
+% 
+%     yline(0, ':')
+%     hold off
+% 
+% end
+
+% %% 2D movie of topographic ERPs (Target - Seated)
+% 
+% figure('units','pixels','position',[0 0 1920 1080]); 
+% set(gcf, 'WindowState', 'maximized');
+% 
+% targ_seated = eegmovie(tERP_seated', fs, nch_locs ,...
+%      'time','on','startsec',-0.200 , 'topoplotopt', ...
+%      {'numcontour' n_cont},'minmax',clim,'title','EEG seated');
+% 
+% seemovie(targ_seated,0,clim);
+% 
+% %% 2D movie of topographic ERPs (Target - Lying)
+% 
+% figure('units','pixels','position',[0 0 1920 1080]); 
+% set(gcf, 'WindowState', 'maximized');
+% 
+% targ_lying = eegmovie(tERP_lying', fs, nch_locs ,...
+%      'time','on','startsec',-0.200 , 'topoplotopt', ...
+%      {'numcontour' n_cont},'minmax',clim,'title','EEG lying');
+% 
+% seemovie(targ_lying,0,clim);
+% 
+% %% 2D movie of topographic ERPs (Target - fMRI)
+% 
+% figure('units','pixels','position',[0 0 1920 1080]); 
+% set(gcf, 'WindowState', 'maximized');
+% 
+% targ_fmri = eegmovie(tERP_fmri', fs, nch_locs ,...
+%      'time','on','startsec',-0.200 , 'topoplotopt', ...
+%      {'numcontour' n_cont},'minmax',clim,'title','EEG w/ fMRI');
+% 
+% seemovie(targ_fmri,0,clim);
+% 
+% %% 2D movie of topographic ERPs (NonTarget - Seated)
+% 
+% figure('units','pixels','position',[0 0 1920 1080]); 
+% set(gcf, 'WindowState', 'maximized');
+% 
+% nontarg_seated = eegmovie(ntERP_seated', fs, nch_locs ,...
+%      'time','on','startsec',-0.200 , 'topoplotopt', ...
+%      {'numcontour' n_cont},'minmax',clim,'title','EEG seated');
+% 
+% seemovie(nontarg_seated,0,clim);
+% 
+% %% 2D movie of topographic ERPs (NonTarget - Lying)
+% 
+% figure('units','pixels','position',[0 0 1920 1080]); 
+% set(gcf, 'WindowState', 'maximized');
+% 
+% nontarg_lying = eegmovie(ntERP_lying', fs, nch_locs ,...
+%      'time','on','startsec',-0.200 , 'topoplotopt', ...
+%      {'numcontour' n_cont},'minmax',clim,'title','EEG lying');
+% 
+% seemovie(nontarg_lying,0,clim);
+% 
+% %% 2D movie of topographic ERPs (NonTarget - fMRI)
+% 
+% figure('units','pixels','position',[0 0 1920 1080]); 
+% set(gcf, 'WindowState', 'maximized');
+% 
+% nontarg_fmri = eegmovie(ntERP_fmri', fs, nch_locs ,...
+%      'time','on','startsec',-0.200 , 'topoplotopt', ...
+%      {'numcontour' n_cont},'minmax',clim,'title','EEG w/ fMRI');
+% 
+% seemovie(nontarg_fmri,0,clim);
+##### SOURCE END #####
+--></body></html>

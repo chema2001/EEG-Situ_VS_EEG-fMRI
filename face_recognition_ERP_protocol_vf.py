@@ -14,6 +14,10 @@ If you publish work using this script the most relevant publication is:
 '''
 Custom code: Lines 160, 729
 '''
+# Routine duration
+EYES_SCREEN = 2.0
+JAW_CLENCHING = 2.0
+EYES_CLOSED = 2.0
 
 # --- Import packages ---
 from psychopy import locale_setup
@@ -78,7 +82,7 @@ frameTolerance = 0.001  # how close to onset before 'same' frame
 
 # --- Setup the Window ---
 win = visual.Window(
-    size=[1920, 1080],  fullscr=True, screen=0, 
+    size=[1000, 600],  fullscr=False, screen=0, 
     winType='pyglet', allowStencil=False,
     monitor='testMonitor', color=[-1.0000, -1.0000, -1.0000], colorSpace='rgb',
     blendMode='avg', useFBO=True, 
@@ -405,7 +409,7 @@ _timeToFirstFrame = win.getFutureFlipTime(clock="now")
 frameN = -1
 
 # --- Run Routine "eyeScreen" ---
-while continueRoutine and routineTimer.getTime() < 15.0:
+while continueRoutine and routineTimer.getTime() < EYES_SCREEN:
     # get current time
     t = routineTimer.getTime()
     tThisFlip = win.getFutureFlipTime(clock=routineTimer)
@@ -459,7 +463,7 @@ for thisComponent in eyeScreenComponents:
 if routineForceEnded:
     routineTimer.reset()
 else:
-    routineTimer.addTime(-15.000000)
+    routineTimer.addTime(-EYES_SCREEN)
 
 # --- Prepare to start Routine "jawClenching" ---
 continueRoutine = True
@@ -480,7 +484,7 @@ _timeToFirstFrame = win.getFutureFlipTime(clock="now")
 frameN = -1
 
 # --- Run Routine "jawClenching" ---
-while continueRoutine and routineTimer.getTime() < 15.0:
+while continueRoutine and routineTimer.getTime() < JAW_CLENCHING:
     # get current time
     t = routineTimer.getTime()
     tThisFlip = win.getFutureFlipTime(clock=routineTimer)
@@ -534,7 +538,7 @@ for thisComponent in jawClenchingComponents:
 if routineForceEnded:
     routineTimer.reset()
 else:
-    routineTimer.addTime(-15.000000)
+    routineTimer.addTime(-JAW_CLENCHING)
 
 # --- Prepare to start Routine "closedEyes" ---
 continueRoutine = True
@@ -557,7 +561,7 @@ _timeToFirstFrame = win.getFutureFlipTime(clock="now")
 frameN = -1
 
 # --- Run Routine "closedEyes" ---
-while continueRoutine and routineTimer.getTime() < 15.0:
+while continueRoutine and routineTimer.getTime() < EYES_CLOSED:
     # get current time
     t = routineTimer.getTime()
     tThisFlip = win.getFutureFlipTime(clock=routineTimer)
@@ -630,7 +634,7 @@ beep.stop()  # ensure sound has stopped at end of routine
 if routineForceEnded:
     routineTimer.reset()
 else:
-    routineTimer.addTime(-15.000000)
+    routineTimer.addTime(-EYES_CLOSED)
 
 # --- Prepare to start Routine "codingTrials" ---
 continueRoutine = True
@@ -715,6 +719,96 @@ for thisTrial_block in trial_block:
         for paramName in thisTrial:
             exec('{} = thisTrial[paramName]'.format(paramName))
     
+    '''================================== Custom code =================================='''
+
+    # Perform random shuffles on the data at the begining of each trial
+    permutation = np.random.permutation(imgs_file.index)
+    shuffled_df = imgs_file.loc[permutation]
+
+    FIRST_N_NONTARGET_TRIALS = 3
+    TARGET_SEPERATION = 3
+
+    invalid_count = 1
+
+    df_size = len(shuffled_df) - 1
+
+    '''
+    This portion of code evaluates if there is space at the end of the stimuli array
+    to fit all the target stimuli with the specified TARGET_SEPERATION distance
+    In case there is not enough space, the target stimuli at the end of the array
+    will be moved directly to the begining of the array where the second part
+    of the algorithm will distribute them according to the valid distance between
+    target stimuli.
+    '''
+
+
+    while (invalid_count > 0): # Loop will run until invalid target positions are removed
+        invalid_count = 0
+        target_count = 0
+        for it, (image, label) in enumerate(shuffled_df.iloc[::-1].values):
+            if (label == "target"):
+                target_count += 1
+            if(it > 0 and 
+            label == "target" and 
+            (it + 1 - target_count) / TARGET_SEPERATION < 2.0):
+                
+                # Second target element (the invalid one) on the reversed DataFrame
+                row_to_move = shuffled_df.iloc[df_size - it].copy()
+                shuffled_df = shuffled_df.drop(df_size - it) # Remove the row from its current position
+                shuffled_df = pd.concat([row_to_move.to_frame().T, shuffled_df], ignore_index=True)
+                invalid_count += 1
+        print("Looping...")
+
+    ''' 
+    This second part is where the consecutive target stimuli will be redistributed according
+    to the valid target seperation distance. Furthermore, no target stimuli must be presented
+    in the first second of the trial
+    '''
+
+    non_target_count = 0
+    allocated_count = 0
+
+    allocated = []
+    reorganized_df = []
+
+    for it, (image, label) in enumerate(shuffled_df.values):
+        if (it <= FIRST_N_NONTARGET_TRIALS and label == "non_target"): 
+            reorganized_df.append([image, label])
+            non_target_count += 1
+
+        else:
+            
+            if (label == "target" and non_target_count >= TARGET_SEPERATION and it > FIRST_N_NONTARGET_TRIALS):
+                reorganized_df.append([image, label])
+                non_target_count = 0
+
+            elif(label == "target" and non_target_count < TARGET_SEPERATION):
+                allocated.append([image, label])
+                allocated_count += 1
+
+            elif(label == "non_target" and non_target_count >= TARGET_SEPERATION and it > FIRST_N_NONTARGET_TRIALS):
+                if(allocated_count > 0):  
+                    reorganized_df.append(allocated[allocated_count - 1])
+                    allocated_count -= 1
+
+                    non_target_count = 0
+                    reorganized_df.append([image, label])
+                    non_target_count += 1
+                else:
+                    reorganized_df.append([image, label])
+                    non_target_count += 1
+
+            elif(label == "non_target" and non_target_count < TARGET_SEPERATION):
+                reorganized_df.append([image, label])
+                non_target_count += 1
+
+    reorganized_df = pd.DataFrame(reorganized_df, columns=['image', 'stimulus']) 
+    img  = reorganized_df['image'].values
+    stim = reorganized_df['stimulus'].values
+
+
+    '''=================================================================================='''
+
     for thisTrial in trials:
         currentLoop = trials
         # abbreviate parameter names if possible (e.g. rgb = thisTrial.rgb)
@@ -727,22 +821,11 @@ for thisTrial_block in trial_block:
         routineForceEnded = False
         # update component parameters for each repeat
         trialImage.setImage(img[count])
-
+        print("Image: ",img[count], "|| Count: ", count)
         if stim[count] == 'target': # Changes color of the stimulus depending on its class: target/non-target
             polygon.color = [1,1,1]
         elif stim[count] == 'non_target':
             polygon.color = [-0.4 , -0.4, -0.4]
-
-        if count < (len(stim)-2): # Condition that prevents 2 consecutive target stimuli presentations (In the makority of cases)
-            if stim[count] == 'target' and stim[count+1] == "target":
-                aux1 = img[count + 1]
-                aux2 = img[count + 2]
-
-                img[count+1] = aux2
-                img[count+2] = aux1
-
-                stim[count+1] = "non_target"    
-                stim[count+2] = "target"
 
         count+=1
 
@@ -836,7 +919,7 @@ for thisTrial_block in trial_block:
             routineTimer.reset()
         else:
             routineTimer.addTime(-0.500000)
-        
+
         # --- Prepare to start Routine "blankScreen" ---
         continueRoutine = True
         routineForceEnded = False
@@ -939,12 +1022,6 @@ for thisTrial_block in trial_block:
     frameN = -1
 
     count = 0
-    
-    permutation = np.random.permutation(imgs_file.index)
-    shuffled_df = imgs_file.loc[permutation]
-
-    img = shuffled_df['image'].values
-    stim = shuffled_df['stimulus'].values
 
     # --- Run Routine "trialBlockScreen" ---
     while continueRoutine:
