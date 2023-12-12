@@ -166,8 +166,6 @@ imgs_file = pd.read_excel(file_path) # Read condition file
 permutation = np.random.permutation(imgs_file.index)
 shuffled_df = imgs_file.loc[permutation]
 
-img = shuffled_df['image'].values
-stim = shuffled_df['stimulus'].values
 count = 0
 
 # --- Initialize components for Routine "trial" ---
@@ -721,16 +719,9 @@ for thisTrial_block in trial_block:
     
     '''================================== Custom code =================================='''
 
-    # Perform random shuffles on the data at the begining of each trial
+    # Perform random shuffles on the data
     permutation = np.random.permutation(imgs_file.index)
     shuffled_df = imgs_file.loc[permutation]
-
-    FIRST_N_NONTARGET_TRIALS = 3
-    TARGET_SEPERATION = 3
-
-    invalid_count = 1
-
-    df_size = len(shuffled_df) - 1
 
     '''
     This portion of code evaluates if there is space at the end of the stimuli array
@@ -741,25 +732,36 @@ for thisTrial_block in trial_block:
     target stimuli.
     '''
 
+    FIRST_N_NONTARGET_TRIALS = 5
+    TARGET_SEPERATION = 3
 
-    while (invalid_count > 0): # Loop will run until invalid target positions are removed
-        invalid_count = 0
+    invalid = True
+
+    df_size = len(shuffled_df) - 1
+    shuffled_df = shuffled_df.to_numpy()
+
+    # Loop will run until invalid target positions are removed
+    while invalid:
+        invalid = False
         target_count = 0
-        for it, (image, label) in enumerate(shuffled_df.iloc[::-1].values):
-            if (label == "target"):
+        for it, (_, label) in enumerate(shuffled_df[::-1, :]):
+            if label == "target":
                 target_count += 1
-            if(it > 0 and 
-            label == "target" and 
-            (it + 1 - target_count) / TARGET_SEPERATION < 2.0):
-                
-                # Second target element (the invalid one) on the reversed DataFrame
-                row_to_move = shuffled_df.iloc[df_size - it].copy()
-                shuffled_df = shuffled_df.drop(df_size - it) # Remove the row from its current position
-                shuffled_df = pd.concat([row_to_move.to_frame().T, shuffled_df], ignore_index=True)
-                invalid_count += 1
+                if (it + 1 - target_count) / TARGET_SEPERATION < 2.0:
+                    # Second target element (the invalid one) on the reversed array
+                    row_to_move = shuffled_df[df_size - it].copy()
+
+                    # Remove the row from its current position
+                    shuffled_df = np.delete(shuffled_df, df_size - it, axis=0)
+
+                    # Insert the row at the beginning
+                    shuffled_df = np.vstack([row_to_move, shuffled_df])
+
+                    invalid = True
+                    break
         print("Looping...")
 
-    ''' 
+    '''
     This second part is where the consecutive target stimuli will be redistributed according
     to the valid target seperation distance. Furthermore, no target stimuli must be presented
     in the first second of the trial
@@ -771,29 +773,36 @@ for thisTrial_block in trial_block:
     allocated = []
     reorganized_df = []
 
-    for it, (image, label) in enumerate(shuffled_df.values):
+    for it, (image, label) in enumerate(shuffled_df):
         if (it <= FIRST_N_NONTARGET_TRIALS and label == "non_target"): 
             reorganized_df.append([image, label])
             non_target_count += 1
 
-        else:
+        elif (it <= FIRST_N_NONTARGET_TRIALS and label == "target"):
+            allocated.append([image, label])
+            allocated_count += 1
+
+        elif(it >= FIRST_N_NONTARGET_TRIALS):
             
-            if (label == "target" and non_target_count >= TARGET_SEPERATION and it > FIRST_N_NONTARGET_TRIALS):
+            if (label == "target" and non_target_count >= TARGET_SEPERATION):
                 reorganized_df.append([image, label])
                 non_target_count = 0
 
             elif(label == "target" and non_target_count < TARGET_SEPERATION):
+                
                 allocated.append([image, label])
                 allocated_count += 1
 
-            elif(label == "non_target" and non_target_count >= TARGET_SEPERATION and it > FIRST_N_NONTARGET_TRIALS):
+            elif(label == "non_target" and non_target_count >= TARGET_SEPERATION):
                 if(allocated_count > 0):  
-                    reorganized_df.append(allocated[allocated_count - 1])
+                    reorganized_df.append(allocated[0])
                     allocated_count -= 1
-
+                    allocated.pop(0) # To avoid duplicates
+                    
                     non_target_count = 0
                     reorganized_df.append([image, label])
                     non_target_count += 1
+
                 else:
                     reorganized_df.append([image, label])
                     non_target_count += 1
@@ -801,11 +810,21 @@ for thisTrial_block in trial_block:
             elif(label == "non_target" and non_target_count < TARGET_SEPERATION):
                 reorganized_df.append([image, label])
                 non_target_count += 1
+    
+    print(reorganized_df)
+    img  = [row[0] for row in reorganized_df]
+    stim = [row[1] for row in reorganized_df]
+  
+    tc = 0
+    for tr in reorganized_df:
+        print(tr[0])
+        if(tr[1] == "target"):
+            tc += 1
 
-    reorganized_df = pd.DataFrame(reorganized_df, columns=['image', 'stimulus']) 
-    img  = reorganized_df['image'].values
-    stim = reorganized_df['stimulus'].values
-
+    print("\n======== After looping =======")
+    print("\nSize: ", len(reorganized_df))
+    print("Nº targets: ", tc)
+    print("Unique: ", len(np.unique(reorganized_df)))
 
     '''=================================================================================='''
 
