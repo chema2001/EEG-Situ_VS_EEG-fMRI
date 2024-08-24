@@ -120,10 +120,6 @@ print("\nSize: ", len(reorganized_df))
 print("Nº targets: ", tc)
 print("Unique: ", len(np.unique(reorganized_df)))
 
-print("\n======")
-lol = [row[0] for row in reorganized_df]
-print(lol)
-
 reorganized_df = pd.DataFrame(reorganized_df, columns = ["image", "stim"])
 
 # Check for duplicates based on entire rows

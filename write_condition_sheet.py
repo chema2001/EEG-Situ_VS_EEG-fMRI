@@ -40,6 +40,8 @@ for i, img in enumerate(imgs):
     
 df = DataFrame({'image': images, 'stimulus': stim})
 
+'''
 permutation = np.random.permutation(df.index)
 shuffled_df = df.loc[permutation] # .loc -> Select rows
 shuffled_df.to_excel('stims.xlsx', sheet_name='sheet1', index=False)
+'''
