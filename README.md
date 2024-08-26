@@ -18,6 +18,7 @@
 
 **EEG Analysis:** The Event-Related Potentials (ERPs) N170, Vertical Vertex Potential (VPP), N2 and P3 were then used to assess the cognitive differences in these conditions, both in the Target and Non-Target stimuli. These four conditions were used to isolate all the main variables. The visual processing of these faces (N170 and VPP) and visual attentional mechanisms that are recruited to attend to the Target stimuli (N2 and P3) are being studied. However, when presenting the fMRI sounds we are introducing additional information for the brain to process in the auditory modality. By separating the conditions in this manner, we can more accurately see the effect of these sounds in the brain and establish a more fair comparison between the EEG recordings inside and outside the fMRI machine, discarding the sounds as the only factor affecting the possible differences expected between the no-fMRI and fMRI conditions.
 
-**Preliminary results:** Despite not being statistically quantified yet, the EEG responses clearly show differences in the stimuli processing between the four conditions tested, particularly in the later stages of the visual stream, namely during the P3 period, both in terms of the peak's amplitude and latency. However, in earlier potentials, the differences appear negligible.
+**Preliminary results:** Despite not being statistically quantified yet, the EEG responses clearly show differences in the stimuli processing between the four conditions tested, particularly in the later stages of the visual stream, namely during the P3 period, both in terms of the peak's amplitude and latency, suggesting cognitive differences even when just simulating a fMRI acquisition. However, in earlier potentials, the differences appear negligible.
 
-![EEG_Situ_vs_fMRI](https://github.com/user-attachments/assets/c6e9d795-3038-4849-a373-7bd1a37c13f2)
+![EEG_Situ_vs_fMRI](https://github.com/user-attachments/assets/f137bad1-f0bf-4eb5-a098-db1c29368cd8)
+
